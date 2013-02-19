@@ -2,6 +2,8 @@
 
 #include "photon_core.h"
 #include "photon_opengl.h"
+#include "photon_level.h"
+#include "photon_laser.h"
 #include <SDL_timer.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -16,12 +18,19 @@ void MainLoop(photon_instance &instance){
     float last_time = SDL_GetTicks();
     float frame_delta = 0;
 
+    photon_laserbeam beam;
+
+    beam.origin = glm::uvec2(0,0);
+    beam.color = glm::vec3(1,0,0);
+    beam.origin_angle = 0;
+
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
 
         sdl::DoEvents(instance, frame_delta);
 
+        opengl::DrawLaser(beam);
 
         sdl::UpdateWindow(instance.window);
 

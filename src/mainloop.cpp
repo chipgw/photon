@@ -37,13 +37,13 @@ void MainLoop(photon_instance &instance){
 
         glBegin(GL_QUADS);{
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f,-0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,0.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,-1.0f,0.5f);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f,-0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,1.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.5f);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f, 0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,1.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.5f);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f, 0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,0.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,-1.0f,0.5f);
 
         }glEnd();
 

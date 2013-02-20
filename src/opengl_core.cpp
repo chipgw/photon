@@ -37,13 +37,10 @@ void InitOpenGL(photon_window &window){
     glDisable(GL_CULL_FACE);
 
     shader_scene = LoadShaderXML("/shaders/scene.xml");
-    shader_laser = LoadShaderXML("/shaders/laser.xml");
+    glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f);
 
-    GLint zoom_uniform;
-    zoom_uniform = glGetUniformLocation(shader_scene.program, "zoom");
-    glUniform1f(zoom_uniform, 1.0f);
-    zoom_uniform = glGetUniformLocation(shader_laser.program, "zoom");
-    glUniform1f(zoom_uniform, 1.0f);
+    shader_laser = LoadShaderXML("/shaders/laser.xml");
+    glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f);
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");
@@ -65,13 +62,12 @@ void OnResize(int width, int height, photon_window &window){
 
     PrintToLog("INFO: Resizing window to %ix%i.", width, height);
 
-    GLint aspect_uniform;
     float aspect = (float)width/(float)height;
 
-    aspect_uniform = glGetUniformLocation(shader_scene.program, "aspect");
-    glUniform1f(aspect_uniform, aspect);
-    aspect_uniform = glGetUniformLocation(shader_laser.program, "aspect");
-    glUniform1f(aspect_uniform, aspect);
+    glUseProgram(shader_scene.program);
+    glUniform1f(glGetUniformLocation(shader_scene.program, "aspect"), aspect);
+    glUseProgram(shader_laser.program);
+    glUniform1f(glGetUniformLocation(shader_laser.program, "aspect"), aspect);
 
     glViewport(0,0,width,height);
 
@@ -107,11 +103,10 @@ GLenum CheckOpenGLErrors(){
 }
 
 void UpdateZoom(float zoom){
-    GLint zoom_uniform;
-    zoom_uniform = glGetUniformLocation(shader_scene.program, "zoom");
-    glUniform1f(zoom_uniform, 1.0f/zoom);
-    zoom_uniform = glGetUniformLocation(shader_laser.program, "zoom");
-    glUniform1f(zoom_uniform, 1.0f/zoom);
+    glUseProgram(shader_scene.program);
+    glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f/zoom);
+    glUseProgram(shader_laser.program);
+    glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f/zoom);
 }
 
 }

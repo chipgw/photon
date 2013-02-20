@@ -25,8 +25,6 @@ void MainLoop(photon_instance &instance){
     beam.color = glm::vec3(1,0,0);
     beam.origin_angle = 0;
 
-    GLuint texture = texture::Load("/textures/laser.tga");
-
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
@@ -36,8 +34,6 @@ void MainLoop(photon_instance &instance){
         glClear(GL_COLOR_BUFFER_BIT);
 
         opengl::DrawLaser(beam);
-
-        glBindTexture(GL_TEXTURE_2D, texture);
 
         glBegin(GL_QUADS);{
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f,-0.1f);

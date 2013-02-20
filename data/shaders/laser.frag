@@ -2,8 +2,10 @@
 
 varying vec2 uv;
 
-uniform sampler2D texture;
-
 void main(void) {
-    gl_FragColor = vec4(texture2D(texture, abs((uv * 2.0) - 1.0)).rgb, 1.0);
+    float power = pow(2.0*(1.0 - abs(uv.x * 2.0 - 1.0)), 4.0);
+
+    vec3 color = normalize(vec3(0.9, 0.2, 0.1));
+
+    gl_FragColor = vec4(color * power, 1.0);
 }

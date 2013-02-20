@@ -2,7 +2,7 @@
 #define _PHOTON_LEVEL_H_
 
 #include "boost/multi_array.hpp"
-#include "photon_block.h"
+#include "photon_blocks/block_base.h"
 
 namespace photon{
 struct photon_level{

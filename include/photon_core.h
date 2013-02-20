@@ -15,6 +15,7 @@ struct photon_instance{
     /*! \brief is set to true when the main loop starts, set to false to end loop. */
     bool running = false;
 
+    float zoom = 1.0;
 };
 
 photon_instance Init(int argc, char *argv[], bool parseconfig = true);

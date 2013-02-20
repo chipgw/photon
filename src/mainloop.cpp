@@ -2,6 +2,7 @@
 
 #include "photon_core.h"
 #include "photon_opengl.h"
+#include "photon_texture.h"
 #include "photon_level.h"
 #include "photon_laser.h"
 #include <SDL_timer.h>
@@ -24,13 +25,31 @@ void MainLoop(photon_instance &instance){
     beam.color = glm::vec3(1,0,0);
     beam.origin_angle = 0;
 
+    GLuint texture = texture::Load("/textures/laser.tga");
+
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
 
         sdl::DoEvents(instance, frame_delta);
 
+        glClear(GL_COLOR_BUFFER_BIT);
+
         opengl::DrawLaser(beam);
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glBegin(GL_QUADS);{
+            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f,-0.1f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,0.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f,-0.1f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,1.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f, 0.1f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,1.0f,0.5f);
+            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f, 0.1f);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,0.0f,0.5f);
+
+        }glEnd();
 
         sdl::UpdateWindow(instance.window);
 

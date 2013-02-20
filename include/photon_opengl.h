@@ -75,6 +75,8 @@ void DeleteShader(photon_shader &shader);
  * \return
  */
 photon_shader LoadShaderXML(const std::string &filename);
+
+void UpdateZoom(float zoom);
 }
 }
 #endif

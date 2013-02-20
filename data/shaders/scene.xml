@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <photon_shader>
   <vertex_shader file="main.vert" />
-  <fragment_shader file="main.frag" />
+  <fragment_shader file="scene.frag" />
   <texture2D name="texture" type="color" />
   <input name="in_location" type="location" />
   <input name="in_uv" type="uv" />

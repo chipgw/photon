@@ -18,8 +18,8 @@
 namespace photon{
 
 namespace opengl{
-//shaders for 3d pass (saves data to gBuffer)
-photon_shader shader_main;
+photon_shader shader_scene;
+photon_shader shader_laser;
 
 void InitOpenGL(photon_window &window){
     PrintToLog("INFO: Initializing OpenGL.");
@@ -36,12 +36,14 @@ void InitOpenGL(photon_window &window){
 
     glDisable(GL_CULL_FACE);
 
-    shader_main = LoadShaderXML("/shaders/main.xml");
+    shader_scene = LoadShaderXML("/shaders/scene.xml");
+    shader_laser = LoadShaderXML("/shaders/laser.xml");
 
-    // load identety matrix to shader
-    GLint model_matrix_uniform = glGetUniformLocation(shader_main.program, "model");
-    glm::mat4 model(1.0f);
-    glUniformMatrix4fv(model_matrix_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    GLint zoom_uniform;
+    zoom_uniform = glGetUniformLocation(shader_scene.program, "zoom");
+    glUniform1f(zoom_uniform, 1.0f);
+    zoom_uniform = glGetUniformLocation(shader_laser.program, "zoom");
+    glUniform1f(zoom_uniform, 1.0f);
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");
@@ -53,7 +55,7 @@ void GarbageCollect(photon_window &window){
 
     texture::GarbageCollect();
 
-    DeleteShader(shader_main);
+    DeleteShader(shader_scene);
 
     PrintToLog("INFO: OpenGL garbage collection complete.");
 }
@@ -62,6 +64,16 @@ void OnResize(int width, int height, photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
     PrintToLog("INFO: Resizing window to %ix%i.", width, height);
+
+    GLint aspect_uniform;
+    float aspect = (float)width/(float)height;
+
+    aspect_uniform = glGetUniformLocation(shader_scene.program, "aspect");
+    glUniform1f(aspect_uniform, aspect);
+    aspect_uniform = glGetUniformLocation(shader_laser.program, "aspect");
+    glUniform1f(aspect_uniform, aspect);
+
+    glViewport(0,0,width,height);
 
     window.width = width;
     window.height = height;
@@ -93,5 +105,14 @@ GLenum CheckOpenGLErrors(){
 
     return err;
 }
+
+void UpdateZoom(float zoom){
+    GLint zoom_uniform;
+    zoom_uniform = glGetUniformLocation(shader_scene.program, "zoom");
+    glUniform1f(zoom_uniform, 1.0f/zoom);
+    zoom_uniform = glGetUniformLocation(shader_laser.program, "zoom");
+    glUniform1f(zoom_uniform, 1.0f/zoom);
+}
+
 }
 }

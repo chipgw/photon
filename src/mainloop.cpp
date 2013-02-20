@@ -24,6 +24,19 @@ void MainLoop(photon_instance &instance){
     beam.origin = glm::uvec2(0,0);
     beam.color = glm::vec3(1,0,0);
     beam.origin_angle = 0;
+    beam.segments.push_back(photon_lasersegment(beam));
+
+    photon_lasersegment &segment1 = beam.segments.back();
+    segment1.start = glm::uvec2(2,0);
+    segment1.end = glm::uvec2(0,0);
+
+    beam.segments.push_back(photon_lasersegment(beam));
+
+    photon_lasersegment &segment2 = beam.segments.back();
+    segment2.start = glm::uvec2(0,0);
+    segment2.end = glm::uvec2(0,2);
+    segment2.parent = &segment1;
+    segment1.child = &segment2;
 
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
@@ -33,19 +46,10 @@ void MainLoop(photon_instance &instance){
 
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE,GL_ONE);
+
         opengl::DrawLaser(beam);
-
-        glBegin(GL_QUADS);{
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f,-0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,-1.0f,0.5f);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f,-0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.5f);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2.0f, 0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.5f);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,-2.0f, 0.1f);
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE,-1.0f,0.5f);
-
-        }glEnd();
 
         sdl::UpdateWindow(instance.window);
 

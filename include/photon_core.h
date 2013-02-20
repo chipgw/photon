@@ -5,10 +5,12 @@
 #include <list>
 
 namespace photon{
-struct photon_window;
+struct photon_level;
 
 struct photon_instance{
     photon_window window;
+
+    photon_level* level = nullptr;
 
     /*! \brief total frames rendered */
     unsigned long total_frames = 0;

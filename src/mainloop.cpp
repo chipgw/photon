@@ -5,6 +5,7 @@
 #include "photon_texture.h"
 #include "photon_level.h"
 #include "photon_laser.h"
+#include "photon_blocks.h"
 #include <SDL_timer.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -13,12 +14,6 @@
 namespace photon{
 void MainLoop(photon_instance &instance){
     instance.running = true;
-
-    PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
-    float start_time = SDL_GetTicks();
-    float last_time = SDL_GetTicks();
-    float frame_delta = 0;
-
     photon_laserbeam beam;
 
     beam.origin = glm::uvec2(0,0);
@@ -38,6 +33,15 @@ void MainLoop(photon_instance &instance){
     segment2.parent = &segment1;
     segment1.child = &segment2;
 
+    instance.level = new photon_level(2,3);
+
+    instance.level->grid[1][1].type = PHOTON_BLOCKS_PLAIN;
+
+    PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
+    float start_time = SDL_GetTicks();
+    float last_time = SDL_GetTicks();
+    float frame_delta = 0;
+
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
@@ -45,6 +49,8 @@ void MainLoop(photon_instance &instance){
         sdl::DoEvents(instance, frame_delta);
 
         glClear(GL_COLOR_BUFFER_BIT);
+
+        level::Draw(*instance.level);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE,GL_ONE);

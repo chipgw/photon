@@ -17,10 +17,10 @@ get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp" @ONLY)
 
 # files not needed in build, but included so they show up in IDE.
-file(GLOB HEADERS "include/*.h" "include/photon_blocks/*.h")
+file(GLOB HEADERS "include/*.h")
 file(GLOB GLSL_SOURCES "data/shaders/*.xml" "data/shaders/*.vert" "data/shaders/*.frag")
 
-file(GLOB SOURCES "src/*.cpp" "src/photon_blocks/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${HEADERS})
 

@@ -186,7 +186,7 @@ void DrawModeLight(photon_window &window){
     glClear(GL_COLOR_BUFFER_BIT);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_DST_ALPHA);
+    glBlendFunc(GL_ONE,GL_ONE);
 
     glUseProgram(shader_light.program);
 

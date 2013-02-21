@@ -10,8 +10,5 @@ void main(void) {
 
     vec4 color = texture2D(texture, screen);
 
-    vec3 emit = color.xyz * color.a;
-    vec3 lit = color.xyz * power * (1.0 - color.a);
-
-    gl_FragColor = vec4(emit+lit, 1.0);
+    gl_FragColor = vec4(color * power);
 }

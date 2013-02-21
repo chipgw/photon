@@ -22,7 +22,7 @@ void MainLoop(photon_instance &instance){
     beam.segments.push_back(photon_lasersegment(beam));
 
     photon_lasersegment &segment1 = beam.segments.back();
-    segment1.start = glm::uvec2(2,0);
+    segment1.start = glm::uvec2(6,0);
     segment1.end = glm::uvec2(0,0);
 
     beam.segments.push_back(photon_lasersegment(beam));

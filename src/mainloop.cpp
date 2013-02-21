@@ -33,9 +33,13 @@ void MainLoop(photon_instance &instance){
     segment2.parent = &segment1;
     segment1.child = &segment2;
 
-    instance.level = new photon_level(2,3);
+    instance.level = new photon_level(4,5);
 
     instance.level->grid[1][1].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[0][2].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[1][2].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[2][1].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[2][2].type = PHOTON_BLOCKS_PLAIN;
 
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
@@ -48,14 +52,21 @@ void MainLoop(photon_instance &instance){
 
         sdl::DoEvents(instance, frame_delta);
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        opengl::DrawModeScene(instance.window);
+
+        // TODO - draw a background texture or something...
+
+        opengl::DrawModeLaser(instance.window);
+
+        opengl::DrawLaser(beam);
+
+        opengl::DrawModeLevel(instance.window);
 
         level::Draw(*instance.level);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE,GL_ONE);
+        opengl::DrawModeLight(instance.window);
 
-        opengl::DrawLaser(beam);
+        opengl::DrawLaserLight(beam);
 
         sdl::UpdateWindow(instance.window);
 

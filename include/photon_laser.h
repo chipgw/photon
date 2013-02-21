@@ -44,7 +44,10 @@ photon_lasersegment *CreateChildBeam(photon_lasersegment *parent);
 namespace opengl{
 
 void DrawLaser(photon_laserbeam &beam);
-void DrawLaserSegment(photon_laserbeam &beam);
+void DrawLaserSegment(photon_lasersegment &segment);
+
+void DrawLaserLight(photon_laserbeam &beam);
+void DrawLaserSegmentLight(photon_lasersegment &segment);
 
 }
 

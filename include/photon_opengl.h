@@ -77,6 +77,30 @@ void DeleteShader(photon_shader &shader);
 photon_shader LoadShaderXML(const std::string &filename);
 
 void UpdateZoom(float zoom);
+
+/*!
+ * \brief switches to the background drawing mode. (clears scene buffer)
+ * \param window
+ */
+void DrawModeScene(photon_window &window);
+
+/*!
+ * \brief switches to the laser drawing mode.
+ * \param window
+ */
+void DrawModeLaser(photon_window &window);
+
+/*!
+ * \brief switches to the level drawing mode.
+ * \param window
+ */
+void DrawModeLevel(photon_window &window);
+
+/*!
+ * \brief switches to the light pass mode.
+ * \param window
+ */
+void DrawModeLight(photon_window &window);
 }
 }
 #endif

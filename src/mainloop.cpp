@@ -19,27 +19,15 @@ void MainLoop(photon_instance &instance){
     beam.origin = glm::uvec2(0,0);
     beam.color = glm::vec3(1,0,0);
     beam.origin_angle = 0;
-    beam.segments.push_back(photon_lasersegment(beam));
 
-    photon_lasersegment &segment1 = beam.segments.back();
-    segment1.start = glm::uvec2(6,0);
-    segment1.end = glm::uvec2(0,0);
+    instance.level = new photon_level(10,5);
 
-    beam.segments.push_back(photon_lasersegment(beam));
-
-    photon_lasersegment &segment2 = beam.segments.back();
-    segment2.start = glm::uvec2(0,0);
-    segment2.end = glm::uvec2(0,2);
-    segment2.parent = &segment1;
-    segment1.child = &segment2;
-
-    instance.level = new photon_level(4,5);
-
-    instance.level->grid[1][1].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[0][2].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[1][2].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[2][1].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[2][2].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[9][0].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[9][1].type = PHOTON_BLOCKS_PLAIN;
 
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
@@ -57,6 +45,8 @@ void MainLoop(photon_instance &instance){
         // TODO - draw a background texture or something...
 
         opengl::DrawModeLaser(instance.window);
+
+        tracer::TraceBeam(beam, *instance.level);
 
         opengl::DrawLaser(beam);
 

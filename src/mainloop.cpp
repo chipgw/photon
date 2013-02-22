@@ -16,7 +16,7 @@ void MainLoop(photon_instance &instance){
     instance.running = true;
     photon_laserbeam beam;
 
-    beam.origin = glm::uvec2(0,0);
+    beam.origin = glm::uvec2(0,1);
     beam.color = glm::vec3(1,0,0);
     beam.origin_angle = 0;
 
@@ -24,10 +24,19 @@ void MainLoop(photon_instance &instance){
 
     instance.level->grid[0][2].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[1][2].type = PHOTON_BLOCKS_PLAIN;
-    instance.level->grid[2][1].type = PHOTON_BLOCKS_PLAIN;
+    instance.level->grid[2][4].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[2][2].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[9][0].type = PHOTON_BLOCKS_PLAIN;
     instance.level->grid[9][1].type = PHOTON_BLOCKS_PLAIN;
+
+    instance.level->grid[2][1].type = PHOTON_BLOCKS_MIRROR;
+    instance.level->grid[2][1].data = 22.5f;
+
+    instance.level->grid[3][2].type = PHOTON_BLOCKS_MIRROR;
+    instance.level->grid[3][2].data = 0.0f;
+
+    instance.level->grid[4][1].type = PHOTON_BLOCKS_MIRROR;
+    instance.level->grid[4][1].data = 22.5f;
 
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();

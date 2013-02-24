@@ -31,6 +31,11 @@ void InitOpenGL(photon_window &window){
         PrintToLog("GLEW ERROR: %s", glewGetErrorString(glewstatus));
         return;
     }
+    if(GLEW_VERSION_2_0){
+        PrintToLog("INFO: OpenGL 2.0 support detected, things should work fine.");
+    }else{
+        PrintToLog("WARNING: OpenGL 2.0 support NOT detected, things probably won't work.");
+    }
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -62,6 +67,7 @@ void InitOpenGL(photon_window &window){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glDisable(GL_CULL_FACE);
+    glEnable(GL_MULTISAMPLE);
 
     shader_scene = LoadShaderXML("/shaders/scene.xml");
     glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f);

@@ -29,6 +29,10 @@ photon_window CreateSDLWindow(){
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
 
+    // TODO - load a setting for this.
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  16);
+
     window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
                                          SDL_WINDOW_OPENGL | /*SDL_WINDOW_INPUT_GRABBED |*/ SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
 

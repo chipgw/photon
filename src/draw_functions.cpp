@@ -8,7 +8,7 @@ namespace photon{
 namespace opengl{
 
 void DrawLaserSegment(photon_lasersegment &segment){
-    glm::vec2 tangent = 0.5f * glm::normalize(glm::rotate(glm::vec2(segment.start) - glm::vec2(segment.end), 90.0f));
+    glm::vec2 tangent = 0.2f * glm::normalize(glm::rotate(glm::vec2(segment.start) - glm::vec2(segment.end), 90.0f));
 
     glm::vec2 child_offset(0.0f);
     glm::vec2 parent_offset(0.0f);
@@ -48,7 +48,7 @@ void DrawLaser(photon_laserbeam &beam){
 }
 
 void DrawLaserSegmentLight(photon_lasersegment &segment){
-    glm::vec2 beam_direction = 4.0f * glm::normalize(glm::vec2(segment.start) - glm::vec2(segment.end));
+    glm::vec2 beam_direction = 2.0f * glm::normalize(glm::vec2(segment.start) - glm::vec2(segment.end));
     glm::vec2 tangent = glm::rotate(beam_direction, 90.0f);
 
     glBegin(GL_QUADS);{

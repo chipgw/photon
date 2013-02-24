@@ -3,6 +3,8 @@
 #include "photon_level.h"
 #include "photon_laser.h"
 
+#include "glm/ext.hpp"
+
 namespace photon{
 
 namespace blocks{
@@ -24,6 +26,27 @@ void DrawBox(glm::uvec2 location){
     }glEnd();
 }
 
+void DrawMirror(glm::uvec2 location, float angle){
+    glm::vec2 point1(0.4f, 0.05f);
+    glm::vec2 point2(0.05f, 0.4f);
+    point1 = glm::rotate(point1, angle);
+    point2 = glm::rotate(point2, angle + 90.0f);
+
+    glBegin(GL_QUADS);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point1.x, location.y + point1.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point2.x, location.y - point2.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point1.x, location.y - point1.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point2.x, location.y + point2.y);
+    }glEnd();
+}
+
 void Draw(photon_block block, glm::uvec2 location){
     switch(block.type){
     case PHOTON_BLOCKS_AIR:
@@ -31,6 +54,14 @@ void Draw(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_PLAIN:
         // TODO - bind texture.
         DrawBox(location);
+        break;
+    case PHOTON_BLOCKS_INDESTRUCTIBLE:
+        // TODO - bind texture.
+        DrawBox(location);
+        break;
+    case PHOTON_BLOCKS_MIRROR:
+    case PHOTON_BLOCKS_MIRROR_LOCKED:
+        DrawMirror(location, block.data);
         break;
     }
 }

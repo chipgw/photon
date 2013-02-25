@@ -61,6 +61,7 @@ void DoEvents(photon_instance &instance, float time){
     SDL_Event event;
     while(SDL_PollEvent(&event)){
         switch (event.type) {
+        // TODO - replace with dynamic input handling system. (would go in input.cpp)
         case SDL_KEYDOWN:
             PrintToLog("INFO: The %s key was pressed!", SDL_GetScancodeName(event.key.keysym.scancode));
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
@@ -90,12 +91,6 @@ void DoEvents(photon_instance &instance, float time){
                 break;
             }
             break;
-        case SDL_MOUSEMOTION:{
-            Uint8 mousebuttons = SDL_GetMouseState(0,0);
-            if(mousebuttons & SDL_BUTTON_MMASK){
-            }
-            break;
-        }
         case SDL_MOUSEWHEEL:
             instance.zoom -= event.wheel.y * 0.1f;
             instance.zoom = std::max(0.01f,instance.zoom);
@@ -103,8 +98,6 @@ void DoEvents(photon_instance &instance, float time){
             break;
         }
     }
-
-//    Uint8 *state = SDL_GetKeyboardState(NULL);
 }
 
 void UpdateWindow(photon_window &window){

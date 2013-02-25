@@ -4,6 +4,7 @@
 #include <glm/gtx/vector_angle.hpp>
 
 #include <SDL_opengl.h>
+#include <SDL_gamecontroller.h>
 
 namespace photon{
 
@@ -16,7 +17,7 @@ photon_window CreateSDLWindow(){
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
-    if(SDL_Init(SDL_INIT_VIDEO) == -1) {
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) == -1) {
         PrintToLog("ERROR: Unable to init SDL! \"%s\"", SDL_GetError());
         throw;
     }
@@ -96,7 +97,7 @@ void DoEvents(photon_instance &instance, float time){
             break;
         }
         case SDL_MOUSEWHEEL:
-            instance.zoom -= event.wheel.y * 0.002f;
+            instance.zoom -= event.wheel.y * 0.1f;
             instance.zoom = std::max(0.01f,instance.zoom);
             opengl::UpdateZoom(instance.zoom);
             break;

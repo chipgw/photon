@@ -20,7 +20,7 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
 
     PrintToLog("INFO: Photon Git Version: %s", version::git_sha1);
 
-    PrintToLog("INFO: Photon Build Type: %s", version::build_type);
+    PrintToLog("INFO: Running on %s, Build Type: %s", SDL_GetPlatform(), version::build_type);
 
     PHYSFS_init(argv[0]);
     PHYSFS_mount("data", "/", 0);

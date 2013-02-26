@@ -22,31 +22,6 @@ void MainLoop(photon_instance &instance){
 
     instance.level = level::LoadLevelXML("/level.xml");
 
-    instance.level.grid[0][0].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[0][2].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[1][0].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[1][2].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[2][0].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[2][2].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[2][3].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[2][4].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[3][1].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[5][1].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[6][1].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[7][1].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[8][1].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[9][0].type = PHOTON_BLOCKS_PLAIN;
-    instance.level.grid[9][1].type = PHOTON_BLOCKS_PLAIN;
-
-    instance.level.grid[2][1].type = PHOTON_BLOCKS_MIRROR;
-    instance.level.grid[2][1].data = 22.5f;
-
-    instance.level.grid[3][2].type = PHOTON_BLOCKS_MIRROR;
-    instance.level.grid[3][2].data = 0.0f;
-
-    instance.level.grid[5][0].type = PHOTON_BLOCKS_MIRROR;
-    instance.level.grid[5][0].data = -22.5f;
-
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
     float last_time = SDL_GetTicks();

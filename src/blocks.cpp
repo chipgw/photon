@@ -60,7 +60,8 @@ void Draw(photon_block block, glm::uvec2 location){
         DrawBox(location);
         break;
     case PHOTON_BLOCKS_INDESTRUCTIBLE:
-        // TODO - bind texture.
+        // TODO - make different texture.
+        glBindTexture(GL_TEXTURE_2D, texture_plain_block);
         DrawBox(location);
         break;
     case PHOTON_BLOCKS_MIRROR:

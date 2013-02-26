@@ -59,6 +59,7 @@ photon_level LoadLevelXML(const std::string &filename){
         xmlChar *width_str = xmlGetProp(root, (const xmlChar *)"width");
         xmlChar *height_str = xmlGetProp(root, (const xmlChar *)"height");
 
+
         int width = atoi((char*)width_str);
         int height = atoi((char*)height_str);
 
@@ -73,11 +74,60 @@ photon_level LoadLevelXML(const std::string &filename){
 
         level.grid.resize(boost::extents[width][height]);
 
+        // fill the borders with indestructible blocks.
+        for(int x = 0;x<width;x++){
+            level.grid[x][0].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+            level.grid[x][height-1].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+        }
+        for(int y = 0;y<height;y++){
+            level.grid[0][y].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+            level.grid[width-1][y].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+        }
+
         xmlNode *node = root->xmlChildrenNode;
+
         while(node != nullptr) {
             if((!xmlStrcmp(node->name, (const xmlChar *)"data"))){
-                // TODO - code goes here.
+                xmlNode *row = node->xmlChildrenNode;
+                while(row != nullptr) {
+                    if((!xmlStrcmp(row->name, (const xmlChar *)"row"))){
+                        xmlChar *y_str = xmlGetProp(row, (const xmlChar *)"y");
+                        unsigned int y = atoi((char*)y_str);
+                        xmlFree(y_str);
+
+                        xmlNode *block_xml = row->xmlChildrenNode;
+                        while(block_xml != nullptr) {
+                            if((!xmlStrcmp(block_xml->name, (const xmlChar *)"block"))){
+                                xmlChar *x_str = xmlGetProp(block_xml, (const xmlChar *)"x");
+                                unsigned int x = atoi((char*)x_str);
+                                xmlFree(x_str);
+
+                                xmlChar *type_str = xmlGetProp(block_xml, (const xmlChar *)"type");
+
+                                photon_block &block = level.grid[x][y];
+
+                                if((!xmlStrcmp(type_str, (const xmlChar *)"plain"))){
+                                    block.type = PHOTON_BLOCKS_PLAIN;
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror"))){
+                                    block.type = PHOTON_BLOCKS_MIRROR;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
+                                }
+                                // TODO - load other block types.
+                                xmlFree(type_str);
+                            }
+                            block_xml = block_xml->next;
+                        }
+                    }
+
+                    row = row->next;
+                }
             }
+            // TODO - load game mode & victory condition.
             node = node->next;
         }
     }else{

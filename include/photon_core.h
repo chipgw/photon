@@ -2,15 +2,18 @@
 #define _PHOTON_CORE_H_
 
 #include "photon_sdl.h"
+#include "photon_player.h"
+#include "photon_level.h"
 #include <list>
 
 namespace photon{
-struct photon_level;
 
 struct photon_instance{
     photon_window window;
 
-    photon_level* level = nullptr;
+    photon_level level;
+
+    photon_player player;
 
     /*! \brief total frames rendered */
     unsigned long total_frames = 0;

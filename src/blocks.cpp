@@ -2,8 +2,11 @@
 #include "photon_opengl.h"
 #include "photon_level.h"
 #include "photon_laser.h"
+#include "photon_texture.h"
 
 #include "glm/ext.hpp"
+
+GLuint texture_plain_block, texture_mirror;
 
 namespace photon{
 
@@ -52,7 +55,8 @@ void Draw(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_AIR:
         break;
     case PHOTON_BLOCKS_PLAIN:
-        // TODO - bind texture.
+        glBindTexture(GL_TEXTURE_2D, texture_plain_block);
+
         DrawBox(location);
         break;
     case PHOTON_BLOCKS_INDESTRUCTIBLE:
@@ -61,6 +65,7 @@ void Draw(photon_block block, glm::uvec2 location){
         break;
     case PHOTON_BLOCKS_MIRROR:
     case PHOTON_BLOCKS_MIRROR_LOCKED:
+        glBindTexture(GL_TEXTURE_2D, texture_mirror);
         DrawMirror(location, block.data);
         break;
     }
@@ -87,6 +92,11 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         break;
     }
     return segment;
+}
+
+void LoadTextures(){
+    texture_plain_block = texture::Load("/textures/block.png");
+    texture_mirror = texture::Load("/textures/mirror.png");
 }
 
 }

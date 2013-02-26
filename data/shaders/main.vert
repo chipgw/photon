@@ -2,6 +2,7 @@
 
 uniform float aspect;
 uniform float zoom;
+uniform vec2 center;
 
 in vec2 in_location;
 in vec2 in_uv;
@@ -10,7 +11,7 @@ varying vec2 uv;
 varying vec2 screen;
 
 void main(void) {
-    vec2 location = in_location * zoom;
+    vec2 location = (in_location - center) * zoom;
 
     if(aspect > 1.0){
         location.x /= aspect;

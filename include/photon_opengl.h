@@ -2,6 +2,7 @@
 #define _PHOTON_OPENGL_H_
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <vector>
 #include <string>
 
@@ -76,7 +77,17 @@ void DeleteShader(photon_shader &shader);
  */
 photon_shader LoadShaderXML(const std::string &filename);
 
+/*!
+ * \brief Updates the zoom uniforms in the shaders.
+ * \param zoom
+ */
 void UpdateZoom(float zoom);
+
+/*!
+ * \brief Updates the center of the viewport in the shaders.
+ * \param center
+ */
+void UpdateCenter(glm::vec2 center);
 
 /*!
  * \brief switches to the background drawing mode. (clears scene buffer)

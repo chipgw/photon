@@ -10,6 +10,7 @@
 #include "photon_opengl.h"
 #include "photon_sdl.h"
 #include "photon_core.h"
+#include "photon_blocks.h"
 #include "photon_texture.h"
 
 #include <physfs.h>
@@ -77,6 +78,8 @@ void InitOpenGL(photon_window &window){
 
     shader_light = LoadShaderXML("/shaders/light.xml");
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f);
+
+    blocks::LoadTextures();
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");
@@ -153,6 +156,15 @@ void UpdateZoom(float zoom){
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f/zoom);
 }
 
+void UpdateCenter(glm::vec2 center){
+    glUseProgram(shader_scene.program);
+    glUniform2fv(glGetUniformLocation(shader_scene.program, "center"), 1, glm::value_ptr(center));
+    glUseProgram(shader_laser.program);
+    glUniform2fv(glGetUniformLocation(shader_laser.program, "center"), 1, glm::value_ptr(center));
+    glUseProgram(shader_light.program);
+    glUniform2fv(glGetUniformLocation(shader_light.program, "center"), 1, glm::value_ptr(center));
+}
+
 void DrawModeScene(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
@@ -171,6 +183,7 @@ void DrawModeLaser(photon_window &window){
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
 
+
     glUseProgram(shader_laser.program);
 }
 
@@ -179,7 +192,8 @@ void DrawModeLevel(photon_window &window){
 
     glBindFramebuffer(GL_FRAMEBUFFER, window.scene_buffer);
 
-    glDisable(GL_BLEND);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shader_scene.program);
 }

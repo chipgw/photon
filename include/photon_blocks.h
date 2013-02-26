@@ -49,6 +49,8 @@ photon_lasersegment* OnLightInteract(photon_lasersegment* segment, glm::uvec2 lo
 
 void Draw(photon_block block, glm::uvec2 location);
 
+void LoadTextures();
+
 }
 
 }

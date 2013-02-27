@@ -36,12 +36,6 @@ namespace sdl{
 photon_window CreateSDLWindow();
 
 /*!
- * \brief Poll and parse SDL events.
- * \param instance
-*/
-void DoEvents(photon_instance &instance, float time);
-
-/*!
  * \brief Swaps window buffers
  * \param window The window to swap buffers of.
 */
@@ -61,7 +55,6 @@ void GarbageCollect(photon_window &window, bool quitSDL = true);
  * \param window The window to toggle.
 */
 void ToggleFullscreen(photon_window &window);
-
 }
 }
 #endif

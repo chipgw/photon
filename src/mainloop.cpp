@@ -6,6 +6,7 @@
 #include "photon_level.h"
 #include "photon_laser.h"
 #include "photon_blocks.h"
+#include "photon_input.h"
 #include <SDL_timer.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -33,7 +34,7 @@ void MainLoop(photon_instance &instance){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
 
-        sdl::DoEvents(instance, frame_delta);
+        input::DoEvents(instance, frame_delta);
 
         opengl::UpdateCenter(instance.player.location);
 

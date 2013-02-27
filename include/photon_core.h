@@ -1,7 +1,7 @@
 #ifndef _PHOTON_CORE_H_
 #define _PHOTON_CORE_H_
 
-#include "photon_sdl.h"
+#include "photon_window_managment.h"
 #include "photon_player.h"
 #include "photon_level.h"
 #include <list>

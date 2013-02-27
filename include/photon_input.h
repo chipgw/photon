@@ -1,7 +1,7 @@
 #ifndef _PHOTON_INPUT_H_
 #define _PHOTON_INPUT_H_
 
-#include "photon_sdl.h"
+#include "photon_window_managment.h"
 
 namespace photon{
 

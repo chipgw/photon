@@ -1,4 +1,4 @@
-#include "photon_sdl.h"
+#include "photon_window_managment.h"
 #include "photon_core.h"
 #include "photon_opengl.h"
 
@@ -16,7 +16,7 @@ void DoEvents(photon_instance &instance, float time){
         case SDL_KEYDOWN:
             PrintToLog("INFO: The %s key was pressed!", SDL_GetScancodeName(event.key.keysym.scancode));
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
-                sdl::ToggleFullscreen(instance.window);
+                window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
                 Close(instance);
             }

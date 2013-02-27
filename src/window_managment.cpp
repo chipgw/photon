@@ -1,5 +1,5 @@
 #include "photon_core.h"
-#include "photon_sdl.h"
+#include "photon_window_managment.h"
 #include "photon_opengl.h"
 #include <glm/gtx/vector_angle.hpp>
 
@@ -8,7 +8,7 @@
 
 namespace photon{
 
-namespace sdl{
+namespace window_managment{
 
 photon_window CreateSDLWindow(){
     PrintToLog("INFO: Initializing SDL.");

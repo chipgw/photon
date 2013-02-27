@@ -8,7 +8,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 #include "photon_opengl.h"
-#include "photon_sdl.h"
+#include "photon_window_managment.h"
 #include "photon_core.h"
 #include "photon_blocks.h"
 #include "photon_texture.h"

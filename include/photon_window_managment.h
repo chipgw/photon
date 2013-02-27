@@ -24,7 +24,7 @@ struct photon_instance;
 /*!
  * \brief contains SDL window managment functions
  */
-namespace sdl{
+namespace window_managment{
 
 /*!
  * \brief Creates SDL window

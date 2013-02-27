@@ -27,7 +27,7 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
 
     photon_instance instance;
 
-    instance.window = sdl::CreateSDLWindow();
+    instance.window = window_managment::CreateSDLWindow();
 
     opengl::InitOpenGL(instance.window);
 
@@ -37,7 +37,7 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
 void GarbageCollect(photon_instance &instance){
     PrintToLog("INFO: Doing garbage collection.");
     opengl::GarbageCollect(instance.window);
-    sdl::GarbageCollect(instance.window);
+    window_managment::GarbageCollect(instance.window);
 
     PHYSFS_deinit();
 

@@ -56,7 +56,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawLaserLight(beam);
 
-        sdl::UpdateWindow(instance.window);
+        window_managment::UpdateWindow(instance.window);
 
         instance.total_frames++;
     }

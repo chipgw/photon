@@ -87,9 +87,12 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         break;
     case PHOTON_BLOCKS_MIRROR:
     case PHOTON_BLOCKS_MIRROR_LOCKED:
-        segment = tracer::CreateChildBeam(segment);
         float angle = segment->angle - block.data;
+        if(fmod(angle, 180.0f) == 0.0f){
+            return nullptr;
+        }
         angle = fmod(angle + 180.0f, 360.0f) - 180.0f;
+        segment = tracer::CreateChildBeam(segment);
         segment->angle = block.data - angle;
         break;
     }

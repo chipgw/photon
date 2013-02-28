@@ -28,7 +28,7 @@ void MainLoop(photon_instance &instance){
     float last_time = SDL_GetTicks();
     float frame_delta = 0;
 
-    instance.player.location = glm::vec2(5.0f,1.0f);
+    instance.player.location = glm::vec2(1.0f,1.0f);
 
     instance.input_set.move_positive_x.key = SDL_SCANCODE_D;
     instance.input_set.move_positive_x.type = input::keyboard;
@@ -112,6 +112,8 @@ void MainLoop(photon_instance &instance){
         opengl::DrawModeLight(instance.window);
 
         opengl::DrawLaserLight(beam);
+
+        opengl::DrawPhoton(instance.player.location);
 
         window_managment::UpdateWindow(instance.window);
 

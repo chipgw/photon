@@ -112,6 +112,12 @@ void DrawModeLevel(photon_window &window);
  * \param window
  */
 void DrawModeLight(photon_window &window);
+
+/*!
+ * \brief DrawPhoton
+ * \param location
+ */
+void DrawPhoton(glm::vec2 location);
 }
 }
 #endif

@@ -23,6 +23,8 @@ photon_shader shader_scene;
 photon_shader shader_laser;
 photon_shader shader_light;
 
+GLuint photon_texture;
+
 void InitOpenGL(photon_window &window){
     PrintToLog("INFO: Initializing OpenGL.");
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
@@ -80,6 +82,8 @@ void InitOpenGL(photon_window &window){
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f);
 
     blocks::LoadTextures();
+
+    photon_texture = texture::Load("/textures/photon.tga");
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");
@@ -211,6 +215,25 @@ void DrawModeLight(photon_window &window){
     glUseProgram(shader_light.program);
 
     glBindTexture(GL_TEXTURE_2D, window.scene_buffer_texture);
+}
+
+void DrawPhoton(glm::vec2 location){
+    glUseProgram(shader_scene.program);
+    glBindTexture(GL_TEXTURE_2D, photon_texture);
+
+    glBegin(GL_QUADS);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y + 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y + 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y - 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y - 0.2);
+    }glEnd();
 }
 
 }

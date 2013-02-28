@@ -106,34 +106,37 @@ void LoadTextures(){
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){
-    photon_block &block = level.grid[location.x][location.y];
-    switch(block.type){
-    case PHOTON_BLOCKS_AIR:
-        // TODO - place currently selected item in inventory.
-        block.type = PHOTON_BLOCKS_MIRROR;
-        break;
-    default:
-        break;
-    case PHOTON_BLOCKS_MIRROR:
-        // TODO - store mirror in inventory.
-        block.type = PHOTON_BLOCKS_AIR;
-        break;
+    if(level.grid.shape()[0] > location.x && level.grid.shape()[1] > location.y){
+        photon_block &block = level.grid[location.x][location.y];
+        switch(block.type){
+        case PHOTON_BLOCKS_AIR:
+            // TODO - place currently selected item in inventory.
+            block.type = PHOTON_BLOCKS_MIRROR;
+            break;
+        default:
+            break;
+        case PHOTON_BLOCKS_MIRROR:
+            // TODO - store mirror in inventory.
+            block.type = PHOTON_BLOCKS_AIR;
+            break;
+        }
     }
-
 }
 
 void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
-    photon_block &block = level.grid[location.x][location.y];
-    switch(block.type){
-    default:
-        break;
-    case PHOTON_BLOCKS_MIRROR:
-        if(counter_clockwise){
-            block.data += 22.5f;
-        }else{
-            block.data -= 22.5f;
+    if(level.grid.shape()[0] > location.x && level.grid.shape()[1] > location.y){
+        photon_block &block = level.grid[location.x][location.y];
+        switch(block.type){
+        default:
+            break;
+        case PHOTON_BLOCKS_MIRROR:
+            if(counter_clockwise){
+                block.data += 22.5f;
+            }else{
+                block.data -= 22.5f;
+            }
+            break;
         }
-        break;
     }
 }
 

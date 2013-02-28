@@ -30,11 +30,52 @@ void MainLoop(photon_instance &instance){
 
     instance.player.location = glm::vec2(5.0f,1.0f);
 
+    instance.input_set.move_positive_x.key = SDL_SCANCODE_D;
+    instance.input_set.move_positive_x.type = input::keyboard;
+    instance.input_set.move_negative_x.key = SDL_SCANCODE_A;
+    instance.input_set.move_negative_x.type = input::keyboard;
+
+    instance.input_set.move_positive_y.key = SDL_SCANCODE_W;
+    instance.input_set.move_positive_y.type = input::keyboard;
+    instance.input_set.move_negative_y.key = SDL_SCANCODE_S;
+    instance.input_set.move_negative_y.type = input::keyboard;
+
+    SDL_Joystick *joy = SDL_JoystickOpen(0);
+    if(joy != nullptr){
+        instance.input_set.move_positive_x.joystick = joy;
+        instance.input_set.move_positive_x.joystick_input_index = 1;
+        instance.input_set.move_positive_x.type = input::joystick_axis;
+        instance.input_set.move_negative_x.joystick = joy;
+        instance.input_set.move_negative_x.joystick_input_index = -1;
+        instance.input_set.move_negative_x.type = input::joystick_axis;
+
+        instance.input_set.move_positive_y.joystick = joy;
+        instance.input_set.move_positive_y.joystick_input_index = -2;
+        instance.input_set.move_positive_y.type = input::joystick_axis;
+        instance.input_set.move_negative_y.joystick = joy;
+        instance.input_set.move_negative_y.joystick_input_index = 2;
+        instance.input_set.move_negative_y.type = input::joystick_axis;
+
+        instance.input_set.interact.type = input::joystick_button;
+        instance.input_set.interact.joystick = joy;
+        instance.input_set.interact.joystick_input_index = 0;
+
+        instance.input_set.rotate_clockwise.type = input::joystick_button;
+        instance.input_set.rotate_clockwise.joystick = joy;
+        instance.input_set.rotate_clockwise.joystick_input_index = 4;
+
+        instance.input_set.rotate_counter_clockwise.type = input::joystick_button;
+        instance.input_set.rotate_counter_clockwise.joystick = joy;
+        instance.input_set.rotate_counter_clockwise.joystick_input_index = 5;
+    }
+
     while(instance.running){
         frame_delta = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
 
         input::DoEvents(instance, frame_delta);
+
+        input::DoInput(instance, frame_delta);
 
         opengl::UpdateCenter(instance.player.location);
 

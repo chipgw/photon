@@ -4,12 +4,15 @@
 #include "photon_window_managment.h"
 #include "photon_player.h"
 #include "photon_level.h"
+#include "photon_input.h"
 #include <list>
 
 namespace photon{
 
 struct photon_instance{
     photon_window window;
+
+    input::game_input input_set;
 
     photon_level level;
 

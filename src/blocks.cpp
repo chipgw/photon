@@ -86,18 +86,52 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         return nullptr;
         break;
     case PHOTON_BLOCKS_MIRROR:
+    case PHOTON_BLOCKS_MIRROR_LOCKED:
         segment = tracer::CreateChildBeam(segment);
         float angle = segment->angle - block.data;
         angle = fmod(angle + 180.0f, 360.0f) - 180.0f;
         segment->angle = block.data - angle;
         break;
     }
+
     return segment;
 }
 
 void LoadTextures(){
     texture_plain_block = texture::Load("/textures/block.png");
     texture_mirror = texture::Load("/textures/mirror.png");
+}
+
+void OnPhotonInteract(glm::uvec2 location, photon_level &level){
+    photon_block &block = level.grid[location.x][location.y];
+    switch(block.type){
+    case PHOTON_BLOCKS_AIR:
+        // TODO - place currently selected item in inventory.
+        block.type = PHOTON_BLOCKS_MIRROR;
+        break;
+    default:
+        break;
+    case PHOTON_BLOCKS_MIRROR:
+        // TODO - store mirror in inventory.
+        block.type = PHOTON_BLOCKS_AIR;
+        break;
+    }
+
+}
+
+void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
+    photon_block &block = level.grid[location.x][location.y];
+    switch(block.type){
+    default:
+        break;
+    case PHOTON_BLOCKS_MIRROR:
+        if(counter_clockwise){
+            block.data += 22.5f;
+        }else{
+            block.data -= 22.5f;
+        }
+        break;
+    }
 }
 
 }

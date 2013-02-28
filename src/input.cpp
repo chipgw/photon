@@ -57,6 +57,8 @@ void DoInput(photon_instance &instance, float time){
     DoInputSingle(instance.input_set.move_negative_y);
     DoInputSingle(instance.input_set.rotate_clockwise);
     DoInputSingle(instance.input_set.rotate_counter_clockwise);
+    DoInputSingle(instance.input_set.zoom_in);
+    DoInputSingle(instance.input_set.zoom_out);
 
     instance.player.location.x += (instance.input_set.move_positive_x.current_state - instance.input_set.move_negative_x.current_state) * time * 1.0e-3 * instance.zoom;
     instance.player.location.y += (instance.input_set.move_positive_y.current_state - instance.input_set.move_negative_y.current_state) * time * 1.0e-3 * instance.zoom;
@@ -70,6 +72,8 @@ void DoInput(photon_instance &instance, float time){
     if(instance.input_set.rotate_counter_clockwise.current_state > 0.9f && instance.input_set.rotate_counter_clockwise.last_state < 0.9f){
         blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
     }
+
+    instance.zoom -= (instance.input_set.zoom_in.current_state - instance.input_set.zoom_out.current_state) * time * 1.0e-3;
 }
 
 void DoEvents(photon_instance &instance, float time){
@@ -107,8 +111,6 @@ void DoEvents(photon_instance &instance, float time){
             break;
         case SDL_MOUSEWHEEL:
             instance.zoom -= event.wheel.y * 0.1f;
-            instance.zoom = std::max(0.01f,instance.zoom);
-            opengl::UpdateZoom(instance.zoom);
             break;
         }
     }

@@ -40,6 +40,24 @@ void DoInputSingle(input_state &state){
         state.current_state = SDL_JoystickGetButton(state.joystick, state.joystick_input_index);
         break;
     }
+    case gamecontroller_axis:{
+        state.current_state = SDL_GameControllerGetAxis(state.controller, state.controller_axis) / 32768.0f;
+        if(state.axis_input_negate){
+            state.current_state = -state.current_state;
+        }
+        // deadzone. TODO - make setting.
+        if(fabs(state.current_state) < 0.16f){
+            state.current_state = 0.0f;
+        }
+        if(state.current_state < 0.0f){
+            state.current_state = 0.0f;
+        }
+        break;
+    }
+    case gamecontroller_button:{
+        state.current_state = SDL_GameControllerGetButton(state.controller, state.controller_button);
+        break;
+    }
     case none:
         break;
     }
@@ -110,6 +128,58 @@ void DoEvents(photon_instance &instance, float time){
             break;
         }
     }
+}
+
+
+input_state CreateControllerAxisInput(SDL_GameController *controller, SDL_GameControllerAxis axis, bool negate){
+    input_state state;
+
+    state.type = gamecontroller_axis;
+    state.controller = controller;
+    state.controller_axis = axis;
+    state.axis_input_negate = negate;
+
+    return state;
+}
+
+input_state CreateControllerButtonInput(SDL_GameController *controller, SDL_GameControllerButton button){
+    input_state state;
+
+    state.type = gamecontroller_button;
+    state.controller = controller;
+    state.controller_button = button;
+
+    return state;
+}
+
+input_state CreateKeyboardInput(SDL_Scancode key){
+    input_state state;
+
+    state.type = keyboard;
+    state.key = key;
+
+    return state;
+}
+
+input_state CreateJoystickAxisInput(SDL_Joystick *joystick, int axis, bool negate){
+    input_state state;
+
+    state.type = joystick_axis;
+    state.joystick = joystick;
+    state.joystick_input_index = axis;
+    state.axis_input_negate = negate;
+
+    return state;
+}
+
+input_state CreateJoystickButtonInput(SDL_Joystick *joystick, int button){
+    input_state state;
+
+    state.type = joystick_button;
+    state.joystick = joystick;
+    state.joystick_input_index = button;
+
+    return state;
 }
 }
 

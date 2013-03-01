@@ -30,66 +30,56 @@ void MainLoop(photon_instance &instance){
 
     instance.player.location = glm::vec2(1.0f,1.0f);
 
-    instance.input_set.move_positive_x.key = SDL_SCANCODE_D;
-    instance.input_set.move_positive_x.type = input::keyboard;
-    instance.input_set.move_negative_x.key = SDL_SCANCODE_A;
-    instance.input_set.move_negative_x.type = input::keyboard;
+    instance.input_set.move_positive_x = input::CreateKeyboardInput(SDL_SCANCODE_D);
+    instance.input_set.move_negative_x = input::CreateKeyboardInput(SDL_SCANCODE_A);
 
-    instance.input_set.move_positive_y.key = SDL_SCANCODE_W;
-    instance.input_set.move_positive_y.type = input::keyboard;
-    instance.input_set.move_negative_y.key = SDL_SCANCODE_S;
-    instance.input_set.move_negative_y.type = input::keyboard;
+    instance.input_set.move_positive_y = input::CreateKeyboardInput(SDL_SCANCODE_W);
+    instance.input_set.move_negative_y = input::CreateKeyboardInput(SDL_SCANCODE_S);
 
-    instance.input_set.zoom_in.key = SDL_SCANCODE_KP_PLUS;
-    instance.input_set.zoom_in.type = input::keyboard;
-    instance.input_set.zoom_out.key = SDL_SCANCODE_KP_MINUS;
-    instance.input_set.zoom_out.type = input::keyboard;
+    instance.input_set.interact = input::CreateKeyboardInput(SDL_SCANCODE_SPACE);
 
-    instance.input_set.interact.key = SDL_SCANCODE_SPACE;
-    instance.input_set.interact.type = input::keyboard;
+    instance.input_set.rotate_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_E);
+    instance.input_set.rotate_counter_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_Q);
 
-    instance.input_set.rotate_clockwise.key = SDL_SCANCODE_E;
-    instance.input_set.rotate_clockwise.type = input::keyboard;
-    instance.input_set.rotate_counter_clockwise.key = SDL_SCANCODE_Q;
-    instance.input_set.rotate_counter_clockwise.type = input::keyboard;
+    instance.input_set.zoom_in = input::CreateKeyboardInput(SDL_SCANCODE_KP_PLUS);
+    instance.input_set.zoom_out = input::CreateKeyboardInput(SDL_SCANCODE_KP_MINUS);
 
-    SDL_Joystick *joy = SDL_JoystickOpen(0);
-    if(joy != nullptr){
-        instance.input_set.move_positive_x.joystick = joy;
-        instance.input_set.move_positive_x.joystick_input_index = 0;
-        instance.input_set.move_positive_x.type = input::joystick_axis;
-        instance.input_set.move_negative_x.joystick = joy;
-        instance.input_set.move_negative_x.joystick_input_index = 0;
-        instance.input_set.move_negative_x.type = input::joystick_axis;
-        instance.input_set.move_negative_x.axis_input_negate = true;
+    if(SDL_IsGameController(0)){
+        SDL_GameController *controller = SDL_GameControllerOpen(0);
 
-        instance.input_set.move_positive_y.joystick = joy;
-        instance.input_set.move_positive_y.joystick_input_index = 1;
-        instance.input_set.move_positive_y.type = input::joystick_axis;
-        instance.input_set.move_positive_y.axis_input_negate = true;
-        instance.input_set.move_negative_y.joystick = joy;
-        instance.input_set.move_negative_y.joystick_input_index = 1;
-        instance.input_set.move_negative_y.type = input::joystick_axis;
+        if(controller != nullptr){
+            instance.input_set.move_positive_x = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTX);
+            instance.input_set.move_negative_x = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTX, true);
 
-        instance.input_set.interact.type = input::joystick_button;
-        instance.input_set.interact.joystick = joy;
-        instance.input_set.interact.joystick_input_index = 0;
+            instance.input_set.move_positive_y = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTY, true);
+            instance.input_set.move_negative_y = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTY);
 
-        instance.input_set.rotate_clockwise.type = input::joystick_button;
-        instance.input_set.rotate_clockwise.joystick = joy;
-        instance.input_set.rotate_clockwise.joystick_input_index = 4;
+            instance.input_set.interact = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_A);
 
-        instance.input_set.rotate_counter_clockwise.type = input::joystick_button;
-        instance.input_set.rotate_counter_clockwise.joystick = joy;
-        instance.input_set.rotate_counter_clockwise.joystick_input_index = 5;
+            instance.input_set.rotate_clockwise = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+            instance.input_set.rotate_counter_clockwise = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
 
-        instance.input_set.zoom_in.joystick = joy;
-        instance.input_set.zoom_in.joystick_input_index = 4;
-        instance.input_set.zoom_in.type = input::joystick_axis;
-        instance.input_set.zoom_in.axis_input_negate = true;
-        instance.input_set.zoom_out.joystick = joy;
-        instance.input_set.zoom_out.joystick_input_index = 4;
-        instance.input_set.zoom_out.type = input::joystick_axis;
+            instance.input_set.zoom_in = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY, true);
+            instance.input_set.zoom_out = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY);
+        }
+    }else{
+        SDL_Joystick *joystick = SDL_JoystickOpen(0);
+        if(joystick != nullptr){
+            instance.input_set.move_positive_x = input::CreateJoystickAxisInput(joystick, 0);
+            instance.input_set.move_negative_x = input::CreateJoystickAxisInput(joystick, 0, true);
+
+            instance.input_set.move_positive_y = input::CreateJoystickAxisInput(joystick, 1, true);
+            instance.input_set.move_negative_y = input::CreateJoystickAxisInput(joystick, 1);
+
+            instance.input_set.interact = input::CreateJoystickButtonInput(joystick, 0);
+
+            instance.input_set.rotate_clockwise = input::CreateJoystickButtonInput(joystick, 4);
+
+            instance.input_set.rotate_counter_clockwise = input::CreateJoystickButtonInput(joystick, 5);
+
+            instance.input_set.zoom_in = input::CreateJoystickAxisInput(joystick, 4, true);
+            instance.input_set.zoom_out = input::CreateJoystickAxisInput(joystick, 4);
+        }
     }
 
     while(instance.running){

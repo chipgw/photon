@@ -12,7 +12,9 @@ enum input_type{
     mouse_button,
     mouse_position,
     joystick_button,
-    joystick_axis
+    joystick_axis,
+    gamecontroller_button,
+    gamecontroller_axis
 };
 
 struct input_state{
@@ -35,6 +37,13 @@ struct input_state{
     SDL_Scancode key = (SDL_Scancode)0;
     // the modifiers for keyboard input types.
     SDL_Keymod modifiers = KMOD_NONE;
+
+    // pointer to the game controller to use for gamecontroller_* types
+    SDL_GameController *controller = nullptr;
+    // the axis to use.
+    SDL_GameControllerAxis controller_axis;
+    // the button to use
+    SDL_GameControllerButton controller_button;
 
 
     // whether or not to negate the axis input. (i.e mouse position, joystick axis and controller sticks)
@@ -74,6 +83,13 @@ void DoEvents(photon_instance &instance, float time);
  */
 void DoInput(photon_instance &instance, float time);
 
+input_state CreateControllerAxisInput(SDL_GameController *controller, SDL_GameControllerAxis axis, bool negate = false);
+input_state CreateControllerButtonInput(SDL_GameController *controller, SDL_GameControllerButton button);
+
+input_state CreateKeyboardInput(SDL_Scancode key);
+
+input_state CreateJoystickAxisInput(SDL_Joystick *joystick, int axis, bool negate = false);
+input_state CreateJoystickButtonInput(SDL_Joystick *joystick, int button);
 }
 
 }

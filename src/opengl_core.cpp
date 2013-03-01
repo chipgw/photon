@@ -218,6 +218,26 @@ void DrawModeLight(photon_window &window){
 }
 
 void DrawPhoton(glm::vec2 location){
+    glBegin(GL_TRIANGLE_FAN);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 8.0, location.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x , location.y + 8.0);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 8.0, location.y);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y - 8.0);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 8.0, location.y);
+    }glEnd();
+
     glUseProgram(shader_scene.program);
     glBindTexture(GL_TEXTURE_2D, photon_texture);
 

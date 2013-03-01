@@ -35,6 +35,10 @@ struct input_state{
     SDL_Scancode key = (SDL_Scancode)0;
     // the modifiers for keyboard input types.
     SDL_Keymod modifiers = KMOD_NONE;
+
+
+    // whether or not to negate the axis input. (i.e mouse position, joystick axis and controller sticks)
+    bool axis_input_negate = false;
 };
 
 /*!

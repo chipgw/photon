@@ -21,21 +21,17 @@ void DoInputSingle(input_state &state){
     case mouse_position:
         break;
     case joystick_axis:{
-        if(state.joystick_input_index > 0){
-            int index = state.joystick_input_index - 1;
-            state.current_state = SDL_JoystickGetAxis(state.joystick, index) / 32768.0f;
-            if(state.current_state < 0.0f){
-                state.current_state = 0.0f;
-            }
-        }else if(state.joystick_input_index < 0){
-            int index = abs(state.joystick_input_index) - 1;
-            state.current_state = -SDL_JoystickGetAxis(state.joystick, index) / 32768.0f;
-            if(state.current_state < 0.0f){
-                state.current_state = 0.0f;
+        if(state.joystick_input_index > -1){
+            state.current_state = SDL_JoystickGetAxis(state.joystick, state.joystick_input_index) / 32768.0f;
+            if(state.axis_input_negate){
+                state.current_state = -state.current_state;
             }
         }
         // deadzone. TODO - make setting.
         if(fabs(state.current_state) < 0.16f){
+            state.current_state = 0.0f;
+        }
+        if(state.current_state < 0.0f){
             state.current_state = 0.0f;
         }
         break;

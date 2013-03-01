@@ -45,22 +45,31 @@ void MainLoop(photon_instance &instance){
     instance.input_set.zoom_out.key = SDL_SCANCODE_KP_MINUS;
     instance.input_set.zoom_out.type = input::keyboard;
 
+    instance.input_set.interact.key = SDL_SCANCODE_SPACE;
+    instance.input_set.interact.type = input::keyboard;
+
+    instance.input_set.rotate_clockwise.key = SDL_SCANCODE_E;
+    instance.input_set.rotate_clockwise.type = input::keyboard;
+    instance.input_set.rotate_counter_clockwise.key = SDL_SCANCODE_Q;
+    instance.input_set.rotate_counter_clockwise.type = input::keyboard;
+
     SDL_Joystick *joy = SDL_JoystickOpen(0);
     if(joy != nullptr){
         instance.input_set.move_positive_x.joystick = joy;
-        instance.input_set.move_positive_x.joystick_input_index = 1;
+        instance.input_set.move_positive_x.joystick_input_index = 0;
         instance.input_set.move_positive_x.type = input::joystick_axis;
         instance.input_set.move_negative_x.joystick = joy;
-        instance.input_set.move_negative_x.joystick_input_index = -1;
+        instance.input_set.move_negative_x.joystick_input_index = 0;
         instance.input_set.move_negative_x.type = input::joystick_axis;
+        instance.input_set.move_negative_x.axis_input_negate = true;
 
         instance.input_set.move_positive_y.joystick = joy;
-        instance.input_set.move_positive_y.joystick_input_index = -2;
+        instance.input_set.move_positive_y.joystick_input_index = 1;
         instance.input_set.move_positive_y.type = input::joystick_axis;
+        instance.input_set.move_positive_y.axis_input_negate = true;
         instance.input_set.move_negative_y.joystick = joy;
-        instance.input_set.move_negative_y.joystick_input_index = 2;
+        instance.input_set.move_negative_y.joystick_input_index = 1;
         instance.input_set.move_negative_y.type = input::joystick_axis;
-
 
         instance.input_set.interact.type = input::joystick_button;
         instance.input_set.interact.joystick = joy;
@@ -75,10 +84,11 @@ void MainLoop(photon_instance &instance){
         instance.input_set.rotate_counter_clockwise.joystick_input_index = 5;
 
         instance.input_set.zoom_in.joystick = joy;
-        instance.input_set.zoom_in.joystick_input_index = -5;
+        instance.input_set.zoom_in.joystick_input_index = 4;
         instance.input_set.zoom_in.type = input::joystick_axis;
+        instance.input_set.zoom_in.axis_input_negate = true;
         instance.input_set.zoom_out.joystick = joy;
-        instance.input_set.zoom_out.joystick_input_index = 5;
+        instance.input_set.zoom_out.joystick_input_index = 4;
         instance.input_set.zoom_out.type = input::joystick_axis;
     }
 

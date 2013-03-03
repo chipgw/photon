@@ -130,6 +130,8 @@ photon_level LoadLevelXML(const std::string &filename){
             // TODO - load game mode & victory condition.
             node = node->next;
         }
+
+        xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Level: \"%s\" does not exist!", filename.c_str());
     }

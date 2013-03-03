@@ -210,6 +210,8 @@ photon_shader LoadShaderXML(const std::string &filename){
             }
             node = node->next;
         }
+
+        xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Shader: file \"%s\" does not exist!", filename.c_str());
     }

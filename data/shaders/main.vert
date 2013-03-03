@@ -4,8 +4,8 @@ uniform float aspect;
 uniform float zoom;
 uniform vec2 center;
 
-in vec2 in_location;
-in vec2 in_uv;
+attribute vec2 in_location;
+attribute vec2 in_uv;
 
 varying vec2 uv;
 varying vec2 screen;

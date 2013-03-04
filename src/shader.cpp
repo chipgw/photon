@@ -37,7 +37,7 @@ GLuint LoadAndCompileShader(const char *filename, GLenum shader_type){
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-    if(maxLength > 0){
+    if(maxLength > 1){
         char *infoLog = (char *)malloc(maxLength);
 
         glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
@@ -76,7 +76,7 @@ int LinkShaderProgram(photon_shader &shader){
     glGetProgramiv(shader.program, GL_LINK_STATUS, (int *)&isLinked);
     glGetProgramiv(shader.program, GL_INFO_LOG_LENGTH, &maxLength);
 
-    if(maxLength > 0){
+    if(maxLength > 1){
         char*infoLog = (char *)malloc(maxLength);
 
         glGetProgramInfoLog(shader.program, maxLength, &maxLength, infoLog);
@@ -181,7 +181,9 @@ photon_shader LoadShaderXML(const std::string &filename){
                 xmlChar *input_name = xmlGetProp(node, (const xmlChar *)"name");
                 xmlChar *input_type = xmlGetProp(node, (const xmlChar *)"type");
 
-                PrintToLog("input name %s type %s", input_name, input_type);
+#ifndef NDEBUG
+                PrintToLog("DEBUG: input name %s type %s", input_name, input_type);
+#endif
 
                 if(!xmlStrcmp(input_type, (const xmlChar *)"location")){
                     glBindAttribLocation(shader.program, PHOTON_VERTEX_LOCATION_ATTRIBUTE, (const GLchar *)input_name);
@@ -196,7 +198,9 @@ photon_shader LoadShaderXML(const std::string &filename){
 
                 xmlChar *texture_type = xmlGetProp(node, (const xmlChar *)"type");
 
-                PrintToLog("uniform name %s type %s", uniform_name, texture_type);
+#ifndef NDEBUG
+                PrintToLog("DEBUG: uniform name %s type %s", uniform_name, texture_type);
+#endif
 
                 if(!xmlStrcmp(texture_type, (const xmlChar *)"color")){
                     glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_COLOR - GL_TEXTURE0);

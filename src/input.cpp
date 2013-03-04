@@ -95,7 +95,6 @@ void DoEvents(photon_instance &instance, float time){
     while(SDL_PollEvent(&event)){
         switch (event.type) {
         case SDL_KEYDOWN:
-            PrintToLog("INFO: The %s key was pressed!", SDL_GetScancodeName(event.key.keysym.scancode));
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_ESCAPE){

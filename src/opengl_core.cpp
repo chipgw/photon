@@ -184,6 +184,7 @@ void DrawModeScene(photon_window &window){
     glDisable(GL_BLEND);
 
     glUseProgram(shader_scene.program);
+    glUniform1f(glGetUniformLocation(shader_scene.program, "fac"), 1.0f);
 }
 
 void DrawModeLaser(photon_window &window){
@@ -275,6 +276,10 @@ void DrawModeGUI(photon_window &window){
 void SetColorGUI(glm::vec4 color){
     glUseProgram(shader_text.program);
     glUniform4fv(glGetUniformLocation(shader_text.program, "color"), 1, glm::value_ptr(color));
+}
+
+void SetSceneFac(float fac){
+    glUniform1f(glGetUniformLocation(shader_scene.program, "fac"), fac);
 }
 
 }

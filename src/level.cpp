@@ -17,6 +17,15 @@ void Draw(photon_level &level){
     }
 }
 
+void DrawFX(photon_level &level){
+    glm::uvec2 current(0);
+    for(current.x = 0; current.x < level.grid.shape()[0];current.x++){
+        for(current.y = 0; current.y < level.grid.shape()[1];current.y++){
+            blocks::DrawFX(level.grid[current.x][current.y], current);
+        }
+    }
+}
+
 photon_level LoadLevelXML(const std::string &filename){
     photon_level level;
 

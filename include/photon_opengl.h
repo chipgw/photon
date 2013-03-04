@@ -123,6 +123,8 @@ void DrawModeGUI(photon_window &window);
 
 void SetColorGUI(glm::vec4 color);
 
+void SetSceneFac(float fac);
+
 }
 }
 #endif

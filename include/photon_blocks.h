@@ -33,6 +33,9 @@
 // (by pointing at it for a couple seconds)
 #define PHOTON_BLOCKS_TNT               0x0c
 
+// draws the fireball after the TNT explodes.
+#define PHOTON_BLOCKS_TNT_FIREBALL      0x0d
+
 // makes it easier to make new ones...
 //#define PHOTON_BLOCKS_
 
@@ -60,6 +63,8 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level);
 void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise = false);
 
 void Draw(photon_block block, glm::uvec2 location);
+
+void DrawFX(photon_block block, glm::uvec2 location);
 
 void LoadTextures();
 

@@ -7,7 +7,7 @@
 
 #include "glm/ext.hpp"
 
-GLuint texture_plain_block, texture_mirror, texture_tnt;
+GLuint texture_plain_block, texture_mirror, texture_tnt, texture_explosion;
 
 namespace photon{
 
@@ -51,6 +51,23 @@ void DrawMirror(glm::uvec2 location, float angle){
     }glEnd();
 }
 
+void DrawExplosion(glm::uvec2 location, float strength){
+    opengl::SetSceneFac(strength);
+    glBegin(GL_QUADS);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 1.5f, location.y + 1.5f);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 1.5f, location.y + 1.5f);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 1.5f, location.y - 1.5f);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 1.5f, location.y - 1.5f);
+    }glEnd();
+}
+
 void Draw(photon_block block, glm::uvec2 location){
     switch(block.type){
     case PHOTON_BLOCKS_AIR:
@@ -74,6 +91,21 @@ void Draw(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_TNT:
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
         DrawBox(location);
+        break;
+    }
+}
+
+void DrawFX(photon_block block, glm::uvec2 location){
+    switch(block.type){
+    case PHOTON_BLOCKS_TNT:
+        // TODO - draw some warmup thing...
+        glBindTexture(GL_TEXTURE_2D, texture_explosion);
+        opengl::SetSceneFac(block.data * 0.5f);
+        DrawBox(location);
+        break;
+    case PHOTON_BLOCKS_TNT_FIREBALL:
+        glBindTexture(GL_TEXTURE_2D, texture_explosion);
+        DrawExplosion(location, block.data);
         break;
     }
 }
@@ -113,8 +145,9 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         if(block.data > 1.0f){
             // TODO - KABOOM goes here...
             PrintToLog("INFO: KABOOM!");
-            block.data = 0.0f;
-            block.type = PHOTON_BLOCKS_AIR;
+            block.type = PHOTON_BLOCKS_TNT_FIREBALL;
+            // cooldown of fireball
+            block.data = 1.0f;
             break;
         }
         // stops tracing the laser.
@@ -129,6 +162,7 @@ void LoadTextures(){
     texture_plain_block = texture::Load("/textures/block.png");
     texture_mirror = texture::Load("/textures/mirror.png");
     texture_tnt = texture::Load("/textures/tnt.png");
+    texture_explosion = texture::Load("/textures/explosion.png");
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){
@@ -187,6 +221,13 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         if(!block.activated){
             block.data -= time;
             block.data = std::max(block.data, 0.0f);
+        }
+        break;
+    case PHOTON_BLOCKS_TNT_FIREBALL:
+        block.data -= time * 3.0f;
+        if(block.data < 0.0f){
+            block.data = 0.0f;
+            block.type = PHOTON_BLOCKS_AIR;
         }
         break;
     }

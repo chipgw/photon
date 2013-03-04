@@ -118,6 +118,8 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawPhoton(instance.player.location);
 
+        level::DrawFX(instance.level);
+
         opengl::DrawModeGUI(instance.window);
 
         gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/frame_delta);

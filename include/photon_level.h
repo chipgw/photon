@@ -26,6 +26,8 @@ namespace level{
 
 void Draw(photon_level &level);
 
+void DrawFX(photon_level &level);
+
 photon_level LoadLevelXML(const std::string &filename);
 
 void AdvanceFrame(photon_level &level, float time);

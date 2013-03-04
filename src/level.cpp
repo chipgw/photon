@@ -157,6 +157,16 @@ photon_level LoadLevelXML(const std::string &filename){
     return level;
 }
 
+void AdvanceFrame(photon_level &level, float time){
+    glm::uvec2 location(0);
+
+    for(location.x = 0; location.x < level.grid.shape()[0];location.x++){
+        for(location.y = 0; location.y < level.grid.shape()[1];location.y++){
+            blocks::OnFrame(location, level, time);
+        }
+    }
+}
+
 }
 
 }

@@ -41,9 +41,14 @@ struct photon_lasersegment;
 struct photon_level;
 
 struct photon_block{
-    unsigned char type;
+    // block type.
+    unsigned char type = PHOTON_BLOCKS_AIR;
+
     // used for various things depending on the block type...
-    float data;
+    float data = 0.0f;
+
+    // used to tell if a laser intersected with it last frame.
+    bool activated = false;
 };
 
 namespace blocks{
@@ -57,6 +62,8 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise =
 void Draw(photon_block block, glm::uvec2 location);
 
 void LoadTextures();
+
+void OnFrame(glm::uvec2 location, photon_level &level, float time);
 
 }
 

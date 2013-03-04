@@ -74,8 +74,8 @@ void DoInput(photon_instance &instance, float time){
     DoInputSingle(instance.input_set.zoom_in);
     DoInputSingle(instance.input_set.zoom_out);
 
-    instance.player.location.x += (instance.input_set.move_positive_x.current_state - instance.input_set.move_negative_x.current_state) * time * 1.0e-3 * instance.zoom;
-    instance.player.location.y += (instance.input_set.move_positive_y.current_state - instance.input_set.move_negative_y.current_state) * time * 1.0e-3 * instance.zoom;
+    instance.player.location.x += (instance.input_set.move_positive_x.current_state - instance.input_set.move_negative_x.current_state) * time * instance.zoom;
+    instance.player.location.y += (instance.input_set.move_positive_y.current_state - instance.input_set.move_negative_y.current_state) * time * instance.zoom;
 
     if(instance.input_set.interact.current_state > 0.9f && instance.input_set.interact.last_state < 0.9f){
         blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
@@ -87,7 +87,7 @@ void DoInput(photon_instance &instance, float time){
         blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
     }
 
-    instance.zoom -= (instance.input_set.zoom_in.current_state - instance.input_set.zoom_out.current_state) * time * 1.0e-3;
+    instance.zoom -= (instance.input_set.zoom_in.current_state - instance.input_set.zoom_out.current_state) * time;
 }
 
 void DoEvents(photon_instance &instance, float time){

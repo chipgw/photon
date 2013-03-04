@@ -84,7 +84,7 @@ void MainLoop(photon_instance &instance){
     }
 
     while(instance.running){
-        frame_delta = SDL_GetTicks() - last_time;
+        frame_delta = (SDL_GetTicks() - last_time) * 0.001f;
         last_time = SDL_GetTicks();
 
         input::DoEvents(instance, frame_delta);
@@ -102,7 +102,9 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeLaser(instance.window);
 
-        tracer::TraceBeam(beam, instance.level, frame_delta * 0.001f);
+        level::AdvanceFrame(instance.level, frame_delta);
+
+        tracer::TraceBeam(beam, instance.level, frame_delta);
 
         opengl::DrawLaser(beam);
 
@@ -118,7 +120,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/(frame_delta)*1000.0f);
+        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

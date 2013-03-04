@@ -80,6 +80,8 @@ void Draw(photon_block block, glm::uvec2 location){
 
 photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 location, photon_level &level, float time){
     photon_block &block = level.grid[location.x][location.y];
+    block.activated = true;
+
     switch(block.type){
     case PHOTON_BLOCKS_AIR:
     default:
@@ -163,6 +165,32 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
             break;
         }
     }
+}
+
+void OnFrame(glm::uvec2 location, photon_level &level, float time){
+    photon_block &block = level.grid[location.x][location.y];
+    switch(block.type){
+    case PHOTON_BLOCKS_AIR:
+    default:
+        break;
+    case PHOTON_BLOCKS_RECIEVER:
+        break;
+    case PHOTON_BLOCKS_PLAIN:
+    case PHOTON_BLOCKS_INDESTRUCTIBLE:
+        break;
+    case PHOTON_BLOCKS_MIRROR:
+    case PHOTON_BLOCKS_MIRROR_LOCKED:
+    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
+        break;
+    case PHOTON_BLOCKS_TNT:
+        // if block was not activated last frame cool down timer.
+        if(!block.activated){
+            block.data -= time;
+            block.data = std::max(block.data, 0.0f);
+        }
+        break;
+    }
+    block.activated = false;
 }
 
 }

@@ -3,10 +3,11 @@
 #include "photon_level.h"
 #include "photon_laser.h"
 #include "photon_texture.h"
+#include "photon_core.h"
 
 #include "glm/ext.hpp"
 
-GLuint texture_plain_block, texture_mirror;
+GLuint texture_plain_block, texture_mirror, texture_tnt;
 
 namespace photon{
 
@@ -66,13 +67,18 @@ void Draw(photon_block block, glm::uvec2 location){
         break;
     case PHOTON_BLOCKS_MIRROR:
     case PHOTON_BLOCKS_MIRROR_LOCKED:
+    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
         DrawMirror(location, block.data);
+        break;
+    case PHOTON_BLOCKS_TNT:
+        glBindTexture(GL_TEXTURE_2D, texture_tnt);
+        DrawBox(location);
         break;
     }
 }
 
-photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 location, photon_level &level){
+photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 location, photon_level &level, float time){
     photon_block &block = level.grid[location.x][location.y];
     switch(block.type){
     case PHOTON_BLOCKS_AIR:
@@ -80,6 +86,9 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         break;
     case PHOTON_BLOCKS_RECIEVER:
         // TODO - make trigger
+        // stops tracing the laser.
+        return nullptr;
+        break;
     case PHOTON_BLOCKS_PLAIN:
     case PHOTON_BLOCKS_INDESTRUCTIBLE:
         // stops tracing the laser.
@@ -87,6 +96,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         break;
     case PHOTON_BLOCKS_MIRROR:
     case PHOTON_BLOCKS_MIRROR_LOCKED:
+    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:{
         float angle = segment->angle - block.data;
         if(fmod(angle, 180.0f) == 0.0f){
             return nullptr;
@@ -96,6 +106,19 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         segment->angle = block.data - angle;
         break;
     }
+    case PHOTON_BLOCKS_TNT:
+        block.data += time;
+        if(block.data > 1.0f){
+            // TODO - KABOOM goes here...
+            PrintToLog("INFO: KABOOM!");
+            block.data = 0.0f;
+            block.type = PHOTON_BLOCKS_AIR;
+            break;
+        }
+        // stops tracing the laser.
+        return nullptr;
+        break;
+    }
 
     return segment;
 }
@@ -103,6 +126,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
 void LoadTextures(){
     texture_plain_block = texture::Load("/textures/block.png");
     texture_mirror = texture::Load("/textures/mirror.png");
+    texture_tnt = texture::Load("/textures/tnt.png");
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){
@@ -130,6 +154,7 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
         default:
             break;
         case PHOTON_BLOCKS_MIRROR:
+        case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
             if(counter_clockwise){
                 block.data += 22.5f;
             }else{

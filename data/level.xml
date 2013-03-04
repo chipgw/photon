@@ -2,12 +2,12 @@
 <photon_level width="10" height="6" >
   <data>
     <row y="1">
-      <block x="1" type="mirror" angle="45" />
+      <block x="1" type="mirror_locked" angle="45" />
       <block x="2" type="plain" />
     </row>
     <row y="4">
-      <block x="1" type="mirror" angle="45" />
-      <block x="4" type="mirror" angle="-45" />
+      <block x="1" type="mirror" angle="-45" />
+      <block x="3" type="tnt" />
     </row>
     <row y="2">
       <block x="2" type="plain" />

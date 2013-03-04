@@ -7,7 +7,7 @@ namespace photon{
 
 namespace tracer{
 
-void TraceBeam(photon_laserbeam& beam, photon_level &level){
+void TraceBeam(photon_laserbeam& beam, photon_level &level, float time){
     photon_lasersegment *segment;
 
     // delete old data.
@@ -41,7 +41,7 @@ void TraceBeam(photon_laserbeam& beam, photon_level &level){
 
         segment->end = trace_location;
 
-        segment = blocks::OnLightInteract(segment, trace_location, level);
+        segment = blocks::OnLightInteract(segment, trace_location, level, time);
 
         last_trace_location = trace_location;
     }

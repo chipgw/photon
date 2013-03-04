@@ -102,7 +102,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeLaser(instance.window);
 
-        tracer::TraceBeam(beam, instance.level);
+        tracer::TraceBeam(beam, instance.level, frame_delta * 0.001f);
 
         opengl::DrawLaser(beam);
 

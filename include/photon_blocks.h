@@ -12,6 +12,9 @@
 // mirror with locked position and rotation.
 #define PHOTON_BLOCKS_MIRROR_LOCKED     0x02
 
+// mirror with locked position.
+#define PHOTON_BLOCKS_MIRROR_LOCKED_POS 0x03
+
 // your basic everyday block.
 #define PHOTON_BLOCKS_PLAIN             0x04
 
@@ -45,7 +48,7 @@ struct photon_block{
 
 namespace blocks{
 
-photon_lasersegment* OnLightInteract(photon_lasersegment* segment, glm::uvec2 location, photon_level &level);
+photon_lasersegment* OnLightInteract(photon_lasersegment* segment, glm::uvec2 location, photon_level &level, float time);
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level);
 

@@ -116,6 +116,24 @@ photon_level LoadLevelXML(const std::string &filename){
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror_locked"))){
+                                    block.type = PHOTON_BLOCKS_MIRROR_LOCKED;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror_locked_pos"))){
+                                    block.type = PHOTON_BLOCKS_MIRROR_LOCKED_POS;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);}
+                                else if((!xmlStrcmp(type_str, (const xmlChar *)"tnt"))){
+                                    block.type = PHOTON_BLOCKS_TNT;
                                 }
                                 // TODO - load other block types.
                                 xmlFree(type_str);

@@ -35,7 +35,7 @@ struct photon_lasersegment{
 
 namespace tracer{
 
-void TraceBeam(photon_laserbeam& beam, photon_level &level);
+void TraceBeam(photon_laserbeam& beam, photon_level &level, float time);
 
 photon_lasersegment *CreateChildBeam(photon_lasersegment *parent);
 

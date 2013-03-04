@@ -12,13 +12,10 @@ namespace photon{
 namespace texture{
 
 #define PHOTON_TEXTURE_UNIT_COLOR          GL_TEXTURE0
-#define PHOTON_TEXTURE_UNIT_LIGHT          GL_TEXTURE1
 
 /*!
  * \brief Loads texture from file.
- * \param filenameRGB Filename for the RGB diffuse texture.
- * \param filenameNormal Filename for the normalmap (optional).
- * \param filenameHouseColor Filename for the black&white house color mask (optional).
+ * \param filename Filename for the texture.
  * \return the texture.
  */
 GLuint Load(const std::string &filename);

@@ -168,8 +168,6 @@ photon_shader LoadShaderXML(const std::string &filename){
                 ParseShaderObjectXML(shader, doc, node, GL_VERTEX_SHADER, filename);
             }else if(!xmlStrcmp(node->name, (const xmlChar *)"fragment_shader")){
                 ParseShaderObjectXML(shader, doc, node, GL_FRAGMENT_SHADER, filename);
-            }else if(!xmlStrcmp(node->name, (const xmlChar *)"geometry_shader")){
-                ParseShaderObjectXML(shader, doc, node, GL_GEOMETRY_SHADER, filename);
             }
             node = node->next;
         }
@@ -202,8 +200,6 @@ photon_shader LoadShaderXML(const std::string &filename){
 
                 if(!xmlStrcmp(texture_type, (const xmlChar *)"color")){
                     glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_COLOR - GL_TEXTURE0);
-                }else if(!xmlStrcmp(texture_type, (const xmlChar *)"light")){
-                    glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_LIGHT - GL_TEXTURE0);
                 }
                 xmlFree(uniform_name);
                 xmlFree(texture_type);

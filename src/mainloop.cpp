@@ -7,6 +7,7 @@
 #include "photon_laser.h"
 #include "photon_blocks.h"
 #include "photon_input.h"
+#include "photon_gui.h"
 #include <SDL_timer.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -115,20 +116,24 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawPhoton(instance.player.location);
 
+        opengl::DrawModeGUI(instance.window);
+
+        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/(frame_delta)*1000.0f);
+
         window_managment::UpdateWindow(instance.window);
 
         instance.total_frames++;
     }
 
     // print total amount of seconds from SDL_Init()
-    PrintToLog("INFO: Total Time: %f seconds.", SDL_GetTicks()*0.001);
+    PrintToLog("INFO: Total Time: %f seconds.", SDL_GetTicks()*0.001f);
     // print total frame count.
     PrintToLog("INFO: Total Frames: %i", instance.total_frames);
 
     // print average draw time by dividing the total amount of time from the start of the main loop by the total amount of frames.
     PrintToLog("INFO: Average Draw Time: %fms.",(SDL_GetTicks()-start_time)/((float) instance.total_frames));
     // print average framerate by inverting the total draw time.
-    PrintToLog("INFO: Average Framerate: %f fps.", 1/(((SDL_GetTicks()-start_time)*0.001)/((float) instance.total_frames)));
+    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f/((SDL_GetTicks()-start_time)/((float) instance.total_frames)))*1000.0f);
 }
 
 }

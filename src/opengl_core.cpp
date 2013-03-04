@@ -22,6 +22,7 @@ namespace opengl{
 photon_shader shader_scene;
 photon_shader shader_laser;
 photon_shader shader_light;
+photon_shader shader_text;
 
 GLuint photon_texture;
 
@@ -81,6 +82,8 @@ void InitOpenGL(photon_window &window){
     shader_light = LoadShaderXML("/shaders/light.xml");
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f);
 
+    shader_text = LoadShaderXML("/shaders/text.xml");
+
     blocks::LoadTextures();
 
     photon_texture = texture::Load("/textures/photon.tga");
@@ -114,6 +117,8 @@ void OnResize(int width, int height, photon_window &window){
     glUniform1f(glGetUniformLocation(shader_laser.program, "aspect"), aspect);
     glUseProgram(shader_light.program);
     glUniform1f(glGetUniformLocation(shader_light.program, "aspect"), aspect);
+    glUseProgram(shader_text.program);
+    glUniform1f(glGetUniformLocation(shader_text.program, "aspect"), aspect);
 
     glViewport(0,0,width,height);
 
@@ -254,6 +259,22 @@ void DrawPhoton(glm::vec2 location){
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y - 0.2);
     }glEnd();
+}
+
+void DrawModeGUI(photon_window &window){
+    SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(shader_text.program);
+}
+
+void SetColorGUI(glm::vec4 color){
+    glUseProgram(shader_text.program);
+    glUniform4fv(glGetUniformLocation(shader_text.program, "color"), 1, glm::value_ptr(color));
 }
 
 }

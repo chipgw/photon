@@ -2,6 +2,7 @@
 
 #include "photon_core.h"
 #include "photon_opengl.h"
+#include "photon_gui.h"
 #include <SDL_timer.h>
 
 #include <stdio.h>
@@ -30,6 +31,8 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
     instance.window = window_managment::CreateSDLWindow();
 
     opengl::InitOpenGL(instance.window);
+
+    gui::InitFreeType();
 
     return instance;
 }

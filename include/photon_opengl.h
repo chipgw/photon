@@ -118,6 +118,11 @@ void DrawModeLight(photon_window &window);
  * \param location
  */
 void DrawPhoton(glm::vec2 location);
+
+void DrawModeGUI(photon_window &window);
+
+void SetColorGUI(glm::vec4 color);
+
 }
 }
 #endif

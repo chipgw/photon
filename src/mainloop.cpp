@@ -91,8 +91,14 @@ void MainLoop(photon_instance &instance){
 
         input::DoInput(instance, frame_delta);
 
+        level::AdvanceFrame(instance.level, frame_delta);
+
+        tracer::TraceBeam(beam, instance.level, frame_delta);
+
         instance.zoom = std::max(0.01f,instance.zoom);
         opengl::UpdateZoom(instance.zoom);
+
+        instance.player.location = player::SnapToBeam(beam, instance.player.location);
 
         opengl::UpdateCenter(instance.player.location);
 
@@ -101,10 +107,6 @@ void MainLoop(photon_instance &instance){
         // TODO - draw a background texture or something...
 
         opengl::DrawModeLaser(instance.window);
-
-        level::AdvanceFrame(instance.level, frame_delta);
-
-        tracer::TraceBeam(beam, instance.level, frame_delta);
 
         opengl::DrawLaser(beam);
 

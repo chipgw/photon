@@ -15,12 +15,16 @@ GLuint load_OGL_texture_PHYSFS(const std::string &filename){
         auto fp = PHYSFS_openRead(filename.c_str());
         unsigned int length = PHYSFS_fileLength(fp);
         if(length > 0){
-            unsigned char *buffer = new unsigned char[length];
+            unsigned char *buffer = (unsigned char*) malloc(length);
 
             PHYSFS_read(fp, buffer, 1, length);
 
             PHYSFS_close(fp);
-            return SOIL_load_OGL_texture_from_memory(buffer, length, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS);
+            GLuint texture = SOIL_load_OGL_texture_from_memory(buffer, length, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS);
+
+            free(buffer);
+
+            return texture;
         }
     }
     return 0;

@@ -33,6 +33,8 @@ GLuint LoadAndCompileShader(const char *filename, GLenum shader_type){
 
     glCompileShader(shader);
 
+    free(source);
+
     int isCompiled,maxLength;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
@@ -211,6 +213,7 @@ photon_shader LoadShaderXML(const std::string &filename){
             node = node->next;
         }
 
+        free(xml_buffer);
         xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Shader: file \"%s\" does not exist!", filename.c_str());

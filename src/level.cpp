@@ -158,6 +158,7 @@ photon_level LoadLevelXML(const std::string &filename){
             node = node->next;
         }
 
+        free(xml_buffer);
         xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Level: \"%s\" does not exist!", filename.c_str());

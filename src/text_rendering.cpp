@@ -62,8 +62,10 @@ void InitFreeType(){
     PHYSFS_close(file);
 
     int err = FT_New_Memory_Face(ft, font_buffer, length, 0, &face);
+
     if(err){
         PrintToLog("ERROR: Could not load font \"%s\"! error code %x!", font_filename, err);
+        free(font_buffer);
         return;
     }
 

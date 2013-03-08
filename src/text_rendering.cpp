@@ -91,7 +91,8 @@ void InitFreeType(){
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+    std::vector<GLubyte> empty_image(width * height, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, &empty_image[0]);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -152,10 +153,10 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, const char
         float w = character.width * scale.x;
         float h = character.rows * scale.y;
 
-        /* Advance the cursor to the start of the next character */
+        // Advance the cursor to the start of the next character
         position += character.advance * scale;
 
-        /* Skip glyphs that have no pixels */
+        // Skip glyphs that have no pixels
         if(!w || !h)
             continue;
 
@@ -166,10 +167,10 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, const char
             glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, 0);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x + w, y);
 
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, 1);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, character.rows / FONT_SIZE);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x + w, y - h);
 
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x, 1);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x, character.rows / FONT_SIZE);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x,     y - h);
         }glEnd();
     }

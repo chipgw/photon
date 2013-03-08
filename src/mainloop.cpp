@@ -62,6 +62,8 @@ void MainLoop(photon_instance &instance){
 
             instance.input_set.zoom_in = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY, true);
             instance.input_set.zoom_out = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY);
+
+            PrintToLog("INFO: Game controller found, using...");
         }
     }else{
         SDL_Joystick *joystick = SDL_JoystickOpen(0);
@@ -80,8 +82,21 @@ void MainLoop(photon_instance &instance){
 
             instance.input_set.zoom_in = input::CreateJoystickAxisInput(joystick, 4, true);
             instance.input_set.zoom_out = input::CreateJoystickAxisInput(joystick, 4);
+
+            SDL_JoystickGUID guid = SDL_JoystickGetGUID(joystick);
+            char guid_str[33];
+            SDL_JoystickGetGUIDString(guid, guid_str, 33);
+            PrintToLog("INFO: Joystick found, using... (GUID: %s)", guid_str);
         }
     }
+
+    photon_gui_element button;
+
+    button.left = -1.0f;
+    button.bottom = -0.5f;
+    button.top = 0.0f;
+    button.text = "good!";
+    button.text_color = glm::vec4(1.0f);
 
     while(instance.running){
         frame_delta = (SDL_GetTicks() - last_time) * 0.001f;
@@ -124,6 +139,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
+        gui::DrawElement(button);
         gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);

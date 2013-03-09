@@ -131,7 +131,7 @@ void InitFreeType(){
     FT_Done_FreeType(ft);
 }
 
-void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, const char *format,...) {
+void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *format,...) {
     va_list args;
     va_start(args, format);
 
@@ -145,6 +145,16 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, const char
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
 
     opengl::SetColorGUI(color);
+
+    if(center){
+        glm::vec2 offset(0.0f);
+        for(const unsigned char *c = (const unsigned char*)out.c_str(); *c; c++) {
+            character_info &character = main_atlas.characters[*c];
+            offset += character.advance * scale;
+        }
+        position -= offset / 2.0f;
+    }
+
 
     for(const unsigned char *c = (const unsigned char*)out.c_str(); *c; c++) {
         character_info &character = main_atlas.characters[*c];

@@ -24,11 +24,6 @@ void MainLoop(photon_instance &instance){
 
     instance.level = level::LoadLevelXML("/level.xml");
 
-    PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
-    float start_time = SDL_GetTicks();
-    float last_time = SDL_GetTicks();
-    float frame_delta = 0;
-
     instance.player.location = glm::vec2(1.0f,1.0f);
 
     instance.input_set.move_positive_x = input::CreateKeyboardInput(SDL_SCANCODE_D);
@@ -92,11 +87,18 @@ void MainLoop(photon_instance &instance){
 
     photon_gui_element button;
 
-    button.left = -1.0f;
-    button.bottom = -0.5f;
-    button.top = 0.0f;
+    button.left = -0.2f;
+    button.right = 0.2f;
+    button.bottom = -0.8f;
+    button.top = -0.7f;
     button.text = "good!";
     button.text_color = glm::vec4(1.0f);
+    button.texture = texture::Load("/textures/block.png");
+
+    PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
+    float start_time = SDL_GetTicks();
+    float last_time = SDL_GetTicks();
+    float frame_delta = 0;
 
     while(instance.running){
         frame_delta = (SDL_GetTicks() - last_time) * 0.001f;
@@ -140,7 +142,7 @@ void MainLoop(photon_instance &instance){
         opengl::DrawModeGUI(instance.window);
 
         gui::DrawElement(button);
-        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), "FPS: %f", 1.0f/frame_delta);
+        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

@@ -22,7 +22,9 @@ file(GLOB GLSL_SOURCES "data/shaders/*.xml" "data/shaders/*.vert" "data/shaders/
 
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${HEADERS})
+set(WINDRES "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc")
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${HEADERS} ${WINDRES})
 
 find_package(LibXml2 REQUIRED)
 if(LIBXML2_FOUND)

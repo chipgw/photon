@@ -206,6 +206,8 @@ photon_shader LoadShaderXML(const std::string &filename){
 
                 if(!xmlStrcmp(texture_type, (const xmlChar *)"color")){
                     glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_COLOR - GL_TEXTURE0);
+                }else if(!xmlStrcmp(texture_type, (const xmlChar *)"light")){
+                    glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_LIGHT - GL_TEXTURE0);
                 }
                 xmlFree(uniform_name);
                 xmlFree(texture_type);

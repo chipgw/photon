@@ -2,10 +2,10 @@
 
 varying vec2 uv;
 
+uniform vec3 color;
+
 void main(void) {
     float power = pow(2.0*uv.x, 4.0);
-
-    vec3 color = normalize(vec3(0.9, 0.2, 0.1));
 
     gl_FragColor = vec4(color * power, power);
 }

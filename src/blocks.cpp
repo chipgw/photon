@@ -52,7 +52,7 @@ void DrawMirror(glm::uvec2 location, float angle){
 }
 
 void DrawExplosion(glm::uvec2 location, float strength){
-    opengl::SetSceneFac(strength);
+    opengl::SetFacFX(strength);
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 1.5f, location.y + 1.5f);
@@ -100,7 +100,7 @@ void DrawFX(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_TNT:
         // TODO - draw some warmup thing...
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
-        opengl::SetSceneFac(block.data * 0.5f);
+        opengl::SetFacFX(block.data * 0.5f);
         DrawBox(location);
         break;
     case PHOTON_BLOCKS_TNT_FIREBALL:

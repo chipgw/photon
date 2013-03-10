@@ -19,7 +19,7 @@ void MainLoop(photon_instance &instance){
     photon_laserbeam beam;
 
     beam.origin = glm::uvec2(0,1);
-    beam.color = glm::vec3(1,0,0);
+    beam.color = glm::normalize(glm::vec3(0.9f,0.2f,0.1f));
     beam.origin_angle = 0;
 
     instance.level = level::LoadLevelXML("/level.xml");
@@ -87,13 +87,14 @@ void MainLoop(photon_instance &instance){
 
     photon_gui_element button;
 
-    button.left = -0.2f;
-    button.right = 0.2f;
-    button.bottom = -0.8f;
+    button.left = -0.4f;
+    button.right = 0.4f;
+    button.bottom = -0.9f;
     button.top = -0.7f;
+    button.text_padding = 0.05f;
     button.text = "good!";
     button.text_color = glm::vec4(1.0f);
-    button.texture = texture::Load("/textures/block.png");
+    button.texture = texture::Load("/textures/button.png");
 
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
@@ -119,6 +120,12 @@ void MainLoop(photon_instance &instance){
 
         opengl::UpdateCenter(instance.player.location);
 
+        opengl::DrawModeLight(instance.window);
+
+        opengl::DrawLaserLight(beam);
+
+        opengl::DrawPhotonLight(instance.player.location);
+
         opengl::DrawModeScene(instance.window);
 
         // TODO - draw a background texture or something...
@@ -131,9 +138,7 @@ void MainLoop(photon_instance &instance){
 
         level::Draw(instance.level);
 
-        opengl::DrawModeLight(instance.window);
-
-        opengl::DrawLaserLight(beam);
+        opengl::DrawModeFX(instance.window);
 
         opengl::DrawPhoton(instance.player.location);
 

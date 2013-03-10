@@ -22,6 +22,7 @@ namespace opengl{
 photon_shader shader_scene;
 photon_shader shader_laser;
 photon_shader shader_light;
+photon_shader shader_fx;
 photon_shader shader_text;
 
 GLuint photon_texture;
@@ -43,8 +44,8 @@ void InitOpenGL(photon_window &window){
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    glGenTextures(1,&window.scene_buffer_texture);
-    glBindTexture(GL_TEXTURE_2D, window.scene_buffer_texture);
+    glGenTextures(1,&window.light_buffer_texture);
+    glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -55,10 +56,10 @@ void InitOpenGL(photon_window &window){
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glGenFramebuffers(1, &window.scene_buffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, window.scene_buffer);
+    glGenFramebuffers(1, &window.light_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, window.light_buffer);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, window.scene_buffer_texture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, window.light_buffer_texture, 0);
 
     GLenum buffer = GL_COLOR_ATTACHMENT0;
     glDrawBuffers(1, &buffer);
@@ -81,6 +82,9 @@ void InitOpenGL(photon_window &window){
 
     shader_light = LoadShaderXML("/shaders/light.xml");
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f);
+
+    shader_fx = LoadShaderXML("/shaders/fx.xml");
+    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"), 1.0f);
 
     shader_text = LoadShaderXML("/shaders/text.xml");
 
@@ -117,6 +121,8 @@ void OnResize(int width, int height, photon_window &window){
     glUniform1f(glGetUniformLocation(shader_laser.program, "aspect"), aspect);
     glUseProgram(shader_light.program);
     glUniform1f(glGetUniformLocation(shader_light.program, "aspect"), aspect);
+    glUseProgram(shader_fx.program);
+    glUniform1f(glGetUniformLocation(shader_fx.program, "aspect"), aspect);
     glUseProgram(shader_text.program);
     glUniform1f(glGetUniformLocation(shader_text.program, "aspect"), aspect);
 
@@ -125,7 +131,7 @@ void OnResize(int width, int height, photon_window &window){
     window.width = width;
     window.height = height;
 
-    glBindTexture(GL_TEXTURE_2D, window.scene_buffer_texture);
+    glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
 }
 
@@ -163,6 +169,8 @@ void UpdateZoom(float zoom){
     glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f/zoom);
     glUseProgram(shader_light.program);
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f/zoom);
+    glUseProgram(shader_fx.program);
+    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"), 1.0f/zoom);
 }
 
 void UpdateCenter(glm::vec2 center){
@@ -172,19 +180,22 @@ void UpdateCenter(glm::vec2 center){
     glUniform2fv(glGetUniformLocation(shader_laser.program, "center"), 1, glm::value_ptr(center));
     glUseProgram(shader_light.program);
     glUniform2fv(glGetUniformLocation(shader_light.program, "center"), 1, glm::value_ptr(center));
+    glUseProgram(shader_fx.program);
+    glUniform2fv(glGetUniformLocation(shader_fx.program, "center"), 1, glm::value_ptr(center));
 }
 
 void DrawModeScene(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, window.scene_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
     glDisable(GL_BLEND);
 
-    glUseProgram(shader_scene.program);
-    glUniform1f(glGetUniformLocation(shader_scene.program, "fac"), 1.0f);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
+    glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
 }
 
 void DrawModeLaser(photon_window &window){
@@ -193,25 +204,29 @@ void DrawModeLaser(photon_window &window){
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
 
-
     glUseProgram(shader_laser.program);
 }
 
 void DrawModeLevel(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, window.scene_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shader_scene.program);
+
+
+    glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
+    glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
 }
 
 void DrawModeLight(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, window.light_buffer);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -220,10 +235,33 @@ void DrawModeLight(photon_window &window){
 
     glUseProgram(shader_light.program);
 
-    glBindTexture(GL_TEXTURE_2D, window.scene_buffer_texture);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
 }
 
+
 void DrawPhoton(glm::vec2 location){
+    glBindTexture(GL_TEXTURE_2D, photon_texture);
+
+    SetFacFX(1.0f);
+
+    glBegin(GL_QUADS);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y + 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y + 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y - 0.2);
+
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y - 0.2);
+    }glEnd();
+}
+
+void DrawPhotonLight(glm::vec2 location){
     glBegin(GL_TRIANGLE_FAN);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y);
@@ -243,23 +281,6 @@ void DrawPhoton(glm::vec2 location){
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 8.0, location.y);
     }glEnd();
-
-    glUseProgram(shader_scene.program);
-    glBindTexture(GL_TEXTURE_2D, photon_texture);
-
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y + 0.2);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y + 0.2);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y - 0.2);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y - 0.2);
-    }glEnd();
 }
 
 void DrawModeGUI(photon_window &window){
@@ -278,8 +299,28 @@ void SetColorGUI(glm::vec4 color){
     glUniform4fv(glGetUniformLocation(shader_text.program, "color"), 1, glm::value_ptr(color));
 }
 
-void SetSceneFac(float fac){
-    glUniform1f(glGetUniformLocation(shader_scene.program, "fac"), fac);
+void SetFacFX(float fac){
+    glUniform1f(glGetUniformLocation(shader_fx.program, "fac"), fac);
+}
+
+void SetLaserColor(glm::vec3 color){
+    glUniform3fv(glGetUniformLocation(shader_laser.program, "color"), 1, glm::value_ptr(color));
+    glUniform3fv(glGetUniformLocation(shader_light.program, "color"), 1, glm::value_ptr(color));
+}
+
+void DrawModeFX(photon_window &window){
+    SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE,GL_ONE);
+
+    glUseProgram(shader_fx.program);
+
+    glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
 }
 
 }

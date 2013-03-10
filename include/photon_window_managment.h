@@ -16,8 +16,8 @@ struct photon_window{
     unsigned int width = 1;
     unsigned int height = 1;
 
-    unsigned int scene_buffer = 0;
-    unsigned int scene_buffer_texture = 0;
+    unsigned int light_buffer = 0;
+    unsigned int light_buffer_texture = 0;
 };
 struct photon_instance;
 

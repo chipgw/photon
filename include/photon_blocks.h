@@ -40,6 +40,9 @@
 #define PHOTON_BLOCKS_FILTER_RED        0x12
 #define PHOTON_BLOCKS_FILTER_GREEN      0x13
 #define PHOTON_BLOCKS_FILTER_BLUE       0x14
+#define PHOTON_BLOCKS_FILTER_YELLOW     0x15
+#define PHOTON_BLOCKS_FILTER_CYAN       0x16
+#define PHOTON_BLOCKS_FILTER_MAGENTA    0x17
 
 // makes it easier to make new ones...
 //#define PHOTON_BLOCKS_

@@ -149,6 +149,12 @@ photon_level LoadLevelXML(const std::string &filename){
                                     block.type = PHOTON_BLOCKS_FILTER_GREEN;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_blue"))){
                                     block.type = PHOTON_BLOCKS_FILTER_BLUE;
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_yellow"))){
+                                    block.type = PHOTON_BLOCKS_FILTER_YELLOW;
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_cyan"))){
+                                    block.type = PHOTON_BLOCKS_FILTER_CYAN;
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_magenta"))){
+                                    block.type = PHOTON_BLOCKS_FILTER_MAGENTA;
                                 }
                                 // TODO - load other block types.
                                 xmlFree(type_str);

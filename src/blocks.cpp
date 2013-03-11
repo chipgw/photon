@@ -7,7 +7,16 @@
 
 #include "glm/ext.hpp"
 
-GLuint texture_plain_block, texture_mirror, texture_tnt, texture_explosion, texture_filter_red, texture_filter_green, texture_filter_blue;
+GLuint texture_plain_block;
+GLuint texture_mirror;
+GLuint texture_tnt;
+GLuint texture_explosion;
+GLuint texture_filter_red;
+GLuint texture_filter_green;
+GLuint texture_filter_blue;
+GLuint texture_filter_yellow;
+GLuint texture_filter_cyan;
+GLuint texture_filter_magenta;
 
 namespace photon{
 
@@ -85,6 +94,18 @@ void Draw(photon_block block, glm::uvec2 location){
         break;
     case PHOTON_BLOCKS_FILTER_BLUE:
         glBindTexture(GL_TEXTURE_2D, texture_filter_blue);
+        DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_FILTER_YELLOW:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_yellow);
+        DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_FILTER_CYAN:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_cyan);
+        DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_FILTER_MAGENTA:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_magenta);
         DrawBox(location, 0.2f);
         break;
     }
@@ -188,6 +209,42 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
+    case PHOTON_BLOCKS_FILTER_YELLOW:{
+        glm::vec3 color = segment->color;
+        color.b = glm::min(color.b, 0.1f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
+    case PHOTON_BLOCKS_FILTER_CYAN:{
+        glm::vec3 color = segment->color;
+        color.r = glm::min(color.r, 0.1f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
+    case PHOTON_BLOCKS_FILTER_MAGENTA:{
+        glm::vec3 color = segment->color;
+        color.g = glm::min(color.g, 0.1f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
     }
 
     return segment;
@@ -201,6 +258,9 @@ void LoadTextures(){
     texture_filter_red = texture::Load("/textures/filter_red.png");
     texture_filter_green = texture::Load("/textures/filter_green.png");;
     texture_filter_blue = texture::Load("/textures/filter_blue.png");;
+    texture_filter_yellow = texture::Load("/textures/filter_yellow.png");
+    texture_filter_cyan = texture::Load("/textures/filter_cyan.png");;
+    texture_filter_magenta = texture::Load("/textures/filter_magenta.png");;
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){

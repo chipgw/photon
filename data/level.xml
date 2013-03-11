@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <photon_level width="20" height="20" >
   <data>
-    <row y="3">
-      <block x="2" type="filter_blue" />
-    </row>
-    <row y="4">
-      <block x="2" type="filter_green" />
-      <block x="4" type="tnt" />
-    </row>
     <row y="2">
       <block x="2" type="filter_red" />
+      <block x="8" type="filter_yellow" />
+    </row>
+    <row y="3">
+      <block x="2" type="filter_green" />
+      <block x="8" type="filter_cyan" />
+    </row>
+    <row y="4">
+      <block x="2" type="filter_blue" />
+      <block x="8" type="filter_magenta" />
     </row>
   </data>
 </photon_level>

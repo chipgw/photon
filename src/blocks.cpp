@@ -23,20 +23,24 @@ namespace photon{
 
 namespace blocks{
 
-void DrawBox(glm::uvec2 location, float size = 0.5f){
-    // TODO - maybe add optional rotation? perhaps via UV coordinates?
+void DrawBox(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
+    glm::vec2 point1(size);
+    glm::vec2 point2(size);
+    point1 = glm::rotate(point1, rotation);
+    point2 = glm::rotate(point2, rotation - 90.0f);
+
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y + size);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point1.x, location.y + point1.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y + size);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point2.x, location.y - point2.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y - size);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point1.x, location.y - point1.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y - size);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point2.x, location.y + point2.y);
     }glEnd();
 }
 
@@ -114,7 +118,7 @@ void Draw(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_EMITTER_GREEN:
     case PHOTON_BLOCKS_EMITTER_BLUE:
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
-        DrawBox(location);
+        DrawBox(location, 0.5f, block.data);
         break;
     }
 }

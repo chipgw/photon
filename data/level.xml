@@ -1,20 +1,28 @@
 <?xml version="1.0"?>
 <photon_level width="20" height="20" >
   <data>
+    <row y="0">
+      <block x="5" type="emitter_white" angle="90" />
+      <block x="6" type="emitter_white" angle="90" />
+      <block x="7" type="emitter_white" angle="90" />
+    </row>
     <row y="2">
       <block x="0" type="emitter_white" angle="0" />
-      <block x="2" type="filter_red" />
+      <block x="4" type="filter_red" />
       <block x="8" type="filter_yellow" />
     </row>
     <row y="3">
       <block x="0" type="emitter_white" angle="0" />
-      <block x="2" type="filter_green" />
+      <block x="4" type="filter_green" />
       <block x="8" type="filter_cyan" />
     </row>
     <row y="4">
       <block x="0" type="emitter_white" angle="0" />
-      <block x="2" type="filter_blue" />
+      <block x="4" type="filter_blue" />
       <block x="8" type="filter_magenta" />
+    </row>
+    <row y="5">
+      <block x="0" type="emitter_white" angle="0" />
     </row>
   </data>
 </photon_level>

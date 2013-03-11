@@ -16,11 +16,6 @@
 namespace photon{
 void MainLoop(photon_instance &instance){
     instance.running = true;
-    photon_laserbeam beam;
-
-    beam.origin = glm::uvec2(0,1);
-    beam.color = glm::normalize(glm::vec3(0.9f,0.9f,0.9f));
-    beam.origin_angle = 0;
 
     instance.level = level::LoadLevelXML("/level.xml");
 
@@ -111,18 +106,18 @@ void MainLoop(photon_instance &instance){
 
         level::AdvanceFrame(instance.level, frame_delta);
 
-        tracer::TraceBeam(beam, instance.level, frame_delta);
-
         instance.zoom = std::max(0.01f,instance.zoom);
         opengl::UpdateZoom(instance.zoom);
 
-        instance.player.location = player::SnapToBeam(beam, instance.player.location);
+        instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
 
         opengl::UpdateCenter(instance.player.location);
 
         opengl::DrawModeLight(instance.window);
 
-        opengl::DrawLaserLight(beam);
+        level::DrawBeamsLight(instance.level);
+
+        opengl::SetLaserColor(glm::vec3(1.0f));
 
         opengl::DrawPhotonLight(instance.player.location);
 
@@ -132,7 +127,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeLaser(instance.window);
 
-        opengl::DrawLaser(beam);
+        level::DrawBeams(instance.level);
 
         opengl::DrawModeLevel(instance.window);
 

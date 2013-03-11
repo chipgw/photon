@@ -17,6 +17,18 @@ void Draw(photon_level &level){
     }
 }
 
+void DrawBeams(photon_level &level){
+    for(photon_laserbeam &beam : level.beams){
+        opengl::DrawLaser(beam);
+    }
+}
+
+void DrawBeamsLight(photon_level &level){
+    for(photon_laserbeam &beam : level.beams){
+        opengl::DrawLaserLight(beam);
+    }
+}
+
 void DrawFX(photon_level &level){
     glm::uvec2 current(0);
     for(current.x = 0; current.x < level.grid.shape()[0];current.x++){
@@ -155,6 +167,38 @@ photon_level LoadLevelXML(const std::string &filename){
                                     block.type = PHOTON_BLOCKS_FILTER_CYAN;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_magenta"))){
                                     block.type = PHOTON_BLOCKS_FILTER_MAGENTA;
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_white"))){
+                                    block.type = PHOTON_BLOCKS_EMITTER_WHITE;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_red"))){
+                                    block.type = PHOTON_BLOCKS_EMITTER_RED;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_green"))){
+                                    block.type = PHOTON_BLOCKS_EMITTER_GREEN;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
+                                }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_blue"))){
+                                    block.type = PHOTON_BLOCKS_EMITTER_BLUE;
+
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+
+                                    block.data = atof((char*)angle_str);
+
+                                    xmlFree(angle_str);
                                 }
                                 // TODO - load other block types.
                                 xmlFree(type_str);
@@ -180,12 +224,16 @@ photon_level LoadLevelXML(const std::string &filename){
 }
 
 void AdvanceFrame(photon_level &level, float time){
+    level.beams.clear();
     glm::uvec2 location(0);
 
     for(location.x = 0; location.x < level.grid.shape()[0];location.x++){
         for(location.y = 0; location.y < level.grid.shape()[1];location.y++){
             blocks::OnFrame(location, level, time);
         }
+    }
+    for(photon_laserbeam &beam : level.beams){
+        tracer::TraceBeam(beam, level, time);
     }
 }
 

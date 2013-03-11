@@ -21,20 +21,24 @@
 // you can't touch this!
 #define PHOTON_BLOCKS_INDESTRUCTIBLE    0x05
 
-// laser emitter, essensially the level start point.
-// there should be one and only one of these per level.
-#define PHOTON_BLOCKS_EMITTER           0x08
+// laser emitter.
+#define PHOTON_BLOCKS_EMITTER_WHITE     0x08
+#define PHOTON_BLOCKS_EMITTER_RED       0x09
+#define PHOTON_BLOCKS_EMITTER_GREEN     0x0a
+#define PHOTON_BLOCKS_EMITTER_BLUE      0x0b
 
-// laser reciever, essensially the level end point.
-// there should be one and only one of these per level.
-#define PHOTON_BLOCKS_RECIEVER          0x09
+// laser reciever.
+#define PHOTON_BLOCKS_RECIEVER          0x0c
+#define PHOTON_BLOCKS_RECIEVER_RED      0x0d
+#define PHOTON_BLOCKS_RECIEVER_GREEN    0x0e
+#define PHOTON_BLOCKS_RECIEVER_BLUE     0x0f
 
 // KABOOM!!! blows up when the laser triggers it
 // (by pointing at it for a couple seconds)
-#define PHOTON_BLOCKS_TNT               0x0c
+#define PHOTON_BLOCKS_TNT               0x10
 
 // draws the fireball after the TNT explodes.
-#define PHOTON_BLOCKS_TNT_FIREBALL      0x0d
+#define PHOTON_BLOCKS_TNT_FIREBALL      0x11
 
 // Color filters
 #define PHOTON_BLOCKS_FILTER_RED        0x12

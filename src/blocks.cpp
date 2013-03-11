@@ -328,6 +328,38 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             block.type = PHOTON_BLOCKS_AIR;
         }
         break;
+    case PHOTON_BLOCKS_EMITTER_WHITE:{
+        level.beams.push_back(photon_laserbeam());
+        photon_laserbeam &beam = level.beams.back();
+        beam.color = glm::vec3(0.9f,0.9f,0.9f);
+        beam.origin = location;
+        beam.origin_angle = block.data;
+        break;
+    }
+    case PHOTON_BLOCKS_EMITTER_RED:{
+        level.beams.push_back(photon_laserbeam());
+        photon_laserbeam &beam = level.beams.back();
+        beam.color = glm::vec3(0.9f,0.2f,0.1f);
+        beam.origin = location;
+        beam.origin_angle = block.data;
+        break;
+    }
+    case PHOTON_BLOCKS_EMITTER_GREEN:{
+        level.beams.push_back(photon_laserbeam());
+        photon_laserbeam &beam = level.beams.back();
+        beam.color = glm::vec3(0.1f,0.9f,0.2f);
+        beam.origin = location;
+        beam.origin_angle = block.data;
+        break;
+    }
+    case PHOTON_BLOCKS_EMITTER_BLUE:{
+        level.beams.push_back(photon_laserbeam());
+        photon_laserbeam &beam = level.beams.back();
+        beam.color = glm::vec3(0.1f,0.2f,0.9f);
+        beam.origin = location;
+        beam.origin_angle = block.data;
+        break;
+    }
     }
     block.activated = false;
 }

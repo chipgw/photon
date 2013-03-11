@@ -43,6 +43,23 @@ glm::vec2 SnapToBeam(photon_laserbeam &beam, glm::vec2 location){
     return loc;
 }
 
+glm::vec2 SnapToBeams(std::vector<photon_laserbeam> &beams, glm::vec2 location){
+    float dist = INFINITY;
+    glm::vec2 loc = location;
+
+    for(photon_laserbeam &beam : beams){
+        for(photon_lasersegment &segment : beam.segments){
+            glm::vec2 point = PointOnSegment(segment, location);
+            float tdist = glm::distance(point, location);
+            if(tdist < dist){
+                dist = tdist;
+                loc = point;
+            }
+        }
+    }
+    return loc;
+}
+
 }
 
 }

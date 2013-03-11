@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <photon_laser.h>
+#include <vector>
 
 namespace photon{
 
@@ -15,6 +16,7 @@ struct photon_player{
 namespace player{
 
 glm::vec2 SnapToBeam(photon_laserbeam &beam, glm::vec2 location);
+glm::vec2 SnapToBeams(std::vector<photon_laserbeam> &beams, glm::vec2 location);
 
 }
 

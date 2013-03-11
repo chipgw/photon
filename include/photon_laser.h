@@ -1,14 +1,13 @@
 #ifndef _PHOTON_LASER_H_
 #define _PHOTON_LASER_H_
 
-#include "photon_level.h"
 #include <glm/glm.hpp>
 #include <list>
 
 namespace photon{
 struct photon_lasersegment;
+struct photon_level;
 
-// TODO - maybe make this a block?
 struct photon_laserbeam{
     glm::uvec2 origin;
     float origin_angle;

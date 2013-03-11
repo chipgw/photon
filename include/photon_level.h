@@ -3,10 +3,12 @@
 
 #include "boost/multi_array.hpp"
 #include "photon_blocks.h"
+#include "photon_laser.h"
 
 namespace photon{
 struct photon_level{
     boost::multi_array<photon_block,2> grid;
+    std::vector<photon_laserbeam> beams;
 
     photon_level(int w, int h) : grid(boost::extents[w][h]) {}
     photon_level() {}
@@ -25,6 +27,10 @@ struct photon_level{
 namespace level{
 
 void Draw(photon_level &level);
+
+void DrawBeams(photon_level &level);
+
+void DrawBeamsLight(photon_level &level);
 
 void DrawFX(photon_level &level);
 

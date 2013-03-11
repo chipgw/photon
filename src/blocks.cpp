@@ -17,6 +17,7 @@ GLuint texture_filter_blue;
 GLuint texture_filter_yellow;
 GLuint texture_filter_cyan;
 GLuint texture_filter_magenta;
+GLuint texture_emitter;
 
 namespace photon{
 
@@ -107,6 +108,13 @@ void Draw(photon_block block, glm::uvec2 location){
     case PHOTON_BLOCKS_FILTER_MAGENTA:
         glBindTexture(GL_TEXTURE_2D, texture_filter_magenta);
         DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_EMITTER_WHITE:
+    case PHOTON_BLOCKS_EMITTER_RED:
+    case PHOTON_BLOCKS_EMITTER_GREEN:
+    case PHOTON_BLOCKS_EMITTER_BLUE:
+        glBindTexture(GL_TEXTURE_2D, texture_emitter);
+        DrawBox(location);
         break;
     }
 }
@@ -261,6 +269,7 @@ void LoadTextures(){
     texture_filter_yellow = texture::Load("/textures/filter_yellow.png");
     texture_filter_cyan = texture::Load("/textures/filter_cyan.png");;
     texture_filter_magenta = texture::Load("/textures/filter_magenta.png");;
+    texture_emitter = texture::Load("/textures/emitter.png");;
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){

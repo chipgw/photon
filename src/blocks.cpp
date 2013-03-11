@@ -186,7 +186,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     case PHOTON_BLOCKS_FILTER_GREEN:{
         glm::vec3 color = segment->color;
         color.r = glm::min(color.r, 0.1f);
-        color.b = glm::min(color.b, 0.2f);
+        color.b = glm::min(color.b, 0.1f);
         if(glm::length2(color) > 0.2f){
             segment = tracer::CreateChildBeam(segment);
             segment->color = color;
@@ -235,7 +235,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     }
     case PHOTON_BLOCKS_FILTER_MAGENTA:{
         glm::vec3 color = segment->color;
-        color.g = glm::min(color.g, 0.1f);
+        color.g = glm::min(color.g, 0.2f);
         if(glm::length2(color) > 0.2f){
             segment = tracer::CreateChildBeam(segment);
             segment->color = color;

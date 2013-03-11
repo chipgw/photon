@@ -19,7 +19,7 @@ void MainLoop(photon_instance &instance){
     photon_laserbeam beam;
 
     beam.origin = glm::uvec2(0,1);
-    beam.color = glm::normalize(glm::vec3(0.9f,0.2f,0.1f));
+    beam.color = glm::normalize(glm::vec3(0.9f,0.9f,0.9f));
     beam.origin_angle = 0;
 
     instance.level = level::LoadLevelXML("/level.xml");

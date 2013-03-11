@@ -36,6 +36,11 @@
 // draws the fireball after the TNT explodes.
 #define PHOTON_BLOCKS_TNT_FIREBALL      0x0d
 
+// Color filters
+#define PHOTON_BLOCKS_FILTER_RED        0x12
+#define PHOTON_BLOCKS_FILTER_GREEN      0x13
+#define PHOTON_BLOCKS_FILTER_BLUE       0x14
+
 // makes it easier to make new ones...
 //#define PHOTON_BLOCKS_
 

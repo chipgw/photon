@@ -7,26 +7,26 @@
 
 #include "glm/ext.hpp"
 
-GLuint texture_plain_block, texture_mirror, texture_tnt, texture_explosion;
+GLuint texture_plain_block, texture_mirror, texture_tnt, texture_explosion, texture_filter_red, texture_filter_green, texture_filter_blue;
 
 namespace photon{
 
 namespace blocks{
 
-void DrawBox(glm::uvec2 location){
+void DrawBox(glm::uvec2 location, float size = 0.5f){
     // TODO - maybe add optional rotation? perhaps via UV coordinates?
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.5, location.y + 0.5);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y + size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.5, location.y + 0.5);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y + size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.5, location.y - 0.5);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y - size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.5, location.y - 0.5);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y - size);
     }glEnd();
 }
 
@@ -48,23 +48,6 @@ void DrawMirror(glm::uvec2 location, float angle){
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point2.x, location.y + point2.y);
-    }glEnd();
-}
-
-void DrawExplosion(glm::uvec2 location, float strength){
-    opengl::SetFacFX(strength);
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 1.5f, location.y + 1.5f);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 1.5f, location.y + 1.5f);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 1.5f, location.y - 1.5f);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 1.5f, location.y - 1.5f);
     }glEnd();
 }
 
@@ -92,6 +75,18 @@ void Draw(photon_block block, glm::uvec2 location){
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
         DrawBox(location);
         break;
+    case PHOTON_BLOCKS_FILTER_RED:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_red);
+        DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_FILTER_GREEN:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_green);
+        DrawBox(location, 0.2f);
+        break;
+    case PHOTON_BLOCKS_FILTER_BLUE:
+        glBindTexture(GL_TEXTURE_2D, texture_filter_blue);
+        DrawBox(location, 0.2f);
+        break;
     }
 }
 
@@ -105,7 +100,8 @@ void DrawFX(photon_block block, glm::uvec2 location){
         break;
     case PHOTON_BLOCKS_TNT_FIREBALL:
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
-        DrawExplosion(location, block.data);
+        opengl::SetFacFX(block.data);
+        DrawBox(location, 1.5);
         break;
     }
 }
@@ -153,6 +149,45 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         // stops tracing the laser.
         return nullptr;
         break;
+    case PHOTON_BLOCKS_FILTER_RED:{
+        glm::vec3 color = segment->color;
+        color.g = glm::min(color.g, 0.2f);
+        color.b = glm::min(color.b, 0.1f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
+    case PHOTON_BLOCKS_FILTER_GREEN:{
+        glm::vec3 color = segment->color;
+        color.r = glm::min(color.r, 0.1f);
+        color.b = glm::min(color.b, 0.2f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
+    case PHOTON_BLOCKS_FILTER_BLUE:{
+        glm::vec3 color = segment->color;
+        color.r = glm::min(color.r, 0.1f);
+        color.g = glm::min(color.g, 0.2f);
+        if(glm::length2(color) > 0.2f){
+            segment = tracer::CreateChildBeam(segment);
+            segment->color = color;
+        }else{
+            // stops tracing the laser.
+            return nullptr;
+        }
+        break;
+    }
     }
 
     return segment;
@@ -163,6 +198,9 @@ void LoadTextures(){
     texture_mirror = texture::Load("/textures/mirror.png");
     texture_tnt = texture::Load("/textures/tnt.png");
     texture_explosion = texture::Load("/textures/explosion.png");
+    texture_filter_red = texture::Load("/textures/filter_red.png");
+    texture_filter_green = texture::Load("/textures/filter_green.png");;
+    texture_filter_blue = texture::Load("/textures/filter_blue.png");;
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){

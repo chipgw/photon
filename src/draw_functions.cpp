@@ -14,13 +14,13 @@ void DrawLaserSegment(photon_lasersegment &segment){
     glm::vec2 child_offset(0.0f);
     glm::vec2 parent_offset(0.0f);
 
-    if(segment.child != nullptr){
+    if(segment.child != nullptr && segment.angle != segment.child->angle){
         float child_angle = segment.angle - segment.child->angle;
         child_angle = 0.5 * -fmod(child_angle + 180.0f, 360.0f);
 
         child_offset = glm::rotate(tangent * glm::tan(glm::radians(child_angle)), 90.0f);
     }
-    if(segment.parent != nullptr){
+    if(segment.parent != nullptr && segment.angle != segment.parent->angle){
         float parent_angle = segment.parent->angle - segment.angle;
         parent_angle = 0.5 * -fmod(parent_angle + 180.0f, 360.0f);
 

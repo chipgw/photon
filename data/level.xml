@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
-<photon_level width="10" height="6" >
+<photon_level width="20" height="20" >
   <data>
-    <row y="1">
-      <block x="1" type="mirror_locked" angle="45" />
-      <block x="2" type="plain" />
+    <row y="3">
+      <block x="2" type="filter_blue" />
     </row>
     <row y="4">
-      <block x="1" type="mirror" angle="-45" />
-      <block x="3" type="tnt" />
+      <block x="2" type="filter_green" />
+      <block x="4" type="tnt" />
     </row>
     <row y="2">
-      <block x="2" type="plain" />
+      <block x="2" type="filter_red" />
     </row>
   </data>
 </photon_level>

@@ -97,12 +97,12 @@ photon_level LoadLevelXML(const std::string &filename){
 
         // fill the borders with indestructible blocks.
         for(int x = 0;x<width;x++){
-            level.grid[x][0].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
-            level.grid[x][height-1].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+            level.grid[x][0].type = indestructible;
+            level.grid[x][height-1].type = indestructible;
         }
         for(int y = 0;y<height;y++){
-            level.grid[0][y].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
-            level.grid[width-1][y].type = PHOTON_BLOCKS_INDESTRUCTIBLE;
+            level.grid[0][y].type = indestructible;
+            level.grid[width-1][y].type = indestructible;
         }
 
         xmlNode *node = root->xmlChildrenNode;
@@ -128,9 +128,9 @@ photon_level LoadLevelXML(const std::string &filename){
                                 photon_block &block = level.grid[x][y];
 
                                 if((!xmlStrcmp(type_str, (const xmlChar *)"plain"))){
-                                    block.type = PHOTON_BLOCKS_PLAIN;
+                                    block.type = plain;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror"))){
-                                    block.type = PHOTON_BLOCKS_MIRROR;
+                                    block.type = mirror;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -138,7 +138,7 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror_locked"))){
-                                    block.type = PHOTON_BLOCKS_MIRROR_LOCKED;
+                                    block.type = mirror_locked;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -146,7 +146,7 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"mirror_locked_pos"))){
-                                    block.type = PHOTON_BLOCKS_MIRROR_LOCKED_POS;
+                                    block.type = mirror_locked_pos;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -154,21 +154,21 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"tnt"))){
-                                    block.type = PHOTON_BLOCKS_TNT;
+                                    block.type = tnt;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_red"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_RED;
+                                    block.type = filter_red;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_green"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_GREEN;
+                                    block.type = filter_green;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_blue"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_BLUE;
+                                    block.type = filter_blue;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_yellow"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_YELLOW;
+                                    block.type = filter_yellow;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_cyan"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_CYAN;
+                                    block.type = filter_cyan;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"filter_magenta"))){
-                                    block.type = PHOTON_BLOCKS_FILTER_MAGENTA;
+                                    block.type = filter_magenta;
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_white"))){
-                                    block.type = PHOTON_BLOCKS_EMITTER_WHITE;
+                                    block.type = emitter_white;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -176,7 +176,7 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_red"))){
-                                    block.type = PHOTON_BLOCKS_EMITTER_RED;
+                                    block.type = emitter_red;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -184,7 +184,7 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_green"))){
-                                    block.type = PHOTON_BLOCKS_EMITTER_GREEN;
+                                    block.type = emitter_green;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 
@@ -192,7 +192,7 @@ photon_level LoadLevelXML(const std::string &filename){
 
                                     xmlFree(angle_str);
                                 }else if((!xmlStrcmp(type_str, (const xmlChar *)"emitter_blue"))){
-                                    block.type = PHOTON_BLOCKS_EMITTER_BLUE;
+                                    block.type = emitter_blue;
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
 

@@ -67,56 +67,56 @@ void DrawMirror(glm::uvec2 location, float angle){
 
 void Draw(photon_block block, glm::uvec2 location){
     switch(block.type){
-    case PHOTON_BLOCKS_AIR:
+    default:
         break;
-    case PHOTON_BLOCKS_PLAIN:
+    case plain:
         glBindTexture(GL_TEXTURE_2D, texture_plain_block);
 
         DrawBox(location);
         break;
-    case PHOTON_BLOCKS_INDESTRUCTIBLE:
+    case indestructible:
         // TODO - make different texture.
         glBindTexture(GL_TEXTURE_2D, texture_plain_block);
         DrawBox(location);
         break;
-    case PHOTON_BLOCKS_MIRROR:
-    case PHOTON_BLOCKS_MIRROR_LOCKED:
-    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
+    case mirror:
+    case mirror_locked:
+    case mirror_locked_pos:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
         DrawMirror(location, block.data);
         break;
-    case PHOTON_BLOCKS_TNT:
+    case tnt:
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
         DrawBox(location);
         break;
-    case PHOTON_BLOCKS_FILTER_RED:
+    case filter_red:
         glBindTexture(GL_TEXTURE_2D, texture_filter_red);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_FILTER_GREEN:
+    case filter_green:
         glBindTexture(GL_TEXTURE_2D, texture_filter_green);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_FILTER_BLUE:
+    case filter_blue:
         glBindTexture(GL_TEXTURE_2D, texture_filter_blue);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_FILTER_YELLOW:
+    case filter_yellow:
         glBindTexture(GL_TEXTURE_2D, texture_filter_yellow);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_FILTER_CYAN:
+    case filter_cyan:
         glBindTexture(GL_TEXTURE_2D, texture_filter_cyan);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_FILTER_MAGENTA:
+    case filter_magenta:
         glBindTexture(GL_TEXTURE_2D, texture_filter_magenta);
         DrawBox(location, 0.2f);
         break;
-    case PHOTON_BLOCKS_EMITTER_WHITE:
-    case PHOTON_BLOCKS_EMITTER_RED:
-    case PHOTON_BLOCKS_EMITTER_GREEN:
-    case PHOTON_BLOCKS_EMITTER_BLUE:
+    case emitter_white:
+    case emitter_red:
+    case emitter_green:
+    case emitter_blue:
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
         DrawBox(location, 0.5f, block.data);
         break;
@@ -125,13 +125,15 @@ void Draw(photon_block block, glm::uvec2 location){
 
 void DrawFX(photon_block block, glm::uvec2 location){
     switch(block.type){
-    case PHOTON_BLOCKS_TNT:
+    default:
+        break;
+    case tnt:
         // TODO - draw some warmup thing...
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
         opengl::SetFacFX(block.data * 0.5f);
         DrawBox(location);
         break;
-    case PHOTON_BLOCKS_TNT_FIREBALL:
+    case tnt_fireball:
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
         opengl::SetFacFX(block.data);
         DrawBox(location, 1.5);
@@ -144,22 +146,22 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     block.activated = true;
 
     switch(block.type){
-    case PHOTON_BLOCKS_AIR:
+    case air:
     default:
         break;
-    case PHOTON_BLOCKS_RECIEVER:
+    case reciever:
         // TODO - make trigger
         // stops tracing the laser.
         return nullptr;
         break;
-    case PHOTON_BLOCKS_PLAIN:
-    case PHOTON_BLOCKS_INDESTRUCTIBLE:
+    case plain:
+    case indestructible:
         // stops tracing the laser.
         return nullptr;
         break;
-    case PHOTON_BLOCKS_MIRROR:
-    case PHOTON_BLOCKS_MIRROR_LOCKED:
-    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:{
+    case mirror:
+    case mirror_locked:
+    case mirror_locked_pos:{
         float angle = segment->angle - block.data;
         if(fmod(angle, 180.0f) == 0.0f){
             return nullptr;
@@ -169,12 +171,12 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         segment->angle = block.data - angle;
         break;
     }
-    case PHOTON_BLOCKS_TNT:
+    case tnt:
         block.data += time;
         if(block.data > 1.0f){
             // TODO - KABOOM goes here...
             PrintToLog("INFO: KABOOM!");
-            block.type = PHOTON_BLOCKS_TNT_FIREBALL;
+            block.type = tnt_fireball;
             // cooldown of fireball
             block.data = 1.0f;
             break;
@@ -182,7 +184,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         // stops tracing the laser.
         return nullptr;
         break;
-    case PHOTON_BLOCKS_FILTER_RED:{
+    case filter_red:{
         glm::vec3 color = segment->color;
         color.g = glm::min(color.g, 0.2f);
         color.b = glm::min(color.b, 0.1f);
@@ -195,7 +197,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
-    case PHOTON_BLOCKS_FILTER_GREEN:{
+    case filter_green:{
         glm::vec3 color = segment->color;
         color.r = glm::min(color.r, 0.1f);
         color.b = glm::min(color.b, 0.1f);
@@ -208,7 +210,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
-    case PHOTON_BLOCKS_FILTER_BLUE:{
+    case filter_blue:{
         glm::vec3 color = segment->color;
         color.r = glm::min(color.r, 0.1f);
         color.g = glm::min(color.g, 0.2f);
@@ -221,7 +223,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
-    case PHOTON_BLOCKS_FILTER_YELLOW:{
+    case filter_yellow:{
         glm::vec3 color = segment->color;
         color.b = glm::min(color.b, 0.1f);
         if(glm::length2(color) > 0.2f){
@@ -233,7 +235,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
-    case PHOTON_BLOCKS_FILTER_CYAN:{
+    case filter_cyan:{
         glm::vec3 color = segment->color;
         color.r = glm::min(color.r, 0.1f);
         if(glm::length2(color) > 0.2f){
@@ -245,7 +247,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         break;
     }
-    case PHOTON_BLOCKS_FILTER_MAGENTA:{
+    case filter_magenta:{
         glm::vec3 color = segment->color;
         color.g = glm::min(color.g, 0.2f);
         if(glm::length2(color) > 0.2f){
@@ -280,15 +282,15 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level){
     if(level.grid.shape()[0] > location.x && level.grid.shape()[1] > location.y){
         photon_block &block = level.grid[location.x][location.y];
         switch(block.type){
-        case PHOTON_BLOCKS_AIR:
+        case air:
             // TODO - place currently selected item in inventory.
-            block.type = PHOTON_BLOCKS_MIRROR;
+            block.type = mirror;
             break;
         default:
             break;
-        case PHOTON_BLOCKS_MIRROR:
+        case mirror:
             // TODO - store mirror in inventory.
-            block.type = PHOTON_BLOCKS_AIR;
+            block.type = air;
             break;
         }
     }
@@ -300,8 +302,8 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
         switch(block.type){
         default:
             break;
-        case PHOTON_BLOCKS_MIRROR:
-        case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
+        case mirror:
+        case mirror_locked_pos:
             if(counter_clockwise){
                 block.data += 22.5f;
             }else{
@@ -315,33 +317,23 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
 void OnFrame(glm::uvec2 location, photon_level &level, float time){
     photon_block &block = level.grid[location.x][location.y];
     switch(block.type){
-    case PHOTON_BLOCKS_AIR:
     default:
         break;
-    case PHOTON_BLOCKS_RECIEVER:
-        break;
-    case PHOTON_BLOCKS_PLAIN:
-    case PHOTON_BLOCKS_INDESTRUCTIBLE:
-        break;
-    case PHOTON_BLOCKS_MIRROR:
-    case PHOTON_BLOCKS_MIRROR_LOCKED:
-    case PHOTON_BLOCKS_MIRROR_LOCKED_POS:
-        break;
-    case PHOTON_BLOCKS_TNT:
+    case tnt:
         // if block was not activated last frame cool down timer.
         if(!block.activated){
             block.data -= time;
             block.data = std::max(block.data, 0.0f);
         }
         break;
-    case PHOTON_BLOCKS_TNT_FIREBALL:
+    case tnt_fireball:
         block.data -= time * 3.0f;
         if(block.data < 0.0f){
             block.data = 0.0f;
-            block.type = PHOTON_BLOCKS_AIR;
+            block.type = air;
         }
         break;
-    case PHOTON_BLOCKS_EMITTER_WHITE:{
+    case emitter_white:{
         level.beams.push_back(photon_laserbeam());
         photon_laserbeam &beam = level.beams.back();
         beam.color = glm::vec3(0.9f,0.9f,0.9f);
@@ -349,7 +341,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         beam.origin_angle = block.data;
         break;
     }
-    case PHOTON_BLOCKS_EMITTER_RED:{
+    case emitter_red:{
         level.beams.push_back(photon_laserbeam());
         photon_laserbeam &beam = level.beams.back();
         beam.color = glm::vec3(0.9f,0.2f,0.1f);
@@ -357,7 +349,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         beam.origin_angle = block.data;
         break;
     }
-    case PHOTON_BLOCKS_EMITTER_GREEN:{
+    case emitter_green:{
         level.beams.push_back(photon_laserbeam());
         photon_laserbeam &beam = level.beams.back();
         beam.color = glm::vec3(0.1f,0.9f,0.2f);
@@ -365,7 +357,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         beam.origin_angle = block.data;
         break;
     }
-    case PHOTON_BLOCKS_EMITTER_BLUE:{
+    case emitter_blue:{
         level.beams.push_back(photon_laserbeam());
         photon_laserbeam &beam = level.beams.back();
         beam.color = glm::vec3(0.1f,0.2f,0.9f);

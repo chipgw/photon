@@ -3,61 +3,48 @@
 
 #include <glm/glm.hpp>
 
-// empty space.
-#define PHOTON_BLOCKS_AIR               0x00
-
-// normal movable & rotatable mirror.
-#define PHOTON_BLOCKS_MIRROR            0x01
-
-// mirror with locked position and rotation.
-#define PHOTON_BLOCKS_MIRROR_LOCKED     0x02
-
-// mirror with locked position.
-#define PHOTON_BLOCKS_MIRROR_LOCKED_POS 0x03
-
-// your basic everyday block.
-#define PHOTON_BLOCKS_PLAIN             0x04
-
-// you can't touch this!
-#define PHOTON_BLOCKS_INDESTRUCTIBLE    0x05
-
-// laser emitter.
-#define PHOTON_BLOCKS_EMITTER_WHITE     0x08
-#define PHOTON_BLOCKS_EMITTER_RED       0x09
-#define PHOTON_BLOCKS_EMITTER_GREEN     0x0a
-#define PHOTON_BLOCKS_EMITTER_BLUE      0x0b
-
-// laser reciever.
-#define PHOTON_BLOCKS_RECIEVER          0x0c
-#define PHOTON_BLOCKS_RECIEVER_RED      0x0d
-#define PHOTON_BLOCKS_RECIEVER_GREEN    0x0e
-#define PHOTON_BLOCKS_RECIEVER_BLUE     0x0f
-
-// KABOOM!!! blows up when the laser triggers it
-// (by pointing at it for a couple seconds)
-#define PHOTON_BLOCKS_TNT               0x10
-
-// draws the fireball after the TNT explodes.
-#define PHOTON_BLOCKS_TNT_FIREBALL      0x11
-
-// Color filters
-#define PHOTON_BLOCKS_FILTER_RED        0x12
-#define PHOTON_BLOCKS_FILTER_GREEN      0x13
-#define PHOTON_BLOCKS_FILTER_BLUE       0x14
-#define PHOTON_BLOCKS_FILTER_YELLOW     0x15
-#define PHOTON_BLOCKS_FILTER_CYAN       0x16
-#define PHOTON_BLOCKS_FILTER_MAGENTA    0x17
-
-// makes it easier to make new ones...
-//#define PHOTON_BLOCKS_
-
 namespace photon{
 struct photon_lasersegment;
 struct photon_level;
 
+enum block_type{
+    air, // empty space.
+
+    mirror, // normal movable & rotatable mirror.
+    mirror_locked, // mirror with locked position and rotation.
+    mirror_locked_pos, // mirror with locked position.
+
+    plain, // your basic everyday block.
+    indestructible, // you can't touch this!
+
+    // laser emitter.
+    emitter_white,
+    emitter_red,
+    emitter_green,
+    emitter_blue,
+
+    // laser reciever.
+    reciever,
+    reciever_white,
+    reciever_red,
+    reciever_green,
+    reciever_blue,
+
+    tnt, // KABOOM!!! blows up when the laser triggers it (by pointing at it for a couple seconds)
+    tnt_fireball, // draws the fireball after the TNT explodes.
+
+    // Color filters
+    filter_red,
+    filter_green,
+    filter_blue,
+    filter_yellow,
+    filter_cyan,
+    filter_magenta
+};
+
 struct photon_block{
     // block type.
-    unsigned char type = PHOTON_BLOCKS_AIR;
+    block_type type = air;
 
     // used for various things depending on the block type...
     float data = 0.0f;

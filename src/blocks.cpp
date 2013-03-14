@@ -5,7 +5,8 @@
 #include "photon_texture.h"
 #include "photon_core.h"
 
-#include "glm/ext.hpp"
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/norm.hpp>
 
 GLuint texture_plain_block;
 GLuint texture_mirror;

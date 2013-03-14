@@ -1,6 +1,6 @@
 #include "photon_player.h"
 
-#include <glm/ext.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace photon{
 

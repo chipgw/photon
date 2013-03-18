@@ -292,17 +292,17 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
 }
 
 void LoadTextures(){
-    texture_plain_block = texture::Load("/textures/block.png");
-    texture_mirror = texture::Load("/textures/mirror.png");
-    texture_tnt = texture::Load("/textures/tnt.png");
+    texture_plain_block = texture::Load("/textures/blocks/block.png");
+    texture_mirror = texture::Load("/textures/blocks/mirror.png");
+    texture_tnt = texture::Load("/textures/blocks/tnt.png");
+    texture_filter_red = texture::Load("/textures/blocks/filter_red.png");
+    texture_filter_green = texture::Load("/textures/blocks/filter_green.png");;
+    texture_filter_blue = texture::Load("/textures/blocks/filter_blue.png");;
+    texture_filter_yellow = texture::Load("/textures/blocks/filter_yellow.png");
+    texture_filter_cyan = texture::Load("/textures/blocks/filter_cyan.png");;
+    texture_filter_magenta = texture::Load("/textures/blocks/filter_magenta.png");;
+    texture_emitter = texture::Load("/textures/blocks/emitter.png");
     texture_explosion = texture::Load("/textures/explosion.png");
-    texture_filter_red = texture::Load("/textures/filter_red.png");
-    texture_filter_green = texture::Load("/textures/filter_green.png");;
-    texture_filter_blue = texture::Load("/textures/filter_blue.png");;
-    texture_filter_yellow = texture::Load("/textures/filter_yellow.png");
-    texture_filter_cyan = texture::Load("/textures/filter_cyan.png");;
-    texture_filter_magenta = texture::Load("/textures/filter_magenta.png");;
-    texture_emitter = texture::Load("/textures/emitter.png");;
 }
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level){

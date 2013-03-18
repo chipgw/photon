@@ -9,15 +9,15 @@ namespace gui{
 photon_gui_game InitGameGUI(){
     photon_gui_game gui;
 
-    gui.bar.top = -0.5f;
-    gui.bar.bottom = -4.5f;
-    gui.bar.left = -4.0f;
-    gui.bar.right = 4.0f;
+    gui.bar.top = 0.5f;
+    gui.bar.bottom = 0.0f;
+    gui.bar.left = -1.0f;
+    gui.bar.right = 1.0f;
 
     gui.bar_texture = texture::Load("/textures/gui/bar.png");
 
-    gui.current_item.top = -0.56f;
-    gui.current_item.bottom = -0.96f;
+    gui.current_item.top = 0.56f;
+    gui.current_item.bottom = 0.06f;
     gui.current_item.left = -0.6f;
     gui.current_item.right = -0.2f;
 
@@ -39,6 +39,7 @@ void DrawBounds(photon_gui_bounds &bounds){
 
 void DrawGameGUI(photon_gui_game &gui){
     opengl::SetColorGUI(glm::vec4(0.0f));
+    opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
     glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
     DrawBounds(gui.bar);
 

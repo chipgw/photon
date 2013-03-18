@@ -1,6 +1,7 @@
 #version 110
 
 uniform float aspect;
+uniform vec2 center;
 
 attribute vec2 in_location;
 attribute vec2 in_uv;
@@ -15,6 +16,8 @@ void main(void) {
     }else if(aspect < 1.0){
         location.y *= aspect;
     }
+
+    location += center;
 
     gl_Position = vec4(location, 0.0, 1.0);
 

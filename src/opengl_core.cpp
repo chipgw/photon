@@ -299,6 +299,11 @@ void SetColorGUI(glm::vec4 color){
     glUniform4fv(glGetUniformLocation(shader_text.program, "color"), 1, glm::value_ptr(color));
 }
 
+void SetCenterGUI(glm::vec2 center){
+    glUseProgram(shader_text.program);
+    glUniform2fv(glGetUniformLocation(shader_text.program, "center"), 1, glm::value_ptr(center));
+}
+
 void SetFacFX(float fac){
     glUniform1f(glGetUniformLocation(shader_fx.program, "fac"), fac);
 }

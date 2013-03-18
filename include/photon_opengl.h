@@ -127,6 +127,8 @@ void DrawModeGUI(photon_window &window);
 
 void SetColorGUI(glm::vec4 color);
 
+void SetCenterGUI(glm::vec2 center);
+
 void SetLaserColor(glm::vec3 color);
 
 void SetFacFX(float fac);

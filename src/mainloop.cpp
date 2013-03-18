@@ -122,7 +122,9 @@ void MainLoop(photon_instance &instance){
         opengl::DrawModeGUI(instance.window);
 
         gui::DrawGameGUI(game_gui);
-        gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
+
+        opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
+        gui::RenderText(glm::vec2(-0.9f,0.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

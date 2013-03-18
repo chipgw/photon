@@ -80,16 +80,8 @@ void MainLoop(photon_instance &instance){
         }
     }
 
-    photon_gui_element button;
-
-    button.left = -0.4f;
-    button.right = 0.4f;
-    button.bottom = -0.9f;
-    button.top = -0.7f;
-    button.text_padding = 0.05f;
-    button.text = "good!";
-    button.text_color = glm::vec4(1.0f);
-    button.texture = texture::Load("/textures/button.png");
+    // TODO - find a proper place to put this... probably some structure that holds all GUI states and put that in the instance...
+    photon_gui_game game_gui = gui::InitGameGUI();
 
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
@@ -141,7 +133,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawElement(button);
+        gui::DrawGameGUI(game_gui);
         gui::RenderText(glm::vec2(-1.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);

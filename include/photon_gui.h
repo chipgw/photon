@@ -5,34 +5,35 @@
 #include <string>
 
 namespace photon{
-struct photon_gui_element{
+struct photon_level;
+struct photon_gui_bounds{
     float top = 0.0f;
     float bottom = 0.0f;
     float left = 0.0f;
     float right = 0.0f;
-
-    unsigned int texture = 0;
-    unsigned int texture_pressed = 0;
-
-    glm::vec4 text_color;
-    glm::vec4 text_color_pressed;
-
-    float text_padding = 0.025f;
-    bool center_text = true;
-
-    std::string text;
 };
 
+struct photon_gui_game{
+    photon_gui_bounds current_item;
+
+    photon_gui_bounds bar;
+    unsigned int bar_texture;
+
+    photon_gui_bounds time_display;
+    photon_gui_bounds moves_display;
+};
 
 namespace gui{
+
+photon_gui_game InitGameGUI();
 
 void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
-void DrawElement(photon_gui_element &element);
+void DrawGameGUI(photon_gui_game &gui);
 
-bool InBounds(glm::vec2 coord, photon_gui_element &element);
+bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds);
 
 }
 

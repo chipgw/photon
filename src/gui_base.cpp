@@ -1,40 +1,55 @@
 #include "photon_gui.h"
+#include "photon_level.h"
 #include "photon_opengl.h"
 #include "photon_texture.h"
 
 namespace photon{
 
 namespace gui{
+photon_gui_game InitGameGUI(){
+    photon_gui_game gui;
 
-void DrawElement(photon_gui_element &element){
-    opengl::SetColorGUI(glm::vec4(0.0f));
-    glBindTexture(GL_TEXTURE_2D, element.texture);
+    gui.bar.top = -0.5f;
+    gui.bar.bottom = -4.5f;
+    gui.bar.left = -4.0f;
+    gui.bar.right = 4.0f;
 
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, element.left, element.bottom);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, element.left, element.top);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, element.right, element.top);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, element.right, element.bottom);
-    }glEnd();
+    gui.bar_texture = texture::Load("/textures/gui/bar.png");
 
-    glm::vec2 text_position(element.left, element.bottom + element.text_padding);
-    float scale = (element.top - element.text_padding) - (element.bottom + element.text_padding);
+    gui.current_item.top = -0.56f;
+    gui.current_item.bottom = -0.96f;
+    gui.current_item.left = -0.6f;
+    gui.current_item.right = -0.2f;
 
-    if(element.center_text){
-        text_position.x += element.right;
-        text_position.x /= 2;
-    }
-
-    RenderText(text_position, glm::vec2(scale), element.text_color, element.center_text, element.text.c_str());
+    return gui;
 }
 
-bool InBounds(glm::vec2 coord, photon_gui_element &element){
-    return coord.x > element.left && coord.x < element.right &&
-            coord.y > element.bottom && coord.y < element.top;
+void DrawBounds(photon_gui_bounds &bounds){
+    glBegin(GL_QUADS);{
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.left, bounds.bottom);
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.left, bounds.top);
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.right, bounds.top);
+        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.right, bounds.bottom);
+    }glEnd();
+}
+
+void DrawGameGUI(photon_gui_game &gui){
+    opengl::SetColorGUI(glm::vec4(0.0f));
+    glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
+    DrawBounds(gui.bar);
+
+    // TODO - get current item from inventory.
+    glBindTexture(GL_TEXTURE_2D, blocks::GetBlockTexture(mirror));
+    DrawBounds(gui.current_item);
+}
+
+bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds){
+    return coord.x > bounds.left && coord.x < bounds.right &&
+            coord.y > bounds.bottom && coord.y < bounds.top;
 }
 
 }

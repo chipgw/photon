@@ -103,6 +103,53 @@ void Draw(photon_block block, glm::uvec2 location){
     }
 }
 
+unsigned int GetBlockTexture(block_type type){
+    switch(type){
+    default:
+        return 0;
+        break;
+    case plain:
+        return texture_plain_block;
+        break;
+    case indestructible:
+        // TODO - make different texture.
+        return texture_plain_block;
+        break;
+    case mirror:
+    case mirror_locked:
+    case mirror_locked_pos:
+        return texture_mirror;
+        break;
+    case tnt:
+        return texture_tnt;
+        break;
+    case filter_red:
+        return texture_filter_red;
+        break;
+    case filter_green:
+        return texture_filter_green;
+        break;
+    case filter_blue:
+        return texture_filter_blue;
+        break;
+    case filter_yellow:
+        return texture_filter_yellow;
+        break;
+    case filter_cyan:
+        return texture_filter_cyan;
+        break;
+    case filter_magenta:
+        return texture_filter_magenta;
+        break;
+    case emitter_white:
+    case emitter_red:
+    case emitter_green:
+    case emitter_blue:
+        return texture_emitter;
+        break;
+    }
+}
+
 void DrawFX(photon_block block, glm::uvec2 location){
     switch(block.type){
     default:

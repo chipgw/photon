@@ -69,6 +69,8 @@ void LoadTextures();
 
 void OnFrame(glm::uvec2 location, photon_level &level, float time);
 
+unsigned int GetBlockTexture(block_type type);
+
 }
 
 }

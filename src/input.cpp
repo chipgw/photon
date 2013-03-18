@@ -64,30 +64,43 @@ void DoInputSingle(input_state &state){
 }
 
 void DoInput(photon_instance &instance, float time){
-    DoInputSingle(instance.input_set.interact);
-    DoInputSingle(instance.input_set.move_positive_x);
-    DoInputSingle(instance.input_set.move_negative_x);
-    DoInputSingle(instance.input_set.move_positive_y);
-    DoInputSingle(instance.input_set.move_negative_y);
-    DoInputSingle(instance.input_set.rotate_clockwise);
-    DoInputSingle(instance.input_set.rotate_counter_clockwise);
-    DoInputSingle(instance.input_set.zoom_in);
-    DoInputSingle(instance.input_set.zoom_out);
+    if(false){ // TODO - make it check if GUI is active.
+        gui_input &gui = instance.input_gui;
+        DoInputSingle(gui.left);
+        DoInputSingle(gui.right);
+        DoInputSingle(gui.up);
+        DoInputSingle(gui.down);
+        DoInputSingle(gui.select);
+        DoInputSingle(gui.back);
 
-    instance.player.location.x += (instance.input_set.move_positive_x.current_state - instance.input_set.move_negative_x.current_state) * time * instance.zoom;
-    instance.player.location.y += (instance.input_set.move_positive_y.current_state - instance.input_set.move_negative_y.current_state) * time * instance.zoom;
+        // TODO - code goes here...
+    }else{
+        game_input &game = instance.input_game;
+        DoInputSingle(game.interact);
+        DoInputSingle(game.move_positive_x);
+        DoInputSingle(game.move_negative_x);
+        DoInputSingle(game.move_positive_y);
+        DoInputSingle(game.move_negative_y);
+        DoInputSingle(game.rotate_clockwise);
+        DoInputSingle(game.rotate_counter_clockwise);
+        DoInputSingle(game.zoom_in);
+        DoInputSingle(game.zoom_out);
 
-    if(instance.input_set.interact.current_state > 0.9f && instance.input_set.interact.last_state < 0.9f){
-        blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
-    }
-    if(instance.input_set.rotate_clockwise.current_state > 0.9f && instance.input_set.rotate_clockwise.last_state < 0.9f){
-        blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
-    }
-    if(instance.input_set.rotate_counter_clockwise.current_state > 0.9f && instance.input_set.rotate_counter_clockwise.last_state < 0.9f){
-        blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
-    }
+        instance.player.location.x += (game.move_positive_x.current_state - game.move_negative_x.current_state) * time * instance.zoom;
+        instance.player.location.y += (game.move_positive_y.current_state - game.move_negative_y.current_state) * time * instance.zoom;
 
-    instance.zoom -= (instance.input_set.zoom_in.current_state - instance.input_set.zoom_out.current_state) * time;
+        if(game.interact.current_state > 0.9f && game.interact.last_state < 0.9f){
+            blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
+        }
+        if(game.rotate_clockwise.current_state > 0.9f && game.rotate_clockwise.last_state < 0.9f){
+            blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
+        }
+        if(game.rotate_counter_clockwise.current_state > 0.9f && game.rotate_counter_clockwise.last_state < 0.9f){
+            blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
+        }
+
+        instance.zoom -= (game.zoom_in.current_state - game.zoom_out.current_state) * time;
+    }
 }
 
 void DoEvents(photon_instance &instance, float time){

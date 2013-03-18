@@ -67,6 +67,23 @@ struct game_input{
 
     input_state zoom_out;
     input_state zoom_in;
+
+    input_state open_inventory;
+    input_state next_item;
+    input_state previous_item;
+};
+
+/*!
+ * \brief holds the inputs used by the GUI
+ */
+struct gui_input{
+    input_state left;
+    input_state right;
+    input_state up;
+    input_state down;
+
+    input_state select;
+    input_state back;
 };
 
 /*!

@@ -12,7 +12,8 @@ namespace photon{
 struct photon_instance{
     photon_window window;
 
-    input::game_input input_set;
+    input::game_input input_game;
+    input::gui_input input_gui;
 
     photon_level level;
 

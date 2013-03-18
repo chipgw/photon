@@ -24,32 +24,11 @@ namespace photon{
 
 namespace blocks{
 
-void DrawBox(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
+void DrawBlock(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
     glm::vec2 point1(size);
     glm::vec2 point2(size);
     point1 = glm::rotate(point1, rotation);
     point2 = glm::rotate(point2, rotation - 90.0f);
-
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point1.x, location.y + point1.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point2.x, location.y - point2.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point1.x, location.y - point1.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point2.x, location.y + point2.y);
-    }glEnd();
-}
-
-void DrawMirror(glm::uvec2 location, float angle){
-    glm::vec2 point1(0.4f, 0.05f);
-    glm::vec2 point2(0.05f, 0.4f);
-    point1 = glm::rotate(point1, angle);
-    point2 = glm::rotate(point2, angle + 90.0f);
 
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
@@ -73,53 +52,53 @@ void Draw(photon_block block, glm::uvec2 location){
     case plain:
         glBindTexture(GL_TEXTURE_2D, texture_plain_block);
 
-        DrawBox(location);
+        DrawBlock(location);
         break;
     case indestructible:
         // TODO - make different texture.
         glBindTexture(GL_TEXTURE_2D, texture_plain_block);
-        DrawBox(location);
+        DrawBlock(location);
         break;
     case mirror:
     case mirror_locked:
     case mirror_locked_pos:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
-        DrawMirror(location, block.data);
+        DrawBlock(location, 0.4f, block.data);
         break;
     case tnt:
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
-        DrawBox(location);
+        DrawBlock(location);
         break;
     case filter_red:
         glBindTexture(GL_TEXTURE_2D, texture_filter_red);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case filter_green:
         glBindTexture(GL_TEXTURE_2D, texture_filter_green);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case filter_blue:
         glBindTexture(GL_TEXTURE_2D, texture_filter_blue);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case filter_yellow:
         glBindTexture(GL_TEXTURE_2D, texture_filter_yellow);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case filter_cyan:
         glBindTexture(GL_TEXTURE_2D, texture_filter_cyan);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case filter_magenta:
         glBindTexture(GL_TEXTURE_2D, texture_filter_magenta);
-        DrawBox(location, 0.2f);
+        DrawBlock(location, 0.2f);
         break;
     case emitter_white:
     case emitter_red:
     case emitter_green:
     case emitter_blue:
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
-        DrawBox(location, 0.5f, block.data);
+        DrawBlock(location, 0.5f, block.data);
         break;
     }
 }
@@ -132,12 +111,12 @@ void DrawFX(photon_block block, glm::uvec2 location){
         // TODO - draw some warmup thing...
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
         opengl::SetFacFX(block.data * 0.5f);
-        DrawBox(location);
+        DrawBlock(location);
         break;
     case tnt_fireball:
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
         opengl::SetFacFX(block.data);
-        DrawBox(location, 1.5);
+        DrawBlock(location, 1.5);
         break;
     }
 }

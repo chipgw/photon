@@ -181,6 +181,10 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         // stops tracing the laser.
         return nullptr;
         break;
+    case emitter_white:
+    case emitter_red:
+    case emitter_green:
+    case emitter_blue:
     case plain:
     case indestructible:
         // stops tracing the laser.

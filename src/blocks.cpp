@@ -417,8 +417,15 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
 
 void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength){
     glm::uvec2 dist(std::ceil(strength));
-    glm::uvec2 current = location - dist;
+    glm::uvec2 current = glm::uvec2(glm::max(glm::ivec2(location) - glm::ivec2(dist), glm::ivec2(0)));
     glm::uvec2 end = location + dist;
+
+    if(end.x >= level.grid.shape()[0]){
+        end.x = level.grid.shape()[0] - 1;
+    }
+    if(end.y >= level.grid.shape()[1]){
+        end.y = level.grid.shape()[1] - 1;
+    }
 
     unsigned int y = current.y;
     for(;current.x <= end.x;current.x++){

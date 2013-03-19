@@ -2,47 +2,425 @@
 <photon_level width="20" height="20" >
   <data>
     <row y="1">
-      <block x="0" type="emitter_white" angle="0" />
+      <block x="0" type="emitter_blue" angle="0" />
     </row>
     <row y="2">
-      <block x="0" type="emitter_white" angle="0" />
+      <block x="1" type="tnt" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="tnt" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
     </row>
     <row y="3">
-      <block x="0" type="emitter_white" angle="0" />
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="tnt" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="tnt" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
     </row>
     <row y="4">
-      <block x="2" type="filter_red" />
-      <block x="3" type="filter_green" />
-      <block x="4" type="filter_blue" />
-      <block x="5" type="filter_yellow" />
-      <block x="6" type="filter_cyan" />
-      <block x="7" type="filter_magenta" />
-      <block x="8" type="plain" />
-      <block x="9" type="tnt" />
-      <block x="10" type="plain" />
-      <block x="11" type="plain" />
-      <block x="12" type="plain" />
-    </row>
-    <row y="5">
-      <block x="8" type="plain" />
-      <block x="9" type="plain" />
-      <block x="10" type="plain" />
-      <block x="11" type="plain" />
-      <block x="12" type="plain" />
-    </row>
-    <row y="6">
-      <block x="8" type="plain" />
-      <block x="9" type="plain" />
-      <block x="10" type="plain" />
-      <block x="11" type="plain" />
-      <block x="12" type="plain" />
-    </row>
-    <row y="7">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
       <block x="8" type="plain" />
       <block x="9" type="plain" />
       <block x="10" type="tnt" />
       <block x="11" type="plain" />
       <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="5">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="tnt" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="tnt" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="tnt" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="6">
+      <block x="1" type="plain" />
+      <block x="2" type="tnt" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="tnt" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="tnt" />
+      <block x="17" type="tnt" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="7">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="tnt" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="tnt" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="8">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="tnt" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="tnt" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="9">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="tnt" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="tnt" />
+    </row>
+    <row y="10">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="tnt" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="tnt" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="11">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="tnt" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="tnt" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="12">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="tnt" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="tnt" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="13">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="tnt" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="14">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="tnt" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="tnt" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="15">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="tnt" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="16">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="tnt" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="17">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="tnt" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="tnt" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="tnt" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="tnt" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="18">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="tnt" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="tnt" />
+      <block x="7" type="plain" />
+      <block x="8" type="tnt" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="tnt" />
+      <block x="13" type="tnt" />
+      <block x="14" type="tnt" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="tnt" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="19">
+      <block x="1" type="plain" />
+      <block x="2" type="plain" />
+      <block x="3" type="tnt" />
+      <block x="4" type="plain" />
+      <block x="5" type="plain" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="tnt" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="plain" />
+      <block x="15" type="plain" />
+      <block x="16" type="tnt" />
+      <block x="17" type="plain" />
+      <block x="18" type="plain" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
+    </row>
+    <row y="20">
+      <block x="1" type="plain" />
+      <block x="2" type="tnt" />
+      <block x="3" type="plain" />
+      <block x="4" type="plain" />
+      <block x="5" type="tnt" />
+      <block x="6" type="plain" />
+      <block x="7" type="plain" />
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+      <block x="13" type="plain" />
+      <block x="14" type="tnt" />
+      <block x="15" type="plain" />
+      <block x="16" type="plain" />
+      <block x="17" type="plain" />
+      <block x="18" type="tnt" />
+      <block x="19" type="plain" />
+      <block x="20" type="plain" />
     </row>
   </data>
 </photon_level>

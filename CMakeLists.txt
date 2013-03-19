@@ -74,9 +74,7 @@ else(OPENGL_FOUND)
   message(FATAL_ERROR "OpenGL not found by CMake!!!")
 endif(OPENGL_FOUND)
 
-set(Boost_ADDITIONAL_VERSIONS "1.47" "1.47.0" "1.48" "1.48.0" "1.49" "1.49.0")
-
-find_package(Boost 1.45 COMPONENTS  system filesystem date_time program_options REQUIRED)
+find_package(Boost 1.5 COMPONENTS  system filesystem date_time program_options REQUIRED)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIR})
   target_link_libraries(${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_RELEASE} ${Boost_DATE_TIME_LIBRARY_RELEASE} ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE})

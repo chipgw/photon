@@ -247,41 +247,44 @@ void DrawPhoton(glm::vec2 location){
     glBindTexture(GL_TEXTURE_2D, photon_texture);
 
     SetFacFX(1.0f);
+    const float size = 0.2f;
 
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y + 0.2);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y + size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y + 0.2);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y + size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 0.2, location.y - 0.2);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y - size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 0.2, location.y - 0.2);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y - size);
     }glEnd();
 }
 
 void DrawPhotonLight(glm::vec2 location){
+    const float size = 16.0f;
+
     glBegin(GL_TRIANGLE_FAN);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
         glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 8.0, location.y);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.5f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x , location.y + 8.0);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x , location.y + size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - 8.0, location.y);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.5f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y - 8.0);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y - size);
 
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + 8.0, location.y);
+        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y);
     }glEnd();
 }
 

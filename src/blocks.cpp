@@ -200,14 +200,6 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     }
     case tnt:
         block.data += time;
-        if(block.data > 1.0f){
-            // TODO - KABOOM goes here...
-            PrintToLog("INFO: KABOOM!");
-            block.type = tnt_fireball;
-            // cooldown of fireball
-            block.data = 1.0f;
-            break;
-        }
         // stops tracing the laser.
         return nullptr;
         break;
@@ -347,6 +339,16 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
     default:
         break;
     case tnt:
+        // if block is triggered, explode.
+        if(block.data > 1.0f){
+            DamageAroundPoint(location, level, 4.0f);
+            // TODO - KABOOM goes here...
+            PrintToLog("INFO: KABOOM!");
+            block.type = tnt_fireball;
+            // cooldown of fireball
+            block.data = 1.0f;
+            break;
+        }
         // if block was not activated last frame cool down timer.
         if(!block.activated){
             block.data -= time;
@@ -394,6 +396,36 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
     }
     }
     block.activated = false;
+}
+
+void OnDamage(glm::uvec2 location, photon_level &level, float damage){
+    photon_block &block = level.grid[location.x][location.y];
+    switch(block.type){
+    default:
+        break;
+    case plain:
+        if(damage > 0.5f){
+            block.type = air;
+        }
+        break;
+    case tnt:
+        // will make explosions trigger nearby TNT...
+        block.data += damage * 2.0f;
+        break;
+    }
+}
+
+void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength){
+    glm::uvec2 dist(std::ceil(strength));
+    glm::uvec2 current = location - dist;
+    glm::uvec2 end = location + dist;
+
+    unsigned int y = current.y;
+    for(;current.x <= end.x;current.x++){
+        for(current.y = y;current.y <= end.y;current.y++){
+            OnDamage(current, level, std::max(2.0f - (glm::distance2(glm::vec2(current), glm::vec2(location)) / strength), 0.0f));
+        }
+    }
 }
 
 }

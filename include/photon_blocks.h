@@ -71,6 +71,10 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time);
 
 unsigned int GetBlockTexture(block_type type);
 
+void OnDamage(glm::uvec2 location, photon_level &level, float damage);
+
+void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength);
+
 }
 
 }

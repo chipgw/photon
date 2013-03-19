@@ -17,6 +17,32 @@
       <block x="5" type="filter_yellow" />
       <block x="6" type="filter_cyan" />
       <block x="7" type="filter_magenta" />
+      <block x="8" type="plain" />
+      <block x="9" type="tnt" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+    </row>
+    <row y="5">
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+    </row>
+    <row y="6">
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="plain" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
+    </row>
+    <row y="7">
+      <block x="8" type="plain" />
+      <block x="9" type="plain" />
+      <block x="10" type="tnt" />
+      <block x="11" type="plain" />
+      <block x="12" type="plain" />
     </row>
   </data>
 </photon_level>

@@ -3,6 +3,7 @@
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
+#include <string>
 
 namespace photon{
 /*!
@@ -55,6 +56,13 @@ void GarbageCollect(photon_window &window, bool quitSDL = true);
  * \param window The window to toggle.
 */
 void ToggleFullscreen(photon_window &window);
+
+/*!
+ * \brief loads and sets the window icon
+ * \param filename
+ */
+void SetWindowIcon(photon_window &window, const std::string &filename);
+
 }
 }
 #endif

@@ -90,7 +90,7 @@ void InitOpenGL(photon_window &window){
 
     blocks::LoadTextures();
 
-    photon_texture = texture::Load("/textures/photon.tga");
+    photon_texture = texture::Load("/textures/photon.png");
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");

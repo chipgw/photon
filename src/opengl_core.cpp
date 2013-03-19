@@ -100,6 +100,8 @@ void InitOpenGL(photon_window &window){
 void GarbageCollect(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
+    CheckOpenGLErrors();
+
     texture::GarbageCollect();
 
     DeleteShader(shader_scene);

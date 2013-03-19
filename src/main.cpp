@@ -5,6 +5,8 @@ int main(int argc, char *argv[]){
 
     photon::MainLoop(instance);
 
+    photon::GarbageCollect(instance);
+
     return 0;
 }
 

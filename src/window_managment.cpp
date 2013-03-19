@@ -54,7 +54,7 @@ photon_window CreateSDLWindow(){
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    SDL_ShowCursor(SDL_DISABLE);
+    SDL_ShowCursor(SDL_ENABLE);
 
     SetWindowIcon(window, "/textures/gui/window_icon.png");
 

@@ -15,11 +15,6 @@ void DoInputSingle(input_state &state){
         state.current_state = keyboard[state.key] && (modifiers == state.modifiers);
         break;
     }
-    case mouse_button:
-
-        break;
-    case mouse_position:
-        break;
     case joystick_axis:{
         if(state.joystick_input_index > -1){
             state.current_state = SDL_JoystickGetAxis(state.joystick, state.joystick_input_index) / 32768.0f;

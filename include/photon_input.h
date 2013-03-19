@@ -9,8 +9,6 @@ namespace input{
 enum input_type{
     none,
     keyboard,
-    mouse_button,
-    mouse_position,
     joystick_button,
     joystick_axis,
     gamecontroller_button,
@@ -30,9 +28,6 @@ struct input_state{
     // the index of the button or axis of the joystick.
     int joystick_input_index = -1;
 
-    // the mouse button for that type of input.
-    unsigned int mouse_button = 0;
-
     // the key scancode for keabord input types.
     SDL_Scancode key = (SDL_Scancode)0;
     // the modifiers for keyboard input types.
@@ -44,7 +39,6 @@ struct input_state{
     SDL_GameControllerAxis controller_axis;
     // the button to use
     SDL_GameControllerButton controller_button;
-
 
     // whether or not to negate the axis input. (i.e mouse position, joystick axis and controller sticks)
     bool axis_input_negate = false;

@@ -2,6 +2,7 @@
 #define _PHOTON_BLOCKS_H_
 
 #include <glm/glm.hpp>
+#include "photon_opengl.h"
 
 namespace photon{
 struct photon_lasersegment;
@@ -61,19 +62,21 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level);
 
 void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise = false);
 
+void OnFrame(glm::uvec2 location, photon_level &level, float time);
+
+void OnDamage(glm::uvec2 location, photon_level &level, float damage);
+
+void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength);
+
+// Drawing functions
+
 void Draw(photon_block block, glm::uvec2 location);
 
 void DrawFX(photon_block block, glm::uvec2 location);
 
 void LoadTextures();
 
-void OnFrame(glm::uvec2 location, photon_level &level, float time);
-
-unsigned int GetBlockTexture(block_type type);
-
-void OnDamage(glm::uvec2 location, photon_level &level, float damage);
-
-void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength);
+GLuint GetBlockTexture(block_type type);
 
 }
 

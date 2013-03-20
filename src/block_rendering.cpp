@@ -101,7 +101,7 @@ void Draw(photon_block block, glm::uvec2 location){
     }
 }
 
-unsigned int GetBlockTexture(block_type type){
+GLuint GetBlockTexture(block_type type){
     switch(type){
     default:
         return 0;

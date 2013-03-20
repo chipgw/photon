@@ -1,7 +1,11 @@
 namespace photon{
+
 namespace version{
+
 const char* git_sha1 =  "@GIT_SHA1@";
 
 const char* build_type =  "@CMAKE_BUILD_TYPE@";
+
 }
+
 }

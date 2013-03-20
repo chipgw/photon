@@ -109,7 +109,7 @@ void GarbageCollect(photon_window &window){
     PrintToLog("INFO: OpenGL garbage collection complete.");
 }
 
-void OnResize(int width, int height, photon_window &window){
+void OnResize(uint32_t width, uint32_t height, photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
     PrintToLog("INFO: Resizing window to %ix%i.", width, height);

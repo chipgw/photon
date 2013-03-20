@@ -4,6 +4,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <string>
+#include "photon_opengl.h"
 
 namespace photon{
 /*!
@@ -14,11 +15,11 @@ struct photon_window{
     SDL_GLContext context_SDL = nullptr;
     bool fullscreen = false;
 
-    unsigned int width = 1;
-    unsigned int height = 1;
+    uint32_t width = 1;
+    uint32_t height = 1;
 
-    unsigned int light_buffer = 0;
-    unsigned int light_buffer_texture = 0;
+    GLuint light_buffer = 0;
+    GLuint light_buffer_texture = 0;
 };
 struct photon_instance;
 

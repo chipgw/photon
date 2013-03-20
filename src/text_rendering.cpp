@@ -46,8 +46,8 @@ void InitFreeType(){
     const char *font_filename = "/Orbitron Bold.otf";
 
     PHYSFS_File *file;
-    long length;
-    unsigned char *font_buffer;
+    intmax_t length;
+    uint8_t *font_buffer;
 
     file = PHYSFS_openRead(font_filename);
     if(!file){
@@ -56,12 +56,12 @@ void InitFreeType(){
     }
 
     length = PHYSFS_fileLength(file);
-    font_buffer = (unsigned char*)malloc(length);
+    font_buffer = (uint8_t*)malloc(length);
 
     PHYSFS_read(file, font_buffer, 1, length);
     PHYSFS_close(file);
 
-    int err = FT_New_Memory_Face(ft, font_buffer, length, 0, &face);
+    FT_Error err = FT_New_Memory_Face(ft, font_buffer, length, 0, &face);
 
     if(err){
         PrintToLog("ERROR: Could not load font \"%s\"! error code %x!", font_filename, err);
@@ -100,7 +100,7 @@ void InitFreeType(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned int x = 0;
+    uint32_t x = 0;
 
     for(unsigned char i = 32; i < 128; i++) {
         if(FT_Load_Char(face, i, FT_LOAD_RENDER))

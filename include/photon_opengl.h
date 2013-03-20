@@ -41,7 +41,7 @@ void GarbageCollect(photon_window &window);
  * \param height
  * \param window
  */
-void OnResize(int width, int height, photon_window &window);
+void OnResize(uint32_t width, uint32_t height, photon_window &window);
 
 /*!
  * \brief CheckOpenGLErrors

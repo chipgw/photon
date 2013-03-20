@@ -1,7 +1,7 @@
 #ifndef _PHOTON_LEVEL_H_
 #define _PHOTON_LEVEL_H_
 
-#include "boost/multi_array.hpp"
+#include <boost/multi_array.hpp>
 #include "photon_blocks.h"
 #include "photon_laser.h"
 

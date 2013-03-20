@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include "photon_opengl.h"
 
 namespace photon{
 struct photon_level;
@@ -17,7 +18,7 @@ struct photon_gui_game{
     photon_gui_bounds current_item;
 
     photon_gui_bounds bar;
-    unsigned int bar_texture;
+    GLuint bar_texture;
 
     photon_gui_bounds time_display;
     photon_gui_bounds moves_display;

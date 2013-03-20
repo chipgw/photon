@@ -20,7 +20,8 @@ struct photon_instance{
     photon_player player;
 
     /*! \brief total frames rendered */
-    unsigned long total_frames = 0;
+    uintmax_t total_frames = 0;
+
     /*! \brief is set to true when the main loop starts, set to false to end loop. */
     bool running = false;
 

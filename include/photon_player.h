@@ -2,13 +2,14 @@
 #define _PHOTON_PLAYER_H_
 
 #include <glm/glm.hpp>
-#include <photon_laser.h>
 #include <vector>
+#include "photon_laser.h"
+#include "photon_blocks.h"
 
 namespace photon{
 
 struct photon_player{
-    glm::vec2 location;
+    glm::vec2 location = glm::vec2(0.0f);
 
     // TODO - keep a list of items at the player's disposal.
 };

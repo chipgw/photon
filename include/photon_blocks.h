@@ -16,7 +16,6 @@ enum block_type{
 
     mirror, // normal movable & rotatable mirror.
     mirror_locked, // mirror with locked position and rotation.
-    mirror_locked_pos, // mirror with locked position.
 
     plain, // your basic everyday block.
     indestructible, // you can't touch this!
@@ -55,6 +54,9 @@ struct photon_block{
 
     // used to tell if a laser intersected with it last frame.
     bool activated = false;
+
+    // if locked you cannot pick it up. (some you cannot pick up at all)
+    bool locked = false;
 };
 
 namespace blocks{

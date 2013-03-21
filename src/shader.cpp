@@ -166,9 +166,9 @@ photon_shader LoadShaderXML(const std::string &filename){
 
         xmlNodePtr node = root->xmlChildrenNode;
         while(node != nullptr) {
-            if(!xmlStrcmp(node->name, (const xmlChar *)"vertex_shader")){
+            if(xmlStrEqual(node->name, (const xmlChar *)"vertex_shader")){
                 ParseShaderObjectXML(shader, doc, node, GL_VERTEX_SHADER, filename);
-            }else if(!xmlStrcmp(node->name, (const xmlChar *)"fragment_shader")){
+            }else if(xmlStrEqual(node->name, (const xmlChar *)"fragment_shader")){
                 ParseShaderObjectXML(shader, doc, node, GL_FRAGMENT_SHADER, filename);
             }
             node = node->next;
@@ -179,7 +179,7 @@ photon_shader LoadShaderXML(const std::string &filename){
 
         node = root->xmlChildrenNode;
         while(node != nullptr) {
-            if((!xmlStrcmp(node->name, (const xmlChar *)"input"))){
+            if((xmlStrEqual(node->name, (const xmlChar *)"input"))){
                 xmlChar *input_name = xmlGetProp(node, (const xmlChar *)"name");
                 xmlChar *input_type = xmlGetProp(node, (const xmlChar *)"type");
 
@@ -187,14 +187,14 @@ photon_shader LoadShaderXML(const std::string &filename){
                 PrintToLog("DEBUG: input name %s type %s", input_name, input_type);
 #endif
 
-                if(!xmlStrcmp(input_type, (const xmlChar *)"location")){
+                if(xmlStrEqual(input_type, (const xmlChar *)"location")){
                     glBindAttribLocation(shader.program, PHOTON_VERTEX_LOCATION_ATTRIBUTE, (const GLchar *)input_name);
-                }else if(!xmlStrcmp(input_type, (const xmlChar *)"uv")){
+                }else if(xmlStrEqual(input_type, (const xmlChar *)"uv")){
                     glBindAttribLocation(shader.program, PHOTON_VERTEX_UV_ATTRIBUTE, (const GLchar *)input_name);
                 }
                 xmlFree(input_name);
                 xmlFree(input_type);
-            }else if((!xmlStrcmp(node->name, (const xmlChar *)"texture2D"))){
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"texture2D"))){
                 xmlChar *uniform_name = xmlGetProp(node, (const xmlChar *)"name");
                 GLuint texuniform = glGetUniformLocation(shader.program, (const GLchar *)uniform_name);
 
@@ -204,9 +204,9 @@ photon_shader LoadShaderXML(const std::string &filename){
                 PrintToLog("DEBUG: uniform name %s type %s", uniform_name, texture_type);
 #endif
 
-                if(!xmlStrcmp(texture_type, (const xmlChar *)"color")){
+                if(xmlStrEqual(texture_type, (const xmlChar *)"color")){
                     glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_COLOR - GL_TEXTURE0);
-                }else if(!xmlStrcmp(texture_type, (const xmlChar *)"light")){
+                }else if(xmlStrEqual(texture_type, (const xmlChar *)"light")){
                     glUniform1i(texuniform, PHOTON_TEXTURE_UNIT_LIGHT - GL_TEXTURE0);
                 }
                 xmlFree(uniform_name);

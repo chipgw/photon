@@ -59,7 +59,6 @@ void Draw(photon_block block, glm::uvec2 location){
         break;
     case mirror:
     case mirror_locked:
-    case mirror_locked_pos:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
         DrawBlock(location, 0.4f, block.data);
         break;
@@ -115,7 +114,6 @@ GLuint GetBlockTexture(block_type type){
         break;
     case mirror:
     case mirror_locked:
-    case mirror_locked_pos:
         return texture_mirror;
         break;
     case tnt:

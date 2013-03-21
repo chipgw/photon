@@ -32,8 +32,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         return nullptr;
         break;
     case mirror:
-    case mirror_locked:
-    case mirror_locked_pos:{
+    case mirror_locked:{
         float angle = segment->angle - block.data;
         if(fmod(angle, 180.0f) == 0.0f){
             return nullptr;
@@ -141,10 +140,18 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
         default:
             break;
         case tnt:
+        case filter_red:
+        case filter_green:
+        case filter_blue:
+        case filter_yellow:
+        case filter_cyan:
+        case filter_magenta:
         case mirror:
-            player::AddItem(player, block.type);
-            block.type = air;
-            block.data = 0.0f;
+            if(!block.locked){
+                player::AddItem(player, block.type);
+                block.type = air;
+                block.data = 0.0f;
+            }
             break;
         }
     }
@@ -157,7 +164,6 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
         default:
             break;
         case mirror:
-        case mirror_locked_pos:
             if(counter_clockwise){
                 block.data += 22.5f;
             }else{

@@ -20,48 +20,14 @@ void MainLoop(photon_instance &instance){
 
     instance.player.location = glm::vec2(1.0f,1.0f);
 
-    instance.input.move_positive_x = input::CreateKeyboardInput(SDL_SCANCODE_D);
-    instance.input.move_negative_x = input::CreateKeyboardInput(SDL_SCANCODE_A);
-
-    instance.input.move_positive_y = input::CreateKeyboardInput(SDL_SCANCODE_W);
-    instance.input.move_negative_y = input::CreateKeyboardInput(SDL_SCANCODE_S);
-
-    instance.input.interact = input::CreateKeyboardInput(SDL_SCANCODE_SPACE);
-
-    instance.input.rotate_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_E);
-    instance.input.rotate_counter_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_Q);
-
-    instance.input.zoom_in = input::CreateKeyboardInput(SDL_SCANCODE_KP_PLUS);
-    instance.input.zoom_out = input::CreateKeyboardInput(SDL_SCANCODE_KP_MINUS);
+    instance.input = input::LoadConfig("/config/keyboard.xml");
 
     if(SDL_IsGameController(0)){
-        instance.input.controller = SDL_GameControllerOpen(0);
+        SDL_GameController *controller = SDL_GameControllerOpen(0);
 
-        if(instance.input.controller != nullptr){
-            instance.input.move_positive_x = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTX);
-            instance.input.move_negative_x = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTX, true);
-
-            instance.input.move_positive_y = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTY, true);
-            instance.input.move_negative_y = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTY);
-
-            instance.input.interact = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_A);
-
-            instance.input.rotate_clockwise = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
-            instance.input.rotate_counter_clockwise = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
-
-            instance.input.zoom_in = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_RIGHTY, true);
-            instance.input.zoom_out = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_RIGHTY);
-
-            instance.input.open_inventory = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_Y);
-            instance.input.next_item = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
-            instance.input.previous_item = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-
-            instance.input.left = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-            instance.input.right = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
-            instance.input.up = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_UP);
-            instance.input.down = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-            instance.input.select = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_A);
-            instance.input.back = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_B);
+        if(controller != nullptr){
+            instance.input = input::LoadConfig("/config/controller.xml");
+            instance.input.controller = controller;
 
             PrintToLog("INFO: Game controller found, using...");
         }
@@ -72,6 +38,12 @@ void MainLoop(photon_instance &instance){
 
     // add items to list.
     player::GiveInfiniteItems(instance.player, mirror);
+    player::GiveInfiniteItems(instance.player, filter_red);
+    player::GiveInfiniteItems(instance.player, filter_green);
+    player::GiveInfiniteItems(instance.player, filter_blue);
+    player::GiveInfiniteItems(instance.player, filter_yellow);
+    player::GiveInfiniteItems(instance.player, filter_cyan);
+    player::GiveInfiniteItems(instance.player, filter_magenta);
     player::AddItem(instance.player, tnt, 10);
     // select the first item in the list.
     player::CurrentItem(instance.player);

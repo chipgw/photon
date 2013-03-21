@@ -2,7 +2,7 @@
 <photon_level width="20" height="20" >
   <data>
     <row y="1">
-      <block x="0" type="emitter_blue" angle="0" />
+      <block x="0" type="emitter_white" angle="0" />
     </row>
     <row y="2">
       <block x="1" type="tnt" />

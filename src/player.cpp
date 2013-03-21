@@ -148,7 +148,9 @@ block_type NextItem(photon_player &player){
         }
         player.current_item = current->first;
 
-        PrintToLog("NextItem() switched current item to: %i", player.current_item);
+#ifndef NDEBUG
+        PrintToLog("DEBUG: NextItem() switched current item to: %i", player.current_item);
+#endif
         return player.current_item;
     }else{
         player.current_item =  invalid_block;
@@ -175,7 +177,9 @@ block_type PreviousItem(photon_player &player){
         --current;
         player.current_item = current->first;
 
-        PrintToLog("PreviousItem() switched current item to: %i", player.current_item);
+#ifndef NDEBUG
+        PrintToLog("DEBUG: PreviousItem() switched current item to: %i", player.current_item);
+#endif
         return player.current_item;
 
     }else{

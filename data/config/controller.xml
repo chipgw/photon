@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<photon_input>
+  <interact type="controller_button" button="a" />
+  <rotate_clockwise type="controller_button" button="rightshoulder" />
+  <rotate_counter_clockwise type="controller_button" button="leftshoulder" />
+  <next_item type="controller_button" button="dpleft" />
+  <previous_item type="controller_button" button="dpright" />
+  <move_right type="controller_axis" axis="leftx" />
+  <move_left type="controller_axis" axis="leftx" negate="true" />
+  <move_up type="controller_axis" axis="lefty" negate="true" />
+  <move_down type="controller_axis" axis="lefty" />
+  <zoom_in type="controller_axis" axis="righty" negate="true" />
+  <zoom_out type="controller_axis" axis="righty" />
+  <gui_select type="controller_button" button="a" />
+  <gui_back type="controller_button" button="b" />
+  <gui_up type="controller_button" button="dpup" />
+  <gui_down type="controller_button" button="dpdown" />
+  <gui_left type="controller_button" button="dpleft" />
+  <gui_right type="controller_button" button="dpright" />
+</photon_input>

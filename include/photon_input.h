@@ -28,7 +28,7 @@ struct photon_input_state{
     // the key scancode for keabord input types.
     SDL_Scancode key = (SDL_Scancode)0;
     // the modifiers for keyboard input types.
-    SDL_Keymod modifiers = KMOD_NONE;
+    int modifiers = KMOD_NONE;
 
     // the axis to use.
     SDL_GameControllerAxis controller_axis;
@@ -98,6 +98,9 @@ photon_input_state CreateKeyboardInput(SDL_Scancode key);
 
 photon_input_state CreateJoystickAxisInput(int axis, bool negate = false);
 photon_input_state CreateJoystickButtonInput(int button);
+
+photon_input LoadConfig(const std::string &filename);
+
 }
 
 }

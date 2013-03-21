@@ -1,3 +1,5 @@
+#include <physfs.h>
+#include <libxml/parser.h>
 #include "photon_window_managment.h"
 #include "photon_core.h"
 #include "photon_opengl.h"
@@ -13,7 +15,7 @@ void DoInputSingle(photon_input_state &state, photon_input &input){
     case photon_input_state::keyboard:{
         Uint8* keyboard = SDL_GetKeyboardState(nullptr);
         SDL_Keymod modifiers = SDL_GetModState();
-        state.current_state = keyboard[state.key] && (modifiers == state.modifiers);
+        state.current_state = keyboard[state.key] && (modifiers == state.modifiers || modifiers & state.modifiers);
         break;
     }
     case photon_input_state::joystick_axis:{
@@ -196,6 +198,164 @@ photon_input_state CreateJoystickButtonInput(int button){
 
     return state;
 }
+
+photon_input_state LoadInputSingle(xmlNode *node){
+    photon_input_state state;
+    xmlChar *type_str = xmlGetProp(node, (const xmlChar *)"type");
+
+    if((xmlStrEqual(type_str, (const xmlChar *)"keyboard"))){
+        state.type = photon_input_state::keyboard;
+
+        xmlChar *key_str = xmlGetProp(node, (const xmlChar *)"key");
+        xmlChar *mod_str = xmlGetProp(node, (const xmlChar *)"modifiers");
+
+        state.key = SDL_GetScancodeFromName((char*)key_str);
+        PrintToLog("HIIIIII: %i", state.key);
+
+        if(xmlStrstr(mod_str, (const xmlChar *)"ctrl")){
+            state.modifiers |= KMOD_CTRL;
+        }else if(xmlStrstr(mod_str, (const xmlChar *)"shift")){
+            state.modifiers |= KMOD_SHIFT;
+        }else if(xmlStrstr(mod_str, (const xmlChar *)"alt")){
+            state.modifiers |= KMOD_ALT;
+        }
+
+        xmlFree(key_str);
+        xmlFree(mod_str);
+    }else if((xmlStrEqual(type_str, (const xmlChar *)"joystick_button"))){
+        state.type = photon_input_state::joystick_button;
+
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"index");
+        state.joystick_input_index = atoi((char*)index_str);
+
+        xmlFree(index_str);
+    }else if((xmlStrEqual(type_str, (const xmlChar *)"joystick_axis"))){
+        state.type = photon_input_state::joystick_axis;
+
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"index");
+        xmlChar *negate_str = xmlGetProp(node, (const xmlChar *)"negate");
+        state.joystick_input_index = atoi((char*)index_str);
+        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar *)"true");
+
+        xmlFree(negate_str);
+        xmlFree(index_str);
+    }else if((xmlStrEqual(type_str, (const xmlChar *)"controller_button"))){
+        state.type = photon_input_state::gamecontroller_button;
+
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"button");
+        state.controller_button = SDL_GameControllerGetButtonFromString((char*)index_str);
+
+        xmlFree(index_str);
+    }else if((xmlStrEqual(type_str, (const xmlChar *)"controller_axis"))){
+        state.type = photon_input_state::gamecontroller_axis;
+
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"axis");
+        xmlChar *negate_str = xmlGetProp(node, (const xmlChar *)"negate");
+        state.controller_axis = SDL_GameControllerGetAxisFromString((char*)index_str);
+        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar *)"true");
+
+        xmlFree(negate_str);
+        xmlFree(index_str);
+    }
+    return state;
+}
+
+photon_input LoadConfig(const std::string &filename){
+    photon_input input;
+
+    if(PHYSFS_exists(filename.c_str())){
+        PHYSFS_File *file;
+        long length;
+        char *xml_buffer;
+
+        file = PHYSFS_openRead(filename.c_str());
+        if(!file){
+            PrintToLog("ERROR: unable to open XML input config file \"%s\"", filename.c_str());
+            return input;
+        }
+
+        length = PHYSFS_fileLength(file);
+        xml_buffer = (char*)malloc(length);
+
+        PHYSFS_read(file, xml_buffer, 1, length);
+        PHYSFS_close(file);
+
+        xmlDocPtr doc = xmlParseMemory(xml_buffer, length);
+
+        if(doc == nullptr) {
+            PrintToLog("ERROR: Unable to load XML input config: Document not parsed successfully!");
+            return input;
+        }
+
+        xmlNodePtr root = xmlDocGetRootElement(doc);
+        if(root == nullptr) {
+            PrintToLog("ERROR: Unable to load XML input config: empty document!");
+            xmlFreeDoc(doc);
+            return input;
+        }
+        if(xmlStrcmp(root->name, (const xmlChar *) "photon_input")) {
+            PrintToLog("ERROR: Unable to load XML input config: root node not photon_input!");
+            xmlFreeDoc(doc);
+            return input;
+        }
+
+        xmlChar *device_str = xmlGetProp(root, (const xmlChar *)"device");
+        xmlChar *guid_str = xmlGetProp(root, (const xmlChar *)"device_guid");
+
+        xmlFree(device_str);
+        xmlFree(guid_str);
+
+        xmlNode *node = root->xmlChildrenNode;
+
+        while(node != nullptr) {
+            if((xmlStrEqual(node->name, (const xmlChar *)"interact"))){
+                input.interact = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"next_item"))){
+                input.next_item = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"previous_item"))){
+                input.previous_item = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"open_inventory"))){
+                input.open_inventory = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"rotate_clockwise"))){
+                input.rotate_clockwise = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"rotate_counter_clockwise"))){
+                input.rotate_counter_clockwise = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"zoom_in"))){
+                input.zoom_in = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"zoom_out"))){
+                input.zoom_out = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_right"))){
+                input.move_positive_x = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_left"))){
+                input.move_negative_x = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_up"))){
+                input.move_positive_y = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_down"))){
+                input.move_negative_y = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_up"))){
+                input.up = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_down"))){
+                input.down = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_left"))){
+                input.left = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_right"))){
+                input.right = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_select"))){
+                input.select = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_back"))){
+                input.back = LoadInputSingle(node);
+            }
+            node = node->next;
+        }
+
+        free(xml_buffer);
+        xmlFreeDoc(doc);
+    }else{
+        PrintToLog("ERROR: Unable to load XML input config: \"%s\" does not exist!", filename.c_str());
+    }
+    return input;
+}
+
 }
 
 }

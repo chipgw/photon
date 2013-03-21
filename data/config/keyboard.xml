@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<photon_input>
+  <interact type="keyboard" key="space" />
+  <rotate_clockwise type="keyboard" key="e" />
+  <rotate_counter_clockwise type="keyboard" key="q" />
+  <next_item type="keyboard" key="tab" />
+  <previous_item type="keyboard" key="tab" modifiers="shift" />
+  <move_right type="keyboard" key="D" />
+  <move_left type="keyboard" key="A" />
+  <move_up type="keyboard" key="W"/>
+  <move_down type="keyboard" key="S" />
+  <zoom_in type="keyboard" key="+" />
+  <zoom_out type="keyboard" key="-" />
+  <gui_select type="keyboard" key="enter" />
+  <gui_back type="keyboard" key="backspace" />
+  <gui_up type="keyboard" key="up" />
+  <gui_down type="keyboard" key="down" />
+  <gui_left type="keyboard" key="left" />
+  <gui_right type="keyboard" key="right" />
+</photon_input>

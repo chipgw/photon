@@ -3,8 +3,8 @@
   <interact type="controller_button" button="a" />
   <rotate_clockwise type="controller_button" button="rightshoulder" />
   <rotate_counter_clockwise type="controller_button" button="leftshoulder" />
-  <next_item type="controller_button" button="dpleft" />
-  <previous_item type="controller_button" button="dpright" />
+  <next_item type="controller_button" button="dpright" />
+  <previous_item type="controller_button" button="dpleft" />
   <move_right type="controller_axis" axis="leftx" />
   <move_left type="controller_axis" axis="leftx" negate="true" />
   <move_up type="controller_axis" axis="lefty" negate="true" />

@@ -6,6 +6,8 @@
 #include "photon_laser.h"
 
 namespace photon{
+struct photon_player;
+
 struct photon_level{
     boost::multi_array<photon_block,2> grid;
     std::vector<photon_laserbeam> beams;
@@ -34,7 +36,7 @@ void DrawBeamsLight(photon_level &level);
 
 void DrawFX(photon_level &level);
 
-photon_level LoadLevelXML(const std::string &filename);
+photon_level LoadLevelXML(const std::string &filename, photon_player &player);
 
 void AdvanceFrame(photon_level &level, float time);
 

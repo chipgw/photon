@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <photon_level width="20" height="20" >
+  <inventory>
+    <item type="mirror" amount="infinite" />
+    <item type="filter_red" amount="infinite" />
+    <item type="filter_green" amount="infinite" />
+    <item type="filter_blue" amount="infinite" />
+    <item type="filter_yellow" amount="infinite" />
+    <item type="filter_cyan" amount="infinite" />
+    <item type="filter_magenta" amount="infinite" />
+    <item type="tnt" amount="10" />
+  </inventory>
   <data>
     <row y="1">
       <block x="0" type="emitter_white" angle="0" />

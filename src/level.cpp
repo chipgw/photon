@@ -38,7 +38,7 @@ void DrawFX(photon_level &level){
     }
 }
 
-photon_level LoadLevelXML(const std::string &filename){
+photon_level LoadLevelXML(const std::string &filename, photon_player &player){
     photon_level level;
 
     if(PHYSFS_exists(filename.c_str())){
@@ -200,6 +200,98 @@ photon_level LoadLevelXML(const std::string &filename){
                     }
 
                     row = row->next;
+                }
+            }else if((xmlStrEqual(node->name, (const xmlChar *)"inventory"))){
+                xmlNode *item = node->xmlChildrenNode;
+                while(item != nullptr) {
+                    if((xmlStrEqual(item->name, (const xmlChar *)"item"))){
+                        xmlChar *type_str = xmlGetProp(item, (const xmlChar *)"type");
+
+                        if((xmlStrEqual(type_str, (const xmlChar *)"mirror"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, mirror);
+                            }else{
+                                player::AddItem(player, mirror, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"tnt"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, tnt);
+                            }else{
+                                player::AddItem(player, tnt, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_red"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_red);
+                            }else{
+                                player::AddItem(player, filter_red, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_green"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_green);
+                            }else{
+                                player::AddItem(player, filter_green, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_blue"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_blue);
+                            }else{
+                                player::AddItem(player, filter_blue, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_yellow"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_yellow);
+                            }else{
+                                player::AddItem(player, filter_yellow, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_cyan"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_cyan);
+                            }else{
+                                player::AddItem(player, filter_cyan, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_magenta"))){
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+
+                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                                player::GiveInfiniteItems(player, filter_magenta);
+                            }else{
+                                player::AddItem(player, filter_magenta, atoi((char*)amount_str));
+                            }
+
+                            xmlFree(amount_str);
+                        }
+                        // TODO - load other block types.
+                        xmlFree(type_str);
+                    }
+                    item = item->next;
                 }
             }
             // TODO - load game mode & victory condition.

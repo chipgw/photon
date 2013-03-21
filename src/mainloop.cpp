@@ -16,7 +16,7 @@ namespace photon{
 void MainLoop(photon_instance &instance){
     instance.running = true;
 
-    instance.level = level::LoadLevelXML("/level.xml");
+    instance.level = level::LoadLevelXML("/level.xml", instance.player);
 
     instance.player.location = glm::vec2(1.0f,1.0f);
 
@@ -35,18 +35,6 @@ void MainLoop(photon_instance &instance){
 
     // TODO - find a proper place to put this... probably some structure that holds all GUI states and put that in the instance...
     photon_gui_game game_gui = gui::InitGameGUI();
-
-    // add items to list.
-    player::GiveInfiniteItems(instance.player, mirror);
-    player::GiveInfiniteItems(instance.player, filter_red);
-    player::GiveInfiniteItems(instance.player, filter_green);
-    player::GiveInfiniteItems(instance.player, filter_blue);
-    player::GiveInfiniteItems(instance.player, filter_yellow);
-    player::GiveInfiniteItems(instance.player, filter_cyan);
-    player::GiveInfiniteItems(instance.player, filter_magenta);
-    player::AddItem(instance.player, tnt, 10);
-    // select the first item in the list.
-    player::CurrentItem(instance.player);
 
     boost::posix_time::ptime start_time = boost::posix_time::microsec_clock::local_time();;
     boost::posix_time::ptime last_time = boost::posix_time::microsec_clock::local_time();;

@@ -1,6 +1,7 @@
 #ifndef _PHOTON_CORE_H_
 #define _PHOTON_CORE_H_
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "photon_window_managment.h"
 #include "photon_player.h"
 #include "photon_level.h"
@@ -21,6 +22,7 @@ struct photon_instance{
 
     /*! \brief total frames rendered */
     uintmax_t total_frames = 0;
+    boost::posix_time::ptime creation_time = boost::posix_time::microsec_clock::local_time();
 
     /*! \brief is set to true when the main loop starts, set to false to end loop. */
     bool running = false;

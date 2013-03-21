@@ -16,6 +16,8 @@ namespace photon{
 FILE* logfile;
 
 photon_instance Init(int argc, char *argv[], bool parseconfig){
+    photon_instance instance;
+
     logfile = fopen("photon.log", "w");
     PrintToLog("INFO: Starting up Photon. Executable: \"%s\"", argv[0]);
 
@@ -25,8 +27,6 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
 
     PHYSFS_init(argv[0]);
     PHYSFS_mount("data", "/", 0);
-
-    photon_instance instance;
 
     instance.window = window_managment::CreateSDLWindow();
 

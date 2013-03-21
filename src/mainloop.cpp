@@ -1,4 +1,6 @@
 #include <GL/glew.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include "photon_core.h"
 #include "photon_opengl.h"
@@ -8,12 +10,9 @@
 #include "photon_blocks.h"
 #include "photon_input.h"
 #include "photon_gui.h"
-#include <SDL_timer.h>
-
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 
 namespace photon{
+
 void MainLoop(photon_instance &instance){
     instance.running = true;
 
@@ -77,14 +76,16 @@ void MainLoop(photon_instance &instance){
     // select the first item in the list.
     player::CurrentItem(instance.player);
 
-    PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
-    float start_time = SDL_GetTicks();
-    float last_time = SDL_GetTicks();
+    boost::posix_time::ptime start_time = boost::posix_time::microsec_clock::local_time();;
+    boost::posix_time::ptime last_time = boost::posix_time::microsec_clock::local_time();;
     float frame_delta = 0;
 
+    PrintToLog("INFO: Main loop started at: %f seconds.", (start_time - instance.creation_time).total_microseconds() * 1.0e-6f);
+
     while(instance.running){
-        frame_delta = (SDL_GetTicks() - last_time) * 0.001f;
-        last_time = SDL_GetTicks();
+        boost::posix_time::ptime current = boost::posix_time::microsec_clock::local_time();
+        frame_delta = (current - last_time).total_microseconds() * 1.0e-6f;
+        last_time = current;
 
         input::DoEvents(instance, frame_delta);
 
@@ -137,15 +138,16 @@ void MainLoop(photon_instance &instance){
         instance.total_frames++;
     }
 
-    // print total amount of seconds from SDL_Init()
-    PrintToLog("INFO: Total Time: %f seconds.", SDL_GetTicks()*0.001f);
+    // print total amount of time since instance was created.
+    boost::posix_time::ptime current = boost::posix_time::microsec_clock::local_time();
+    PrintToLog("INFO: Total Time: %f seconds.", (current - instance.creation_time).total_microseconds());
     // print total frame count.
     PrintToLog("INFO: Total Frames: %i", instance.total_frames);
 
     // print average draw time by dividing the total amount of time from the start of the main loop by the total amount of frames.
-    PrintToLog("INFO: Average Draw Time: %fms.",(SDL_GetTicks()-start_time)/((float) instance.total_frames));
+    PrintToLog("INFO: Average Draw Time: %fms.",((current - start_time).total_microseconds() * 1.0e-3f) / (float)instance.total_frames);
     // print average framerate by inverting the total draw time.
-    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f/((SDL_GetTicks()-start_time)/((float) instance.total_frames)))*1000.0f);
+    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / ((current-start_time).total_microseconds() / (float)instance.total_frames))*1.0e6f);
 }
 
 }

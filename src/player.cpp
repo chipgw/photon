@@ -1,4 +1,5 @@
 #include "photon_player.h"
+#include "photon_core.h"
 
 #include <glm/gtx/norm.hpp>
 
@@ -58,6 +59,135 @@ glm::vec2 SnapToBeams(std::vector<photon_laserbeam> &beams, glm::vec2 location){
         }
     }
     return loc;
+}
+
+int8_t AddItem(photon_player &player, block_type type, int8_t amount){
+    // if it exists and is <= 0 it is infinite
+    if(player.items.count(type) && player.items[type] <= 0){
+        return -1;
+    }
+    player.items[type] += amount;
+    // if it is <= 0 it was not so at first so it is empty, not infinite.
+    if(player.items[type] <= 0){
+        player.items.erase(type);
+        return 0;
+    }
+    return player.items[type];
+}
+
+int8_t AddItemCurrent(photon_player &player, int8_t amount){
+    if(player.items.count(player.current_item)){
+        int8_t &value = player.items[player.current_item];
+        if(value <= 0){
+            return -1;
+        }
+        value += amount;
+        // if it is <= 0 it was not so at first so it is empty, not infinite.
+        if(value <= 0){
+            player.items.erase(player.current_item);
+            NextItem(player);
+            return 0;
+        }
+        return value;
+    }
+    return 0;
+}
+
+int8_t GetItemCount(photon_player &player, block_type type){
+    if(player.items.count(type)){
+        if(player.items[type] <= 0){
+            return -1;
+        }
+        return player.items[type];
+    }
+    return 0;
+}
+
+int8_t GetItemCountCurrent(photon_player &player){
+    if(player.items.size() > 0){
+        if(!player.items.count(player.current_item)){
+            NextItem(player);
+        }
+        if(player.items[player.current_item] <= 0){
+            return -1;
+        }
+        return player.items[player.current_item];
+    }
+    return 0;
+}
+
+block_type CurrentItem(photon_player &player){
+    if(player.items.size() > 0){
+        if(!player.items.count(player.current_item)){
+            return NextItem(player);
+        }
+        return player.current_item;
+    }else{
+        player.current_item =  invalid_block;
+        return invalid_block;
+    }
+}
+
+block_type NextItem(photon_player &player){
+    if(player.items.size() > 0){
+        auto current = player.items.find(player.current_item);
+        if(current == player.items.end()){
+            // temporarily create the item in the list so we can retrieve what is after it.
+            block_type tmp = player.current_item;
+            player.items[tmp];
+            NextItem(player);
+            player.items.erase(tmp);
+
+            return player.current_item;
+        }
+
+        ++current;
+
+        if(current == player.items.end()){
+            current = player.items.begin();
+        }
+        player.current_item = current->first;
+
+        PrintToLog("NextItem() switched current item to: %i", player.current_item);
+        return player.current_item;
+    }else{
+        player.current_item =  invalid_block;
+        return invalid_block;
+    }
+}
+
+block_type PreviousItem(photon_player &player){
+    if(player.items.size() > 0){
+        auto current = player.items.find(player.current_item);
+        if(current == player.items.end()){
+            // temporarily create the item in the list so we can retrieve what is before it.
+            block_type tmp = player.current_item;
+            player.items[tmp];
+            PreviousItem(player);
+            player.items.erase(tmp);
+
+            return player.current_item;
+        }
+
+        if(current == player.items.begin()){
+            current = player.items.end();
+        }
+        --current;
+        player.current_item = current->first;
+
+        PrintToLog("PreviousItem() switched current item to: %i", player.current_item);
+        return player.current_item;
+
+    }else{
+        player.current_item =  invalid_block;
+        return invalid_block;
+    }
+}
+
+void GiveInfiniteItems(photon_player &player, block_type type){
+    if(type != invalid_block){
+        player.items[type] = -1;
+    }
 }
 
 }

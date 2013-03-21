@@ -6,6 +6,8 @@
 #include "photon_opengl.h"
 
 #define FONT_SIZE 32
+#define FONT_FIRST_CHAR 32
+#define FONT_LAST_CHAR 128
 
 namespace photon{
 
@@ -22,7 +24,7 @@ struct character_info {
 };
 
 struct character_atlas{
-    character_info characters[128];
+    character_info characters[FONT_LAST_CHAR+1];
 
     int width;
 
@@ -75,7 +77,7 @@ void InitFreeType(){
     int width = 0;
     int height = 0;
 
-    for(unsigned char c = 0; c < 128; c++) {
+    for(unsigned char c = FONT_FIRST_CHAR; c <= FONT_LAST_CHAR; c++) {
         if(FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             PrintToLog("WARNING: Loading character %c failed!", c);
             continue;
@@ -102,7 +104,7 @@ void InitFreeType(){
 
     uint32_t x = 0;
 
-    for(unsigned char i = 32; i < 128; i++) {
+    for(unsigned char i = FONT_FIRST_CHAR; i <= FONT_LAST_CHAR; i++) {
         if(FT_Load_Char(face, i, FT_LOAD_RENDER))
             continue;
 

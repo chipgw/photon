@@ -7,6 +7,8 @@
 
 namespace photon{
 struct photon_level;
+struct photon_instance;
+
 struct photon_gui_bounds{
     float top = 0.0f;
     float bottom = 0.0f;
@@ -32,7 +34,7 @@ void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
-void DrawGameGUI(photon_gui_game &gui);
+void DrawGameGUI(photon_gui_game &gui, photon_instance &instance);
 
 bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds);
 

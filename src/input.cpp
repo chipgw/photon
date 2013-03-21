@@ -80,18 +80,26 @@ void DoInput(photon_instance &instance, float time){
         DoInputSingle(game.rotate_counter_clockwise);
         DoInputSingle(game.zoom_in);
         DoInputSingle(game.zoom_out);
+        DoInputSingle(game.next_item);
+        DoInputSingle(game.previous_item);
 
         instance.player.location.x += (game.move_positive_x.current_state - game.move_negative_x.current_state) * time * instance.zoom;
         instance.player.location.y += (game.move_positive_y.current_state - game.move_negative_y.current_state) * time * instance.zoom;
 
         if(game.interact.current_state > 0.9f && game.interact.last_state < 0.9f){
-            blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
+            blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, instance.player);
         }
         if(game.rotate_clockwise.current_state > 0.9f && game.rotate_clockwise.last_state < 0.9f){
             blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
         }
         if(game.rotate_counter_clockwise.current_state > 0.9f && game.rotate_counter_clockwise.last_state < 0.9f){
             blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
+        }
+        if(game.next_item.current_state > 0.9f && game.next_item.last_state < 0.9f){
+            player::NextItem(instance.player);
+        }
+        if(game.previous_item.current_state > 0.9f && game.previous_item.last_state < 0.9f){
+            player::PreviousItem(instance.player);
         }
 
         instance.zoom -= (game.zoom_in.current_state - game.zoom_out.current_state) * time;

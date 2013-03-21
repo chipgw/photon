@@ -7,8 +7,11 @@
 namespace photon{
 struct photon_lasersegment;
 struct photon_level;
+struct photon_player;
 
 enum block_type{
+    invalid_block = -1,// if there is an error of some kind.
+
     air, // empty space.
 
     mirror, // normal movable & rotatable mirror.
@@ -58,7 +61,7 @@ namespace blocks{
 
 photon_lasersegment* OnLightInteract(photon_lasersegment* segment, glm::uvec2 location, photon_level &level, float time);
 
-void OnPhotonInteract(glm::uvec2 location, photon_level &level);
+void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &player);
 
 void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise = false);
 

@@ -71,6 +71,12 @@ void MainLoop(photon_instance &instance){
     // TODO - find a proper place to put this... probably some structure that holds all GUI states and put that in the instance...
     photon_gui_game game_gui = gui::InitGameGUI();
 
+    // add items to list.
+    player::GiveInfiniteItems(instance.player, mirror);
+    player::AddItem(instance.player, tnt, 10);
+    // select the first item in the list.
+    player::CurrentItem(instance.player);
+
     PrintToLog("INFO: Main loop started at: %f seconds.", SDL_GetTicks()*0.001);
     float start_time = SDL_GetTicks();
     float last_time = SDL_GetTicks();
@@ -121,10 +127,10 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawGameGUI(game_gui);
+        gui::DrawGameGUI(game_gui, instance);
 
         opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
-        gui::RenderText(glm::vec2(-0.9f,0.0f), glm::vec2(0.1f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
+        gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

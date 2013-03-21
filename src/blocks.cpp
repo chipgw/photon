@@ -128,19 +128,23 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     return segment;
 }
 
-void OnPhotonInteract(glm::uvec2 location, photon_level &level){
+void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &player){
     if(level.grid.shape()[0] > location.x && level.grid.shape()[1] > location.y){
         photon_block &block = level.grid[location.x][location.y];
         switch(block.type){
         case air:
-            // TODO - place currently selected item in inventory.
-            block.type = mirror;
+            if(player.current_item != invalid_block){
+                block.type = player.current_item;
+                player::AddItemCurrent(player, -1);
+            }
             break;
         default:
             break;
+        case tnt:
         case mirror:
-            // TODO - store mirror in inventory.
+            player::AddItem(player, block.type);
             block.type = air;
+            block.data = 0.0f;
             break;
         }
     }

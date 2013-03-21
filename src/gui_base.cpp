@@ -2,6 +2,7 @@
 #include "photon_level.h"
 #include "photon_opengl.h"
 #include "photon_texture.h"
+#include "photon_core.h"
 
 namespace photon{
 
@@ -16,8 +17,8 @@ photon_gui_game InitGameGUI(){
 
     gui.bar_texture = texture::Load("/textures/gui/bar.png");
 
-    gui.current_item.top = 0.56f;
-    gui.current_item.bottom = 0.06f;
+    gui.current_item.top = 0.44f;
+    gui.current_item.bottom = 0.04f;
     gui.current_item.left = -0.6f;
     gui.current_item.right = -0.2f;
 
@@ -37,15 +38,24 @@ void DrawBounds(photon_gui_bounds &bounds){
     }glEnd();
 }
 
-void DrawGameGUI(photon_gui_game &gui){
+void DrawGameGUI(photon_gui_game &gui, photon_instance &instance){
     opengl::SetColorGUI(glm::vec4(0.0f));
     opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
     glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
     DrawBounds(gui.bar);
 
     // TODO - get current item from inventory.
-    glBindTexture(GL_TEXTURE_2D, blocks::GetBlockTexture(mirror));
-    DrawBounds(gui.current_item);
+    GLuint tex = blocks::GetBlockTexture(player::CurrentItem(instance.player));
+    if(tex){
+        glBindTexture(GL_TEXTURE_2D, tex);
+        DrawBounds(gui.current_item);
+    }
+    int8_t count = player::GetItemCountCurrent(instance.player);
+    if(count < 0){
+        RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "infinite");
+    }else{
+        RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "%i", count);
+    }
 }
 
 bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds){

@@ -6,18 +6,19 @@
 namespace photon{
 
 namespace input{
-void DoInputSingle(input_state &state){
+
+void DoInputSingle(photon_input_state &state, photon_input &input){
     state.last_state = state.current_state;
     switch(state.type){
-    case keyboard:{
+    case photon_input_state::keyboard:{
         Uint8* keyboard = SDL_GetKeyboardState(nullptr);
         SDL_Keymod modifiers = SDL_GetModState();
         state.current_state = keyboard[state.key] && (modifiers == state.modifiers);
         break;
     }
-    case joystick_axis:{
+    case photon_input_state::joystick_axis:{
         if(state.joystick_input_index > -1){
-            state.current_state = SDL_JoystickGetAxis(state.joystick, state.joystick_input_index) / 32768.0f;
+            state.current_state = SDL_JoystickGetAxis(input.joystick, state.joystick_input_index) / 32768.0f;
             if(state.axis_input_negate){
                 state.current_state = -state.current_state;
             }
@@ -31,12 +32,12 @@ void DoInputSingle(input_state &state){
         }
         break;
     }
-    case joystick_button:{
-        state.current_state = SDL_JoystickGetButton(state.joystick, state.joystick_input_index);
+    case photon_input_state::joystick_button:{
+        state.current_state = SDL_JoystickGetButton(input.joystick, state.joystick_input_index);
         break;
     }
-    case gamecontroller_axis:{
-        state.current_state = SDL_GameControllerGetAxis(state.controller, state.controller_axis) / 32768.0f;
+    case photon_input_state::gamecontroller_axis:{
+        state.current_state = SDL_GameControllerGetAxis(input.controller, state.controller_axis) / 32768.0f;
         if(state.axis_input_negate){
             state.current_state = -state.current_state;
         }
@@ -49,60 +50,63 @@ void DoInputSingle(input_state &state){
         }
         break;
     }
-    case gamecontroller_button:{
-        state.current_state = SDL_GameControllerGetButton(state.controller, state.controller_button);
+    case photon_input_state::gamecontroller_button:{
+        state.current_state = SDL_GameControllerGetButton(input.controller, state.controller_button);
         break;
     }
-    case none:
+    case photon_input_state::none:
         break;
     }
 }
 
+bool IsActivated(photon_input_state &state){
+    return state.current_state > 0.9f && state.last_state < 0.9f;
+}
+
 void DoInput(photon_instance &instance, float time){
+    photon_input &input = instance.input;
     if(false){ // TODO - make it check if GUI is active.
-        gui_input &gui = instance.input_gui;
-        DoInputSingle(gui.left);
-        DoInputSingle(gui.right);
-        DoInputSingle(gui.up);
-        DoInputSingle(gui.down);
-        DoInputSingle(gui.select);
-        DoInputSingle(gui.back);
+        DoInputSingle(input.left, input);
+        DoInputSingle(input.right, input);
+        DoInputSingle(input.up, input);
+        DoInputSingle(input.down, input);
+        DoInputSingle(input.select, input);
+        DoInputSingle(input.back, input);
 
         // TODO - code goes here...
     }else{
-        game_input &game = instance.input_game;
-        DoInputSingle(game.interact);
-        DoInputSingle(game.move_positive_x);
-        DoInputSingle(game.move_negative_x);
-        DoInputSingle(game.move_positive_y);
-        DoInputSingle(game.move_negative_y);
-        DoInputSingle(game.rotate_clockwise);
-        DoInputSingle(game.rotate_counter_clockwise);
-        DoInputSingle(game.zoom_in);
-        DoInputSingle(game.zoom_out);
-        DoInputSingle(game.next_item);
-        DoInputSingle(game.previous_item);
+        DoInputSingle(input.interact, input);
+        DoInputSingle(input.move_positive_x, input);
+        DoInputSingle(input.move_negative_x, input);
+        DoInputSingle(input.move_positive_y, input);
+        DoInputSingle(input.move_negative_y, input);
+        DoInputSingle(input.rotate_clockwise, input);
+        DoInputSingle(input.rotate_counter_clockwise, input);
+        DoInputSingle(input.zoom_in, input);
+        DoInputSingle(input.zoom_out, input);
+        DoInputSingle(input.next_item, input);
+        DoInputSingle(input.previous_item, input);
 
-        instance.player.location.x += (game.move_positive_x.current_state - game.move_negative_x.current_state) * time * instance.zoom;
-        instance.player.location.y += (game.move_positive_y.current_state - game.move_negative_y.current_state) * time * instance.zoom;
+        instance.player.location.x += (input.move_positive_x.current_state - input.move_negative_x.current_state) * time * instance.zoom;
+        instance.player.location.y += (input.move_positive_y.current_state - input.move_negative_y.current_state) * time * instance.zoom;
 
-        if(game.interact.current_state > 0.9f && game.interact.last_state < 0.9f){
+        if(IsActivated(input.interact)){
             blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, instance.player);
         }
-        if(game.rotate_clockwise.current_state > 0.9f && game.rotate_clockwise.last_state < 0.9f){
+        if(IsActivated(input.rotate_clockwise)){
             blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level);
         }
-        if(game.rotate_counter_clockwise.current_state > 0.9f && game.rotate_counter_clockwise.last_state < 0.9f){
+        if(IsActivated(input.rotate_counter_clockwise)){
             blocks::OnRotate(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, true);
         }
-        if(game.next_item.current_state > 0.9f && game.next_item.last_state < 0.9f){
+        if(IsActivated(input.next_item)){
             player::NextItem(instance.player);
         }
-        if(game.previous_item.current_state > 0.9f && game.previous_item.last_state < 0.9f){
+        if(IsActivated(input.previous_item)){
             player::PreviousItem(instance.player);
         }
 
-        instance.zoom -= (game.zoom_in.current_state - game.zoom_out.current_state) * time;
+        instance.zoom -= (input.zoom_in.current_state - input.zoom_out.current_state) * time;
     }
 }
 
@@ -146,52 +150,48 @@ void DoEvents(photon_instance &instance, float time){
 }
 
 
-input_state CreateControllerAxisInput(SDL_GameController *controller, SDL_GameControllerAxis axis, bool negate){
-    input_state state;
+photon_input_state CreateControllerAxisInput(SDL_GameControllerAxis axis, bool negate){
+    photon_input_state state;
 
-    state.type = gamecontroller_axis;
-    state.controller = controller;
+    state.type = photon_input_state::gamecontroller_axis;
     state.controller_axis = axis;
     state.axis_input_negate = negate;
 
     return state;
 }
 
-input_state CreateControllerButtonInput(SDL_GameController *controller, SDL_GameControllerButton button){
-    input_state state;
+photon_input_state CreateControllerButtonInput(SDL_GameControllerButton button){
+    photon_input_state state;
 
-    state.type = gamecontroller_button;
-    state.controller = controller;
+    state.type = photon_input_state::gamecontroller_button;
     state.controller_button = button;
 
     return state;
 }
 
-input_state CreateKeyboardInput(SDL_Scancode key){
-    input_state state;
+photon_input_state CreateKeyboardInput(SDL_Scancode key){
+    photon_input_state state;
 
-    state.type = keyboard;
+    state.type = photon_input_state::keyboard;
     state.key = key;
 
     return state;
 }
 
-input_state CreateJoystickAxisInput(SDL_Joystick *joystick, int axis, bool negate){
-    input_state state;
+photon_input_state CreateJoystickAxisInput(int axis, bool negate){
+    photon_input_state state;
 
-    state.type = joystick_axis;
-    state.joystick = joystick;
+    state.type = photon_input_state::joystick_axis;
     state.joystick_input_index = axis;
     state.axis_input_negate = negate;
 
     return state;
 }
 
-input_state CreateJoystickButtonInput(SDL_Joystick *joystick, int button){
-    input_state state;
+photon_input_state CreateJoystickButtonInput(int button){
+    photon_input_state state;
 
-    state.type = joystick_button;
-    state.joystick = joystick;
+    state.type = photon_input_state::joystick_button;
     state.joystick_input_index = button;
 
     return state;

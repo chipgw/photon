@@ -5,26 +5,23 @@
 
 namespace photon{
 
-namespace input{
-enum input_type{
-    none,
-    keyboard,
-    joystick_button,
-    joystick_axis,
-    gamecontroller_button,
-    gamecontroller_axis
-};
-
-struct input_state{
+struct photon_input_state{
     // the current state value.
     float current_state = 0;
     // the value as of last frame.
     float last_state = 0;
 
+    enum input_type{
+        none,
+        keyboard,
+        joystick_button,
+        joystick_axis,
+        gamecontroller_button,
+        gamecontroller_axis
+    };
+
     input_type type = none;
 
-    // pointer to joystick to use if event is one of the joystick_* types
-    SDL_Joystick* joystick = nullptr;
     // the index of the button or axis of the joystick.
     int joystick_input_index = -1;
 
@@ -33,8 +30,6 @@ struct input_state{
     // the modifiers for keyboard input types.
     SDL_Keymod modifiers = KMOD_NONE;
 
-    // pointer to the game controller to use for gamecontroller_* types
-    SDL_GameController *controller = nullptr;
     // the axis to use.
     SDL_GameControllerAxis controller_axis;
     // the button to use
@@ -45,40 +40,42 @@ struct input_state{
 };
 
 /*!
- * \brief holds the inputs used by the game (not UI)
+ * \brief holds the inputs used by the game & UI
  */
-struct game_input{
-    input_state move_positive_x;
-    input_state move_negative_x;
+struct photon_input{
+    // pointer to joystick to use if event is one of the joystick_* types
+    SDL_Joystick* joystick = nullptr;
+    // pointer to the game controller to use for gamecontroller_* types
+    SDL_GameController *controller = nullptr;
 
-    input_state move_positive_y;
-    input_state move_negative_y;
+    photon_input_state move_positive_x;
+    photon_input_state move_negative_x;
 
-    input_state interact;
+    photon_input_state move_positive_y;
+    photon_input_state move_negative_y;
 
-    input_state rotate_clockwise;
-    input_state rotate_counter_clockwise;
+    photon_input_state interact;
 
-    input_state zoom_out;
-    input_state zoom_in;
+    photon_input_state rotate_clockwise;
+    photon_input_state rotate_counter_clockwise;
 
-    input_state open_inventory;
-    input_state next_item;
-    input_state previous_item;
+    photon_input_state zoom_out;
+    photon_input_state zoom_in;
+
+    photon_input_state open_inventory;
+    photon_input_state next_item;
+    photon_input_state previous_item;
+
+    photon_input_state left;
+    photon_input_state right;
+    photon_input_state up;
+    photon_input_state down;
+
+    photon_input_state select;
+    photon_input_state back;
 };
 
-/*!
- * \brief holds the inputs used by the GUI
- */
-struct gui_input{
-    input_state left;
-    input_state right;
-    input_state up;
-    input_state down;
-
-    input_state select;
-    input_state back;
-};
+namespace input{
 
 /*!
  * \brief Poll and parse SDL events.
@@ -94,13 +91,13 @@ void DoEvents(photon_instance &instance, float time);
  */
 void DoInput(photon_instance &instance, float time);
 
-input_state CreateControllerAxisInput(SDL_GameController *controller, SDL_GameControllerAxis axis, bool negate = false);
-input_state CreateControllerButtonInput(SDL_GameController *controller, SDL_GameControllerButton button);
+photon_input_state CreateControllerAxisInput(SDL_GameControllerAxis axis, bool negate = false);
+photon_input_state CreateControllerButtonInput(SDL_GameControllerButton button);
 
-input_state CreateKeyboardInput(SDL_Scancode key);
+photon_input_state CreateKeyboardInput(SDL_Scancode key);
 
-input_state CreateJoystickAxisInput(SDL_Joystick *joystick, int axis, bool negate = false);
-input_state CreateJoystickButtonInput(SDL_Joystick *joystick, int button);
+photon_input_state CreateJoystickAxisInput(int axis, bool negate = false);
+photon_input_state CreateJoystickButtonInput(int button);
 }
 
 }

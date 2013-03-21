@@ -20,48 +20,48 @@ void MainLoop(photon_instance &instance){
 
     instance.player.location = glm::vec2(1.0f,1.0f);
 
-    instance.input_game.move_positive_x = input::CreateKeyboardInput(SDL_SCANCODE_D);
-    instance.input_game.move_negative_x = input::CreateKeyboardInput(SDL_SCANCODE_A);
+    instance.input.move_positive_x = input::CreateKeyboardInput(SDL_SCANCODE_D);
+    instance.input.move_negative_x = input::CreateKeyboardInput(SDL_SCANCODE_A);
 
-    instance.input_game.move_positive_y = input::CreateKeyboardInput(SDL_SCANCODE_W);
-    instance.input_game.move_negative_y = input::CreateKeyboardInput(SDL_SCANCODE_S);
+    instance.input.move_positive_y = input::CreateKeyboardInput(SDL_SCANCODE_W);
+    instance.input.move_negative_y = input::CreateKeyboardInput(SDL_SCANCODE_S);
 
-    instance.input_game.interact = input::CreateKeyboardInput(SDL_SCANCODE_SPACE);
+    instance.input.interact = input::CreateKeyboardInput(SDL_SCANCODE_SPACE);
 
-    instance.input_game.rotate_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_E);
-    instance.input_game.rotate_counter_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_Q);
+    instance.input.rotate_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_E);
+    instance.input.rotate_counter_clockwise = input::CreateKeyboardInput(SDL_SCANCODE_Q);
 
-    instance.input_game.zoom_in = input::CreateKeyboardInput(SDL_SCANCODE_KP_PLUS);
-    instance.input_game.zoom_out = input::CreateKeyboardInput(SDL_SCANCODE_KP_MINUS);
+    instance.input.zoom_in = input::CreateKeyboardInput(SDL_SCANCODE_KP_PLUS);
+    instance.input.zoom_out = input::CreateKeyboardInput(SDL_SCANCODE_KP_MINUS);
 
     if(SDL_IsGameController(0)){
-        SDL_GameController *controller = SDL_GameControllerOpen(0);
+        instance.input.controller = SDL_GameControllerOpen(0);
 
-        if(controller != nullptr){
-            instance.input_game.move_positive_x = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTX);
-            instance.input_game.move_negative_x = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTX, true);
+        if(instance.input.controller != nullptr){
+            instance.input.move_positive_x = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTX);
+            instance.input.move_negative_x = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTX, true);
 
-            instance.input_game.move_positive_y = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTY, true);
-            instance.input_game.move_negative_y = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_LEFTY);
+            instance.input.move_positive_y = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTY, true);
+            instance.input.move_negative_y = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_LEFTY);
 
-            instance.input_game.interact = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_A);
+            instance.input.interact = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_A);
 
-            instance.input_game.rotate_clockwise = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
-            instance.input_game.rotate_counter_clockwise = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
+            instance.input.rotate_clockwise = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_LEFTSHOULDER);
+            instance.input.rotate_counter_clockwise = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_RIGHTSHOULDER);
 
-            instance.input_game.zoom_in = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY, true);
-            instance.input_game.zoom_out = input::CreateControllerAxisInput(controller, SDL_CONTROLLER_AXIS_RIGHTY);
+            instance.input.zoom_in = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_RIGHTY, true);
+            instance.input.zoom_out = input::CreateControllerAxisInput(SDL_CONTROLLER_AXIS_RIGHTY);
 
-            instance.input_game.open_inventory = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_Y);
-            instance.input_game.next_item = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
-            instance.input_game.previous_item = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+            instance.input.open_inventory = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_Y);
+            instance.input.next_item = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+            instance.input.previous_item = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
 
-            instance.input_gui.left = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT);
-            instance.input_gui.right = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
-            instance.input_gui.up = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_UP);
-            instance.input_gui.down = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN);
-            instance.input_gui.select = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_A);
-            instance.input_gui.back = input::CreateControllerButtonInput(controller, SDL_CONTROLLER_BUTTON_B);
+            instance.input.left = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_LEFT);
+            instance.input.right = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_RIGHT);
+            instance.input.up = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_UP);
+            instance.input.down = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_DPAD_DOWN);
+            instance.input.select = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_A);
+            instance.input.back = input::CreateControllerButtonInput(SDL_CONTROLLER_BUTTON_B);
 
             PrintToLog("INFO: Game controller found, using...");
         }

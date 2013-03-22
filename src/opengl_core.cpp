@@ -51,7 +51,7 @@ void InitOpenGL(photon_window &window){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // texture size is 1x1 because it will get resized properly later (on resized event from window creation)
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1, 1, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -134,7 +134,7 @@ void OnResize(uint32_t width, uint32_t height, photon_window &window){
     window.height = height;
 
     glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 }
 
 

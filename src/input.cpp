@@ -210,7 +210,6 @@ photon_input_state LoadInputSingle(xmlNode *node){
         xmlChar *mod_str = xmlGetProp(node, (const xmlChar *)"modifiers");
 
         state.key = SDL_GetScancodeFromName((char*)key_str);
-        PrintToLog("HIIIIII: %i", state.key);
 
         if(xmlStrstr(mod_str, (const xmlChar *)"ctrl")){
             state.modifiers |= KMOD_CTRL;

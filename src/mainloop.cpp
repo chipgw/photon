@@ -18,7 +18,7 @@ void MainLoop(photon_instance &instance){
 
     instance.level = level::LoadLevelXML("/level.xml", instance.player);
 
-    instance.player.location = glm::vec2(1.0f,1.0f);
+    instance.player.location = glm::vec2(1.0f, 1.0f);
 
     instance.input = input::LoadConfig("/config/keyboard.xml");
 
@@ -53,7 +53,7 @@ void MainLoop(photon_instance &instance){
 
         level::AdvanceFrame(instance.level, frame_delta);
 
-        instance.zoom = std::max(0.01f,instance.zoom);
+        instance.zoom = std::max(0.01f, instance.zoom);
         opengl::UpdateZoom(instance.zoom);
 
         instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
@@ -91,7 +91,7 @@ void MainLoop(photon_instance &instance){
         gui::DrawGameGUI(game_gui, instance);
 
         opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
-        gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f,0.4f,0.1f,0.8f), false, "FPS: %f", 1.0f/frame_delta);
+        gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f, 0.4f, 0.1f, 0.8f), false, "FPS: %f", 1.0f / frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 
@@ -100,14 +100,14 @@ void MainLoop(photon_instance &instance){
 
     // print total amount of time since instance was created.
     boost::posix_time::ptime current = boost::posix_time::microsec_clock::local_time();
-    PrintToLog("INFO: Total Time: %f seconds.", (current - instance.creation_time).total_microseconds());
+    PrintToLog("INFO: Total Time: %f seconds.", (current - instance.creation_time).total_microseconds() * 1.0e-6f);
     // print total frame count.
     PrintToLog("INFO: Total Frames: %i", instance.total_frames);
 
     // print average draw time by dividing the total amount of time from the start of the main loop by the total amount of frames.
     PrintToLog("INFO: Average Draw Time: %fms.",((current - start_time).total_microseconds() * 1.0e-3f) / (float)instance.total_frames);
     // print average framerate by inverting the total draw time.
-    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / ((current-start_time).total_microseconds() / (float)instance.total_frames))*1.0e6f);
+    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / ((current - start_time).total_microseconds() / (float)instance.total_frames)) * 1.0e6f);
 }
 
 }

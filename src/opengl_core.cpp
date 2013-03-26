@@ -44,7 +44,7 @@ void InitOpenGL(photon_window &window){
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    glGenTextures(1,&window.light_buffer_texture);
+    glGenTextures(1, &window.light_buffer_texture);
     glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -128,7 +128,7 @@ void OnResize(uint32_t width, uint32_t height, photon_window &window){
     glUseProgram(shader_text.program);
     glUniform1f(glGetUniformLocation(shader_text.program, "aspect"), aspect);
 
-    glViewport(0,0,width,height);
+    glViewport(0, 0, width, height);
 
     window.width = width;
     window.height = height;
@@ -218,7 +218,6 @@ void DrawModeLevel(photon_window &window){
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shader_scene.program);
-
 
     glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
     glBindTexture(GL_TEXTURE_2D, window.light_buffer_texture);

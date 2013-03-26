@@ -7,6 +7,7 @@
 namespace photon{
 
 namespace gui{
+
 photon_gui_game InitGameGUI(){
     photon_gui_game gui;
 

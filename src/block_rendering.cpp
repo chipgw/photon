@@ -7,6 +7,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 GLuint texture_plain_block;
+GLuint texture_indestructible_block;
 GLuint texture_mirror;
 GLuint texture_tnt;
 GLuint texture_explosion;
@@ -53,8 +54,7 @@ void Draw(photon_block block, glm::uvec2 location){
         DrawBlock(location);
         break;
     case indestructible:
-        // TODO - make different texture.
-        glBindTexture(GL_TEXTURE_2D, texture_plain_block);
+        glBindTexture(GL_TEXTURE_2D, texture_indestructible_block);
         DrawBlock(location);
         break;
     case mirror:
@@ -109,8 +109,7 @@ GLuint GetBlockTexture(block_type type){
         return texture_plain_block;
         break;
     case indestructible:
-        // TODO - make different texture.
-        return texture_plain_block;
+        return texture_indestructible_block;
         break;
     case mirror:
     case mirror_locked:
@@ -166,6 +165,7 @@ void DrawFX(photon_block block, glm::uvec2 location){
 
 void LoadTextures(){
     texture_plain_block = texture::Load("/textures/blocks/block.png");
+    texture_indestructible_block = texture::Load("/textures/blocks/indestructible_block.png");
     texture_mirror = texture::Load("/textures/blocks/mirror.png");
     texture_tnt = texture::Load("/textures/blocks/tnt.png");
     texture_filter_red = texture::Load("/textures/blocks/filter_red.png");

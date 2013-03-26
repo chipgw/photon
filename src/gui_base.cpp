@@ -45,7 +45,6 @@ void DrawGameGUI(photon_gui_game &gui, photon_instance &instance){
     glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
     DrawBounds(gui.bar);
 
-    // TODO - get current item from inventory.
     GLuint tex = blocks::GetBlockTexture(player::CurrentItem(instance.player));
     if(tex){
         glBindTexture(GL_TEXTURE_2D, tex);

@@ -26,7 +26,19 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
     PrintToLog("INFO: Running on %s, Build Type: %s", SDL_GetPlatform(), version::build_type);
 
     PHYSFS_init(argv[0]);
-    PHYSFS_mount("data", "/", 0);
+    if(!PHYSFS_mount("data", "/", 0)){
+        PrintToLog("WARNING: PhysFS was unable to mount data as '/', trying archive extensions...");
+
+        const PHYSFS_ArchiveInfo **types = PHYSFS_supportedArchiveTypes();
+        while((*types) != nullptr){
+            std::string filename = "data.";
+            if(PHYSFS_mount(filename.append((*types)->extension).c_str(), "/", 0)){
+                PrintToLog("INFO: data.%s archive found!", (*types)->extension);
+                break;
+            }
+            types++;
+        }
+    }
 
     instance.window = window_managment::CreateSDLWindow();
 

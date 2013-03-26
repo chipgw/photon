@@ -50,7 +50,6 @@ void Draw(photon_block block, glm::uvec2 location){
         break;
     case plain:
         glBindTexture(GL_TEXTURE_2D, texture_plain_block);
-
         DrawBlock(location);
         break;
     case indestructible:

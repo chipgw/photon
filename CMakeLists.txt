@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 
 include_directories("./include")
 
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 1)
+set(VERSION_PATCH 0)
+
 set(CMAKE_CXX_FLAGS                "-std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -Wall")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
@@ -22,6 +26,7 @@ file(GLOB GLSL_SOURCES "data/shaders/*.xml" "data/shaders/*.vert" "data/shaders/
 
 file(GLOB SOURCES "src/*.cpp")
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc" @ONLY)
 set(WINDRES "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${HEADERS} ${WINDRES})

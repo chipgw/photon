@@ -1,0 +1,37 @@
+#include <windows.h>
+
+IDI_ICON1   ICON  DISCARDABLE  "photon.ico"
+
+#define VER_FILEVERSION             @VERSION_MAJOR@,@VERSION_MINOR@,@VERSION_PATCH@,0
+#define VER_FILEVERSION_STR         "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@.0"
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION       VER_FILEVERSION
+  PRODUCTVERSION    VER_FILEVERSION
+  FILEFLAGSMASK     VS_FFI_FILEFLAGSMASK
+#ifdef NDEBUG
+  FILEFLAGS      	(VS_FF_PRERELEASE)
+#else
+  FILEFLAGS      	(VS_FF_PRERELEASE|VS_FF_DEBUG)
+#endif
+  FILEOS VOS_NT_WINDOWS32
+  FILETYPE VFT_APP
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "04090000"
+      BEGIN
+        VALUE "FileDescription", "Photon"
+        VALUE "FileVersion", VER_FILEVERSION_STR
+        VALUE "InternalName", "photon"
+        VALUE "LegalCopyright", "© 2013 chipgw"
+        VALUE "OriginalFilename", "photon.exe"
+        VALUE "ProductName", "Photon"
+        VALUE "ProductVersion", VER_FILEVERSION_STR
+      END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+      VALUE "Translation", 0x409, 1200
+    END
+  END

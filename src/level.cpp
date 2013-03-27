@@ -74,9 +74,17 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         xmlChar *width_str = xmlGetProp(root, (const xmlChar *)"width");
         xmlChar *height_str = xmlGetProp(root, (const xmlChar *)"height");
 
+        int w = atoi((char*)width_str);
+        int h = atoi((char*)height_str);
 
-        level.width = atoi((char*)width_str);
-        level.height = atoi((char*)height_str);
+        if(w < 250 && h < 250){
+            level.width = w;
+            level.height = h;
+        }else{
+            PrintToLog("WARNING: level \"%s\" dimensions exceed 250x250! capping...", filename.c_str());
+            level.width = 250;
+            level.height = 250;
+        }
 
         xmlFree(width_str);
         xmlFree(height_str);

@@ -77,14 +77,15 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         int w = atoi((char*)width_str);
         int h = atoi((char*)height_str);
 
-        if(w < 250 && h < 250){
-            level.width = w;
-            level.height = h;
-        }else{
-            PrintToLog("WARNING: level \"%s\" dimensions exceed 250x250! capping...", filename.c_str());
-            level.width = 250;
-            level.height = 250;
+        if(w <= 0 || h <= 0){
+            PrintToLog("WARNING: level \"%s\" dimensions are less than 1x1!", filename.c_str());
         }
+        if(w > 250 || h > 250){
+            PrintToLog("WARNING: level \"%s\" dimensions exceed 250x250! capping...", filename.c_str());
+        }
+        level.width = std::min(std::max(w, 1), 250);
+        level.height = std::min(std::max(h, 1), 250);
+
 
         xmlFree(width_str);
         xmlFree(height_str);
@@ -110,11 +111,17 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         while(node != nullptr) {
             if((xmlStrEqual(node->name, (const xmlChar *)"data"))){
                 xmlNode *row = node->xmlChildrenNode;
-                while(row != nullptr) {
+                while(row != nullptr){
                     if((xmlStrEqual(row->name, (const xmlChar *)"row"))){
                         xmlChar *y_str = xmlGetProp(row, (const xmlChar *)"y");
                         uint8_t y = atoi((char*)y_str);
                         xmlFree(y_str);
+
+                        if(y >= level.height || y < 0){
+                            PrintToLog("WARNING: Row location not within level bounds!");
+                            row = row->next;
+                            continue;
+                        }
 
                         xmlNode *block_xml = row->xmlChildrenNode;
                         while(block_xml != nullptr) {
@@ -122,6 +129,12 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                                 xmlChar *x_str = xmlGetProp(block_xml, (const xmlChar *)"x");
                                 uint8_t x = atoi((char*)x_str);
                                 xmlFree(x_str);
+
+                                if(x >= level.width || x < 0){
+                                    PrintToLog("WARNING: Block location not within level bounds!");
+                                    block_xml = block_xml->next;
+                                    continue;
+                                }
 
                                 xmlChar *type_str = xmlGetProp(block_xml, (const xmlChar *)"type");
 

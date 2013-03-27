@@ -36,15 +36,15 @@ void MainLoop(photon_instance &instance){
     // TODO - find a proper place to put this... probably some structure that holds all GUI states and put that in the instance...
     photon_gui_game game_gui = gui::InitGameGUI();
 
-    boost::posix_time::ptime start_time = boost::posix_time::microsec_clock::local_time();;
-    boost::posix_time::ptime last_time = boost::posix_time::microsec_clock::local_time();;
+    std::chrono::high_resolution_clock::time_point start_time = std::chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point last_time = std::chrono::high_resolution_clock::now();
     float frame_delta = 0;
 
-    PrintToLog("INFO: Main loop started at: %f seconds.", (start_time - instance.creation_time).total_microseconds() * 1.0e-6f);
+    PrintToLog("INFO: Main loop started at: %f seconds.", (start_time - instance.creation_time));
 
     while(instance.running){
-        boost::posix_time::ptime current = boost::posix_time::microsec_clock::local_time();
-        frame_delta = (current - last_time).total_microseconds() * 1.0e-6f;
+        std::chrono::high_resolution_clock::time_point current = std::chrono::high_resolution_clock::now();
+        frame_delta = std::chrono::duration_cast<std::chrono::microseconds>(current - last_time).count() * 1.0e-6f;
         last_time = current;
 
         input::DoEvents(instance, frame_delta);
@@ -99,15 +99,15 @@ void MainLoop(photon_instance &instance){
     }
 
     // print total amount of time since instance was created.
-    boost::posix_time::ptime current = boost::posix_time::microsec_clock::local_time();
-    PrintToLog("INFO: Total Time: %f seconds.", (current - instance.creation_time).total_microseconds() * 1.0e-6f);
+    std::chrono::high_resolution_clock::time_point current = std::chrono::high_resolution_clock::now();
+    PrintToLog("INFO: Total Time: %f seconds.", (std::chrono::duration_cast<std::chrono::microseconds>(current - instance.creation_time).count() * 1.0e-6f));
     // print total frame count.
     PrintToLog("INFO: Total Frames: %i", instance.total_frames);
 
     // print average draw time by dividing the total amount of time from the start of the main loop by the total amount of frames.
-    PrintToLog("INFO: Average Draw Time: %fms.",((current - start_time).total_microseconds() * 1.0e-3f) / (float)instance.total_frames);
+    PrintToLog("INFO: Average Draw Time: %fms.", (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() * 1.0e-3f) / (float)instance.total_frames);
     // print average framerate by inverting the total draw time.
-    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / ((current - start_time).total_microseconds() / (float)instance.total_frames)) * 1.0e6f);
+    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() / (float)instance.total_frames)) * 1.0e6f);
 }
 
 }

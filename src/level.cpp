@@ -9,11 +9,8 @@ namespace photon{
 namespace level{
 
 void Draw(photon_level &level){
-    glm::uvec2 current(0);
-    for(current.x = 0; current.x < level.grid.shape()[0];current.x++){
-        for(current.y = 0; current.y < level.grid.shape()[1];current.y++){
-            blocks::Draw(level.grid[current.x][current.y], current);
-        }
+    for(auto &block : level.grid){
+        blocks::Draw(block.second, glm::uvec2(block.first.first, block.first.second));
     }
 }
 
@@ -30,11 +27,8 @@ void DrawBeamsLight(photon_level &level){
 }
 
 void DrawFX(photon_level &level){
-    glm::uvec2 current(0);
-    for(current.x = 0; current.x < level.grid.shape()[0];current.x++){
-        for(current.y = 0; current.y < level.grid.shape()[1];current.y++){
-            blocks::DrawFX(level.grid[current.x][current.y], current);
-        }
+    for(auto &block : level.grid){
+        blocks::DrawFX(block.second, glm::uvec2(block.first.first, block.first.second));
     }
 }
 
@@ -81,28 +75,26 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         xmlChar *height_str = xmlGetProp(root, (const xmlChar *)"height");
 
 
-        int width = atoi((char*)width_str);
-        int height = atoi((char*)height_str);
+        level.width = atoi((char*)width_str);
+        level.height = atoi((char*)height_str);
 
         xmlFree(width_str);
         xmlFree(height_str);
 
-        PrintToLog("INFO: Level size %i x %i", width, height);
+        PrintToLog("INFO: Level size %i x %i", level.width, level.height);
 
         //because we fill the edges with indestructible blocks.
-        width += 2;
-        height += 2;
-
-        level.grid.resize(boost::extents[width][height]);
+        level.width += 2;
+        level.height += 2;
 
         // fill the borders with indestructible blocks.
-        for(int x = 0;x<width;x++){
-            level.grid[x][0].type = indestructible;
-            level.grid[x][height-1].type = indestructible;
+        for(int x = 0; x < level.width; x++){
+            level.grid[photon_level_coord(x, 0               )].type = indestructible;
+            level.grid[photon_level_coord(x, level.height - 1)].type = indestructible;
         }
-        for(int y = 0;y<height;y++){
-            level.grid[0][y].type = indestructible;
-            level.grid[width-1][y].type = indestructible;
+        for(int y = 0; y < level.height; y++){
+            level.grid[photon_level_coord(0,               y)].type = indestructible;
+            level.grid[photon_level_coord(level.width - 1, y)].type = indestructible;
         }
 
         xmlNode *node = root->xmlChildrenNode;
@@ -113,19 +105,19 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                 while(row != nullptr) {
                     if((xmlStrEqual(row->name, (const xmlChar *)"row"))){
                         xmlChar *y_str = xmlGetProp(row, (const xmlChar *)"y");
-                        unsigned int y = atoi((char*)y_str);
+                        uint8_t y = atoi((char*)y_str);
                         xmlFree(y_str);
 
                         xmlNode *block_xml = row->xmlChildrenNode;
                         while(block_xml != nullptr) {
                             if((xmlStrEqual(block_xml->name, (const xmlChar *)"block"))){
                                 xmlChar *x_str = xmlGetProp(block_xml, (const xmlChar *)"x");
-                                unsigned int x = atoi((char*)x_str);
+                                uint8_t x = atoi((char*)x_str);
                                 xmlFree(x_str);
 
                                 xmlChar *type_str = xmlGetProp(block_xml, (const xmlChar *)"type");
 
-                                photon_block &block = level.grid[x][y];
+                                photon_block &block = level.grid[photon_level_coord(x,y)];
 
                                 if((xmlStrEqual(type_str, (const xmlChar *)"plain"))){
                                     block.type = plain;
@@ -309,12 +301,8 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
 void AdvanceFrame(photon_level &level, float time){
     level.beams.clear();
-    glm::uvec2 location(0);
-
-    for(location.x = 0; location.x < level.grid.shape()[0];location.x++){
-        for(location.y = 0; location.y < level.grid.shape()[1];location.y++){
-            blocks::OnFrame(location, level, time);
-        }
+    for(auto &block : level.grid){
+        blocks::OnFrame(glm::uvec2(block.first.first, block.first.second), level, time);
     }
     for(photon_laserbeam &beam : level.beams){
         tracer::TraceBeam(beam, level, time);

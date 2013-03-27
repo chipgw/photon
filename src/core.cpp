@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctime>
-#include <boost/date_time.hpp>
 #include <physfs.h>
 
 namespace photon{
@@ -70,13 +69,20 @@ void PrintToLog(const char *format,...){
     va_start(args, format);
 
     char buffer[512];
-    vsprintf(buffer, format, args);
+
+    std::chrono::high_resolution_clock::time_point current = std::chrono::high_resolution_clock::now();
+
+    time_t tnow = std::chrono::high_resolution_clock::to_time_t(current);
+    tm *date = std::localtime(&tnow);
+    int microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current.time_since_epoch()).count() % 1000000;
+
+    sprintf(buffer, "%02i:%02i:%02i.%06i: ", date->tm_hour, date->tm_min, date->tm_sec, microseconds);
+
+    // index 17 is the right place to start after the time has been printed.
+    vsprintf(&buffer[17], format, args);
     va_end(args);
 
     std::string out(buffer);
-
-    auto t = boost::posix_time::microsec_clock::local_time();
-    out.insert(0, boost::posix_time::to_simple_string(t).substr(12) + ": ");
 
     if(*out.rbegin() != '\n'){
         out.append("\n");

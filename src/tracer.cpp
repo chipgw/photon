@@ -34,7 +34,7 @@ void TraceBeam(photon_laserbeam& beam, photon_level &level, float time){
         glm::uvec2 trace_location = last_trace_location + glm::uvec2(trace);
 
         // check to se if the laser is within the bounds of the level.
-        if(trace_location.x >= level.grid.shape()[0] || trace_location.y >= level.grid.shape()[1]){
+        if(trace_location.x >= level.width || trace_location.y >= level.height){
             segment = nullptr;
             break;
         }

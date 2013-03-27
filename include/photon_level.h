@@ -1,29 +1,21 @@
 #ifndef _PHOTON_LEVEL_H_
 #define _PHOTON_LEVEL_H_
 
-#include <boost/multi_array.hpp>
 #include "photon_blocks.h"
 #include "photon_laser.h"
+#include <map>
 
 namespace photon{
 struct photon_player;
 
+typedef std::pair<uint8_t, uint8_t>  photon_level_coord;
+
 struct photon_level{
-    boost::multi_array<photon_block,2> grid;
+    std::map<photon_level_coord, photon_block> grid;
     std::vector<photon_laserbeam> beams;
 
-    photon_level(int w, int h) : grid(boost::extents[w][h]) {}
-    photon_level() {}
-
-    // really annoying that boost::multi_array requires this, but it does so here it is.
-    photon_level& operator= (const photon_level &other){
-        // Check for self-assignment
-        if (this != &other){
-            this->grid.resize(boost::extents[other.grid.shape()[0]][other.grid.shape()[1]]);
-            this->grid = other.grid;
-        }
-        return *this;
-    }
+    uint8_t width = 0;
+    uint8_t height = 0;
 };
 
 namespace level{

@@ -131,32 +131,33 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
 
 void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &player){
     photon_level_coord coord(location.x, location.y);
-    if(level.grid.count(coord)){
-        photon_block &block = level.grid[coord];
-        switch(block.type){
-        case air:
-            if(player.current_item != invalid_block){
-                block.type = player.current_item;
-                player::AddItemCurrent(player, -1);
-            }
-            break;
-        default:
-            break;
-        case tnt:
-        case filter_red:
-        case filter_green:
-        case filter_blue:
-        case filter_yellow:
-        case filter_cyan:
-        case filter_magenta:
-        case mirror:
-            if(!block.locked){
-                player::AddItem(player, block.type);
-                block.type = air;
-                block.data = 0.0f;
-            }
-            break;
+    photon_block &block = level.grid[coord];
+    switch(block.type){
+    case air:
+        if(player.current_item != invalid_block){
+            block.type = player.current_item;
+            player::AddItemCurrent(player, -1);
         }
+        break;
+    default:
+        break;
+    case tnt:
+    case filter_red:
+    case filter_green:
+    case filter_blue:
+    case filter_yellow:
+    case filter_cyan:
+    case filter_magenta:
+    case mirror:
+        if(!block.locked){
+            player::AddItem(player, block.type);
+            level.grid.erase(coord);
+        }
+        break;
+    }
+    // if for some reason nothing happened to this block after it was added...
+    if(block.type == air){
+        level.grid.erase(coord);
     }
 }
 
@@ -205,8 +206,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         case tnt_fireball:
             block.data -= time * 3.0f;
             if(block.data < 0.0f){
-                block.data = 0.0f;
-                block.type = air;
+                level.grid.erase(coord);
             }
             break;
         case emitter_white:{
@@ -255,7 +255,7 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
             break;
         case plain:
             if(damage > 0.5f){
-                block.type = air;
+                level.grid.erase(coord);
             }
             break;
         case tnt:

@@ -108,7 +108,7 @@ void DoInput(photon_instance &instance, float time){
             player::PreviousItem(instance.player);
         }
 
-        instance.zoom -= (input.zoom_in.current_state - input.zoom_out.current_state) * time;
+        instance.zoom -= (input.zoom_in.current_state - input.zoom_out.current_state) * instance.zoom * 0.5f * time;
     }
 }
 
@@ -145,7 +145,7 @@ void DoEvents(photon_instance &instance, float time){
             }
             break;
         case SDL_MOUSEWHEEL:
-            instance.zoom -= event.wheel.y * 0.1f;
+            instance.zoom -= event.wheel.y * instance.zoom * 0.02f;
             break;
         }
     }

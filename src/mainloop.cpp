@@ -22,14 +22,17 @@ void MainLoop(photon_instance &instance){
 
     instance.input = input::LoadConfig("/config/keyboard.xml");
 
-    if(SDL_IsGameController(0)){
-        SDL_GameController *controller = SDL_GameControllerOpen(0);
+    for(int i = 0; i < SDL_NumJoysticks(); i++){
+        if(SDL_IsGameController(i)){
+            SDL_GameController *controller = SDL_GameControllerOpen(0);
 
-        if(controller != nullptr){
-            instance.input = input::LoadConfig("/config/controller.xml");
-            instance.input.controller = controller;
+            if(controller != nullptr){
+                instance.input = input::LoadConfig("/config/controller.xml");
+                instance.input.controller = controller;
 
-            PrintToLog("INFO: Game controller found, using...");
+                PrintToLog("INFO: Game controller found, using...");
+                break;
+            }
         }
     }
 

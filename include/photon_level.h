@@ -30,6 +30,8 @@ void DrawFX(photon_level &level);
 
 photon_level LoadLevelXML(const std::string &filename, photon_player &player);
 
+void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player);
+
 void AdvanceFrame(photon_level &level, float time);
 
 }

@@ -4,6 +4,10 @@
 #include "photon_blocks.h"
 #include "photon_core.h"
 
+const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
+    return (const xmlChar*)str;
+}
+
 namespace photon{
 
 namespace level{
@@ -65,14 +69,14 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
             xmlFreeDoc(doc);
             return level;
         }
-        if(xmlStrcmp(root->name, (const xmlChar *) "photon_level")) {
+        if(xmlStrcmp(root->name, "photon_level"_xml)) {
             PrintToLog("ERROR: Unable to load XML Level: root node not photon_level!");
             xmlFreeDoc(doc);
             return level;
         }
 
-        xmlChar *width_str = xmlGetProp(root, (const xmlChar *)"width");
-        xmlChar *height_str = xmlGetProp(root, (const xmlChar *)"height");
+        xmlChar *width_str = xmlGetProp(root, "width"_xml);
+        xmlChar *height_str = xmlGetProp(root, "height"_xml);
 
         int w = atoi((char*)width_str);
         int h = atoi((char*)height_str);
@@ -109,11 +113,11 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
-            if((xmlStrEqual(node->name, (const xmlChar *)"data"))){
+            if((xmlStrEqual(node->name, "data"_xml))){
                 xmlNode *row = node->xmlChildrenNode;
                 while(row != nullptr){
-                    if((xmlStrEqual(row->name, (const xmlChar *)"row"))){
-                        xmlChar *y_str = xmlGetProp(row, (const xmlChar *)"y");
+                    if((xmlStrEqual(row->name, "row"_xml))){
+                        xmlChar *y_str = xmlGetProp(row, "y"_xml);
                         uint8_t y = atoi((char*)y_str);
                         xmlFree(y_str);
 
@@ -125,8 +129,8 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                         xmlNode *block_xml = row->xmlChildrenNode;
                         while(block_xml != nullptr) {
-                            if((xmlStrEqual(block_xml->name, (const xmlChar *)"block"))){
-                                xmlChar *x_str = xmlGetProp(block_xml, (const xmlChar *)"x");
+                            if((xmlStrEqual(block_xml->name, "block"_xml))){
+                                xmlChar *x_str = xmlGetProp(block_xml, "x"_xml);
                                 uint8_t x = atoi((char*)x_str);
                                 xmlFree(x_str);
 
@@ -136,70 +140,70 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                                     continue;
                                 }
 
-                                xmlChar *type_str = xmlGetProp(block_xml, (const xmlChar *)"type");
+                                xmlChar *type_str = xmlGetProp(block_xml, "type"_xml);
 
                                 photon_block &block = level.grid[photon_level_coord(x,y)];
 
-                                if((xmlStrEqual(type_str, (const xmlChar *)"plain"))){
+                                if((xmlStrEqual(type_str, "plain"_xml))){
                                     block.type = plain;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"mirror"))){
+                                }else if((xmlStrEqual(type_str, "mirror"_xml))){
                                     block.type = mirror;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"mirror_locked"))){
+                                }else if((xmlStrEqual(type_str, "mirror_locked"_xml))){
                                     block.type = mirror_locked;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"tnt"))){
+                                }else if((xmlStrEqual(type_str, "tnt"_xml))){
                                     block.type = tnt;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_red"))){
+                                }else if((xmlStrEqual(type_str, "filter_red"_xml))){
                                     block.type = filter_red;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_green"))){
+                                }else if((xmlStrEqual(type_str, "filter_green"_xml))){
                                     block.type = filter_green;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_blue"))){
+                                }else if((xmlStrEqual(type_str, "filter_blue"_xml))){
                                     block.type = filter_blue;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_yellow"))){
+                                }else if((xmlStrEqual(type_str, "filter_yellow"_xml))){
                                     block.type = filter_yellow;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_cyan"))){
+                                }else if((xmlStrEqual(type_str, "filter_cyan"_xml))){
                                     block.type = filter_cyan;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_magenta"))){
+                                }else if((xmlStrEqual(type_str, "filter_magenta"_xml))){
                                     block.type = filter_magenta;
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"emitter_white"))){
+                                }else if((xmlStrEqual(type_str, "emitter_white"_xml))){
                                     block.type = emitter_white;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"emitter_red"))){
+                                }else if((xmlStrEqual(type_str, "emitter_red"_xml))){
                                     block.type = emitter_red;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"emitter_green"))){
+                                }else if((xmlStrEqual(type_str, "emitter_green"_xml))){
                                     block.type = emitter_green;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, (const xmlChar *)"emitter_blue"))){
+                                }else if((xmlStrEqual(type_str, "emitter_blue"_xml))){
                                     block.type = emitter_blue;
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar *)"angle");
+                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
                                     block.data = atof((char*)angle_str);
 
@@ -214,86 +218,86 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                     row = row->next;
                 }
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"inventory"))){
+            }else if((xmlStrEqual(node->name, "inventory"_xml))){
                 xmlNode *item = node->xmlChildrenNode;
                 while(item != nullptr) {
-                    if((xmlStrEqual(item->name, (const xmlChar *)"item"))){
-                        xmlChar *type_str = xmlGetProp(item, (const xmlChar *)"type");
+                    if((xmlStrEqual(item->name, "item"_xml))){
+                        xmlChar *type_str = xmlGetProp(item, "type"_xml);
 
-                        if((xmlStrEqual(type_str, (const xmlChar *)"mirror"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        if((xmlStrEqual(type_str, "mirror"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, mirror);
                             }else{
                                 player::AddItem(player, mirror, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"tnt"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "tnt"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, tnt);
                             }else{
                                 player::AddItem(player, tnt, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_red"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_red"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_red);
                             }else{
                                 player::AddItem(player, filter_red, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_green"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_green"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_green);
                             }else{
                                 player::AddItem(player, filter_green, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_blue"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_blue"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_blue);
                             }else{
                                 player::AddItem(player, filter_blue, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_yellow"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_yellow"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_yellow);
                             }else{
                                 player::AddItem(player, filter_yellow, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_cyan"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_cyan"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_cyan);
                             }else{
                                 player::AddItem(player, filter_cyan, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, (const xmlChar *)"filter_magenta"))){
-                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar *)"amount");
+                        }else if((xmlStrEqual(type_str, "filter_magenta"_xml))){
+                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
-                            if((xmlStrEqual(amount_str, (const xmlChar *)"infinite"))){
+                            if((xmlStrEqual(amount_str, "infinite"_xml))){
                                 player::GiveInfiniteItems(player, filter_magenta);
                             }else{
                                 player::AddItem(player, filter_magenta, atoi((char*)amount_str));
@@ -318,6 +322,92 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
     }
 
     return level;
+}
+
+void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player){
+    xmlChar *xmlbuff;
+    int buffersize;
+
+    xmlDoc *doc = xmlNewDoc("1.0"_xml);
+    xmlNode *root = xmlNewNode(nullptr, "photon_level"_xml);
+    xmlDocSetRootElement(doc, root);
+
+    xmlSetProp(root, "width"_xml, (const xmlChar*)std::to_string(level.width - 2).c_str());
+    xmlSetProp(root, "height"_xml, (const xmlChar*)std::to_string(level.height - 2).c_str());
+
+    xmlNode *inventory = xmlNewNode(nullptr, "inventory"_xml);
+    xmlAddChild(root, inventory);
+
+    for(auto item : player.items){
+        xmlNode* item_xml = xmlNewNode(nullptr, "item"_xml);
+        xmlAddChild(inventory, item_xml);
+        xmlSetProp(item_xml, "type"_xml, (const xmlChar*)blocks::GetBlockName(item.first));
+
+        if(item.second > 0){
+            xmlSetProp(item_xml, "amount"_xml, (const xmlChar*)std::to_string(item.second).c_str());
+        }else{
+            xmlSetProp(item_xml, "amount"_xml, "infinite"_xml);
+        }
+    }
+
+    xmlNode *data = xmlNewNode(nullptr, "data"_xml);
+    xmlAddChild(root, data);
+
+    std::map<uint8_t, xmlNode*> rows;
+
+    for(auto block : level.grid){
+        xmlNode* block_xml = xmlNewNode(nullptr, "block"_xml);
+        xmlSetProp(block_xml, "x"_xml, (const xmlChar*)std::to_string(block.first.first).c_str());
+
+        switch(block.second.type){
+        case mirror:
+        case mirror_locked:
+        case emitter_white:
+        case emitter_red:
+        case emitter_green:
+        case emitter_blue:
+            xmlSetProp(block_xml, "angle"_xml, (const xmlChar*)std::to_string(block.second.data).c_str());
+        case tnt:
+            // TODO - store TNT warmup.
+            break;
+        case indestructible:
+            if(block.first.first == 0 || block.first.first == level.width - 1 ||
+                    block.first.second == 0 || block.first.second == level.height - 1){
+                // block is a border block, no need to store.
+                xmlFreeNode(block_xml);
+                continue;
+            }
+            break;
+        default:
+            break;
+        }
+
+        xmlSetProp(block_xml, "type"_xml, (const xmlChar*)blocks::GetBlockName(block.second.type));
+        if(rows.count(block.first.second)){
+            xmlAddChild(rows[block.first.second], block_xml);
+        }else{
+            xmlNode* row_xml = xmlNewNode(nullptr, "row"_xml);
+            xmlSetProp(row_xml, "y"_xml, (const xmlChar*)std::to_string(block.first.second).c_str());
+            xmlAddChild(data, row_xml);
+            rows[block.first.second] = row_xml;
+            xmlAddChild(row_xml, block_xml);
+        }
+    }
+
+    // TODO - perhaps store what level originally loaded so people can come back to puzzles and still have it count? that will probably enable cheating though...
+
+    xmlDocDumpFormatMemory(doc, &xmlbuff, &buffersize, 1);
+
+    auto fp = PHYSFS_openWrite(filename.c_str());
+
+    if(fp != nullptr){
+        PHYSFS_write(fp, xmlbuff, 1, buffersize);
+
+        PHYSFS_close(fp);
+    }
+
+    xmlFree(xmlbuff);
+    xmlFreeDoc(doc);
 }
 
 void AdvanceFrame(photon_level &level, float time){

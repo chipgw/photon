@@ -45,6 +45,7 @@ enum block_type{
     filter_magenta
 };
 
+
 struct photon_block{
     // block type.
     block_type type = air;
@@ -82,6 +83,8 @@ void DrawFX(photon_block block, glm::uvec2 location);
 void LoadTextures();
 
 GLuint GetBlockTexture(block_type type);
+
+const char* GetBlockName(block_type type);
 
 }
 

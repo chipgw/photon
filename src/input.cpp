@@ -121,6 +121,8 @@ void DoEvents(photon_instance &instance, float time){
                 window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
                 Close(instance);
+            }else if(event.key.keysym.sym == SDLK_s && event.key.keysym.mod & KMOD_CTRL){
+                level::SaveLevelXML("/save.xml", instance.level, instance.player);
             }
             break;
         case SDL_QUIT:

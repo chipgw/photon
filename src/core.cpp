@@ -38,6 +38,7 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
             types++;
         }
     }
+    PHYSFS_setWriteDir("data");
 
     instance.window = window_managment::CreateSDLWindow();
 

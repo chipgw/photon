@@ -278,6 +278,38 @@ void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength)
         }
     }
 }
+#define CASESTR(X) case X: return #X; break;
+
+const char* GetBlockName(block_type type){
+    switch(type){
+    default:
+        CASESTR(invalid_block);
+        CASESTR(air);
+        CASESTR(mirror);
+        CASESTR(mirror_locked);
+        CASESTR(plain);
+        CASESTR(indestructible);
+        CASESTR(emitter_white);
+        CASESTR(emitter_red);
+        CASESTR(emitter_green);
+        CASESTR(emitter_blue);
+        CASESTR(reciever);
+        CASESTR(reciever_white);
+        CASESTR(reciever_red);
+        CASESTR(reciever_green);
+        CASESTR(reciever_blue);
+        CASESTR(tnt);
+        CASESTR(tnt_fireball);
+        CASESTR(filter_red);
+        CASESTR(filter_green);
+        CASESTR(filter_blue);
+        CASESTR(filter_yellow);
+        CASESTR(filter_cyan);
+        CASESTR(filter_magenta);
+    }
+}
+
+#undef CASESTR
 
 }
 

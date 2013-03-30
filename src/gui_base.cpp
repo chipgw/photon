@@ -15,6 +15,8 @@ photon_gui_container InitGUI(){
     gui.game.pause_menu_button_texture = texture::Load("/textures/gui/pause_button.png");
     gui.game.toggle_fullscreen_button_texture = texture::Load("/textures/gui/fullscreen_button.png");
 
+    gui.text_button_texture = texture::Load("/textures/gui/button.png");
+
     return gui;
 }
 
@@ -32,11 +34,10 @@ void DrawBounds(photon_gui_bounds &bounds){
     }glEnd();
 }
 
-void DrawGameGUI(photon_instance &instance){
+void DrawGameGUI(photon_instance &instance, float time){
     photon_gui_game &gui = instance.gui.game;
-
     opengl::SetColorGUI(glm::vec4(0.0f));
-//    opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
+
     glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
     DrawBounds(gui.bar);
 
@@ -57,7 +58,30 @@ void DrawGameGUI(photon_instance &instance){
             RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "%i", count);
         }
     }
+    // TODO - make bounds.
+    gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f, 0.4f, 0.1f, 0.8f), false, "FPS: %f", 1.0f / time);
 
+    if(instance.paused){
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        photon_gui_bounds tmp(-100.0f, 100.0f, -100.0f, 100.0f);
+        opengl::SetColorGUI(glm::vec4(0.1f, 0.1f, 0.1f, -0.4f));
+        DrawBounds(tmp);
+
+        photon_gui_pause_menu &gui = instance.gui.pause_menu;
+        opengl::SetColorGUI(glm::vec4(0.0f));
+
+        glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
+        DrawBounds(gui.resume_button);
+        DrawBounds(gui.load_button);
+        DrawBounds(gui.save_button);
+        DrawBounds(gui.exit_button);
+
+        RenderText(glm::vec2(0.0f, gui.resume_button.bottom + 0.15f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Resume");
+        RenderText(glm::vec2(0.0f, gui.load_button.bottom + 0.15f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Load");
+        RenderText(glm::vec2(0.0f, gui.save_button.bottom + 0.15f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Save");
+        RenderText(glm::vec2(0.0f, gui.exit_button.bottom + 0.15f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Exit");
+    }
 }
 
 bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds){
@@ -74,14 +98,33 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
     location /= std::min(widthfac, heightfac);
 
     // TODO - check other gui states. (you know, the ones that don't exist yet...)
-
-    if(InBounds(location, instance.gui.game.pause_menu_button)){
-        PrintToLog("PAUSE");
+    if(instance.paused){
+        if(InBounds(location, instance.gui.pause_menu.resume_button)){
+            instance.paused = false;
+        }
+        if(InBounds(location, instance.gui.pause_menu.load_button)){
+            // TODO - ask for confirmation & file name or slot.
+            instance.level = level::LoadLevelXML("/save.xml", instance.player);
+        }
+        if(InBounds(location, instance.gui.pause_menu.save_button)){
+            // TODO - ask for confirmation & file name or slot.
+            level::SaveLevelXML("/save.xml", instance.level, instance.player);
+        }
+        if(InBounds(location, instance.gui.pause_menu.exit_button)){
+            // TODO - ask for confirmation.
+            Close(instance);
+        }
+        // pause menu absorbs all clicks.
         return true;
-    }
-    if(InBounds(location, instance.gui.game.toggle_fullscreen_button)){
-        window_managment::ToggleFullscreen(instance.window);
-        return true;
+    }else{
+        if(InBounds(location, instance.gui.game.pause_menu_button)){
+            instance.paused = true;
+            return true;
+        }
+        if(InBounds(location, instance.gui.game.toggle_fullscreen_button)){
+            window_managment::ToggleFullscreen(instance.window);
+            return true;
+        }
     }
 
     return false;

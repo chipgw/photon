@@ -67,14 +67,15 @@ bool IsActivated(photon_input_state &state){
 
 void DoInput(photon_instance &instance, float time){
     photon_input &input = instance.input;
-    if(false){ // TODO - make it check if GUI is active.
-        DoInputSingle(input.left, input);
-        DoInputSingle(input.right, input);
-        DoInputSingle(input.up, input);
-        DoInputSingle(input.down, input);
-        DoInputSingle(input.select, input);
-        DoInputSingle(input.back, input);
 
+    DoInputSingle(input.left, input);
+    DoInputSingle(input.right, input);
+    DoInputSingle(input.up, input);
+    DoInputSingle(input.down, input);
+    DoInputSingle(input.select, input);
+    DoInputSingle(input.back, input);
+
+    if(instance.paused){
         // TODO - code goes here...
     }else{
         DoInputSingle(input.interact, input);
@@ -120,7 +121,7 @@ void DoEvents(photon_instance &instance, float time){
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
-                Close(instance);
+                instance.paused = !instance.paused;
             }else if(event.key.keysym.sym == SDLK_s && event.key.keysym.mod & KMOD_CTRL){
                 level::SaveLevelXML("/save.xml", instance.level, instance.player);
             }

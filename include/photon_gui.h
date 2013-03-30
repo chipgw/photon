@@ -37,10 +37,21 @@ struct photon_gui_game{
     photon_gui_bounds moves_display;
 };
 
+struct photon_gui_pause_menu{
+    photon_gui_bounds resume_button = { 0.86f, 0.46f, -0.8f, 0.8f};
+    photon_gui_bounds load_button   = { 0.42f, 0.02f, -0.8f, 0.8f};
+    photon_gui_bounds save_button   = {-0.02f,-0.42f, -0.8f, 0.8f};
+    photon_gui_bounds exit_button   = {-0.46f,-0.86f, -0.8f, 0.8f};
+    GLuint button_texture = 0;
+};
+
 struct photon_gui_container{
     photon_gui_game game;
+    photon_gui_pause_menu pause_menu;
 
     // TODO - add other gui states.
+
+    GLuint text_button_texture = 0;
 };
 
 namespace gui{
@@ -51,7 +62,7 @@ void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
-void DrawGameGUI(photon_instance &instance);
+void DrawGameGUI(photon_instance &instance, float time);
 
 bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds);
 

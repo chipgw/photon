@@ -53,7 +53,7 @@ void MainLoop(photon_instance &instance){
 
         input::DoInput(instance, frame_delta);
 
-        level::AdvanceFrame(instance.level, frame_delta);
+        level::AdvanceFrame(instance.level, frame_delta * !instance.paused);
 
         instance.zoom = std::max(0.01f, instance.zoom);
         opengl::UpdateZoom(instance.zoom);
@@ -90,10 +90,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawGameGUI(instance);
-
-        opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
-        gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f, 0.4f, 0.1f, 0.8f), false, "FPS: %f", 1.0f / frame_delta);
+        gui::DrawGameGUI(instance, frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

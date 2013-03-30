@@ -21,6 +21,7 @@ struct photon_instance{
     photon_player player;
 
     photon_gui_container gui;
+    bool paused = false;
 
     /*! \brief total frames rendered */
     uintmax_t total_frames = 0;

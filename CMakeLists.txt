@@ -7,7 +7,7 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
 
-set(CMAKE_CXX_FLAGS                "-std=c++11")
+set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -Wall")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")

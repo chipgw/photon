@@ -105,11 +105,11 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
         }
         if(InBounds(location, instance.gui.pause_menu.load_button)){
             // TODO - ask for confirmation & file name or slot.
-            instance.level = level::LoadLevelXML("/save.xml", instance.player);
+            instance.level = level::LoadLevelXML("save.xml", instance.player);
         }
         if(InBounds(location, instance.gui.pause_menu.save_button)){
             // TODO - ask for confirmation & file name or slot.
-            level::SaveLevelXML("/save.xml", instance.level, instance.player);
+            level::SaveLevelXML("save.xml", instance.level, instance.player);
         }
         if(InBounds(location, instance.gui.pause_menu.exit_button)){
             // TODO - ask for confirmation.

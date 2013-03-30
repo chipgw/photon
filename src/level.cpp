@@ -144,64 +144,11 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                                 photon_block &block = level.grid[photon_level_coord(x,y)];
 
-                                if((xmlStrEqual(type_str, "plain"_xml))){
-                                    block.type = plain;
-                                }else if((xmlStrEqual(type_str, "mirror"_xml))){
-                                    block.type = mirror;
+                                block.type = blocks::GetBlockFromName((char*)type_str);
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
-
-                                    block.data = atof((char*)angle_str);
-
-                                    xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, "mirror_locked"_xml))){
-                                    block.type = mirror_locked;
-
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
-
-                                    block.data = atof((char*)angle_str);
-
-                                    xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, "tnt"_xml))){
-                                    block.type = tnt;
-                                }else if((xmlStrEqual(type_str, "filter_red"_xml))){
-                                    block.type = filter_red;
-                                }else if((xmlStrEqual(type_str, "filter_green"_xml))){
-                                    block.type = filter_green;
-                                }else if((xmlStrEqual(type_str, "filter_blue"_xml))){
-                                    block.type = filter_blue;
-                                }else if((xmlStrEqual(type_str, "filter_yellow"_xml))){
-                                    block.type = filter_yellow;
-                                }else if((xmlStrEqual(type_str, "filter_cyan"_xml))){
-                                    block.type = filter_cyan;
-                                }else if((xmlStrEqual(type_str, "filter_magenta"_xml))){
-                                    block.type = filter_magenta;
-                                }else if((xmlStrEqual(type_str, "emitter_white"_xml))){
-                                    block.type = emitter_white;
-
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
-
-                                    block.data = atof((char*)angle_str);
-
-                                    xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, "emitter_red"_xml))){
-                                    block.type = emitter_red;
-
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
-
-                                    block.data = atof((char*)angle_str);
-
-                                    xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, "emitter_green"_xml))){
-                                    block.type = emitter_green;
-
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
-
-                                    block.data = atof((char*)angle_str);
-
-                                    xmlFree(angle_str);
-                                }else if((xmlStrEqual(type_str, "emitter_blue"_xml))){
-                                    block.type = emitter_blue;
+                                if(block.type == mirror || block.type == mirror_locked ||
+                                        block.type == emitter_white || block.type == emitter_red ||
+                                        block.type == emitter_green || block.type == emitter_blue){
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
@@ -209,7 +156,7 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                                     xmlFree(angle_str);
                                 }
-                                // TODO - load other block types.
+
                                 xmlFree(type_str);
                             }
                             block_xml = block_xml->next;
@@ -224,89 +171,19 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                 while(item != nullptr) {
                     if((xmlStrEqual(item->name, "item"_xml))){
                         xmlChar *type_str = xmlGetProp(item, "type"_xml);
-
-                        if((xmlStrEqual(type_str, "mirror"_xml))){
+                        block_type type = blocks::GetBlockFromName((char*)type_str);
+                        if(type != invalid_block){
                             xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
 
                             if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, mirror);
+                                player::GiveInfiniteItems(player, type);
                             }else{
-                                player::AddItem(player, mirror, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "tnt"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, tnt);
-                            }else{
-                                player::AddItem(player, tnt, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_red"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_red);
-                            }else{
-                                player::AddItem(player, filter_red, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_green"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_green);
-                            }else{
-                                player::AddItem(player, filter_green, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_blue"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_blue);
-                            }else{
-                                player::AddItem(player, filter_blue, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_yellow"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_yellow);
-                            }else{
-                                player::AddItem(player, filter_yellow, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_cyan"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_cyan);
-                            }else{
-                                player::AddItem(player, filter_cyan, atoi((char*)amount_str));
-                            }
-
-                            xmlFree(amount_str);
-                        }else if((xmlStrEqual(type_str, "filter_magenta"_xml))){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
-
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
-                                player::GiveInfiniteItems(player, filter_magenta);
-                            }else{
-                                player::AddItem(player, filter_magenta, atoi((char*)amount_str));
+                                player::AddItem(player, type, atoi((char*)amount_str));
                             }
 
                             xmlFree(amount_str);
                         }
-                        // TODO - load other block types.
+
                         xmlFree(type_str);
                     }
                     item = item->next;

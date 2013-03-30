@@ -311,6 +311,37 @@ const char* GetBlockName(block_type type){
         CASESTR(filter_magenta);
     }
 }
+#undef CASESTR
+#define CASESTR(X) if(!strcmp(name, #X)){ return X; }
+
+block_type GetBlockFromName(const char* name){
+    CASESTR(invalid_block)
+    else CASESTR(air)
+    else CASESTR(mirror)
+    else CASESTR(mirror_locked)
+    else CASESTR(plain)
+    else CASESTR(indestructible)
+    else CASESTR(emitter_white)
+    else CASESTR(emitter_red)
+    else CASESTR(emitter_green)
+    else CASESTR(emitter_blue)
+    else CASESTR(reciever)
+    else CASESTR(reciever_white)
+    else CASESTR(reciever_red)
+    else CASESTR(reciever_green)
+    else CASESTR(reciever_blue)
+    else CASESTR(tnt)
+    else CASESTR(tnt_fireball)
+    else CASESTR(filter_red)
+    else CASESTR(filter_green)
+    else CASESTR(filter_blue)
+    else CASESTR(filter_yellow)
+    else CASESTR(filter_cyan)
+    else CASESTR(filter_magenta)
+    else{
+        return invalid_block;
+    }
+}
 
 #undef CASESTR
 

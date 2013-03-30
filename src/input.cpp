@@ -123,7 +123,7 @@ void DoEvents(photon_instance &instance, float time){
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
                 instance.paused = !instance.paused;
             }else if(event.key.keysym.sym == SDLK_s && event.key.keysym.mod & KMOD_CTRL){
-                level::SaveLevelXML("/save.xml", instance.level, instance.player);
+                level::SaveLevelXML("save.xml", instance.level, instance.player);
             }
             break;
         case SDL_QUIT:

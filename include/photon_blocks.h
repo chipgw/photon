@@ -86,6 +86,8 @@ GLuint GetBlockTexture(block_type type);
 
 const char* GetBlockName(block_type type);
 
+block_type GetBlockFromName(const char* name);
+
 }
 
 }

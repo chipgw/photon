@@ -58,8 +58,9 @@ void DrawGameGUI(photon_instance &instance, float time){
             RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "%i", count);
         }
     }
-    // TODO - make bounds.
-    gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f, 0.4f, 0.1f, 0.8f), false, "FPS: %f", 1.0f / time);
+    gui::RenderText(gui.moves_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "Moves: %i", instance.level.moves);
+    gui::RenderText(gui.time_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "Time: %f", instance.level.time);
+    gui::RenderText(gui.fps_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "FPS: %f", 1.0f / time);
 
     if(instance.paused){
         glBindTexture(GL_TEXTURE_2D, 0);

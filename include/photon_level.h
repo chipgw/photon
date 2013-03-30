@@ -16,6 +16,9 @@ struct photon_level{
 
     uint8_t width = 0;
     uint8_t height = 0;
+
+    float time;
+    uint32_t moves = 0;
 };
 
 namespace level{

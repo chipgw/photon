@@ -418,6 +418,8 @@ void AdvanceFrame(photon_level &level, float time){
     for(photon_laserbeam &beam : level.beams){
         tracer::TraceBeam(beam, level, time);
     }
+
+    level.time += time;
 }
 
 }

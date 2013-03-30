@@ -137,6 +137,7 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
         if(player.current_item != invalid_block){
             block.type = player.current_item;
             player::AddItemCurrent(player, -1);
+            level.moves++;
         }
         break;
     default:
@@ -152,6 +153,7 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
         if(!block.locked){
             player::AddItem(player, block.type);
             level.grid.erase(coord);
+            level.moves++;
         }
         break;
     }
@@ -174,6 +176,7 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
             }else{
                 block.data -= 22.5f;
             }
+            level.moves++;
             break;
         }
     }

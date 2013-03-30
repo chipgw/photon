@@ -148,7 +148,9 @@ void DoEvents(photon_instance &instance, float time){
             }
             break;
         case SDL_MOUSEWHEEL:
-            instance.zoom -= event.wheel.y * instance.zoom * 0.02f;
+            if(!instance.paused){
+                instance.zoom -= event.wheel.y * instance.zoom * 0.02f;
+            }
             break;
         case SDL_MOUSEBUTTONUP:
             if(event.button.button == SDL_BUTTON_LEFT){

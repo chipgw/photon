@@ -219,6 +219,7 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                     row = row->next;
                 }
             }else if((xmlStrEqual(node->name, "inventory"_xml))){
+                player.items.clear();
                 xmlNode *item = node->xmlChildrenNode;
                 while(item != nullptr) {
                     if((xmlStrEqual(item->name, "item"_xml))){

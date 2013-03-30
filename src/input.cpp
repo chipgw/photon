@@ -149,6 +149,11 @@ void DoEvents(photon_instance &instance, float time){
         case SDL_MOUSEWHEEL:
             instance.zoom -= event.wheel.y * instance.zoom * 0.02f;
             break;
+        case SDL_MOUSEBUTTONUP:
+            if(event.button.button == SDL_BUTTON_LEFT){
+                gui::HandleMouseClick(instance, event.button.x, event.button.y);
+            }
+            break;
         }
     }
 }

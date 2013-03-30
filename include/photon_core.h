@@ -5,6 +5,7 @@
 #include "photon_player.h"
 #include "photon_level.h"
 #include "photon_input.h"
+#include "photon_gui.h"
 #include <list>
 #include <chrono>
 
@@ -18,6 +19,8 @@ struct photon_instance{
     photon_level level;
 
     photon_player player;
+
+    photon_gui_container gui;
 
     /*! \brief total frames rendered */
     uintmax_t total_frames = 0;

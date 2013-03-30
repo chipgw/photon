@@ -36,8 +36,7 @@ void MainLoop(photon_instance &instance){
         }
     }
 
-    // TODO - find a proper place to put this... probably some structure that holds all GUI states and put that in the instance...
-    photon_gui_game game_gui = gui::InitGameGUI();
+    instance.gui = gui::InitGUI();
 
     std::chrono::high_resolution_clock::time_point start_time = std::chrono::high_resolution_clock::now();
     std::chrono::high_resolution_clock::time_point last_time = std::chrono::high_resolution_clock::now();
@@ -91,7 +90,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawGameGUI(game_gui, instance);
+        gui::DrawGameGUI(instance);
 
         opengl::SetCenterGUI(glm::vec2(0.0f,-1.0f));
         gui::RenderText(glm::vec2(0.0f), glm::vec2(0.05f), glm::vec4(0.8f, 0.4f, 0.1f, 0.8f), false, "FPS: %f", 1.0f / frame_delta);

@@ -14,29 +14,48 @@ struct photon_gui_bounds{
     float bottom = 0.0f;
     float left = 0.0f;
     float right = 0.0f;
+
+    glm::vec2 offset = glm::vec2(0.0f);
+
+    photon_gui_bounds() = default;
+    photon_gui_bounds(float t, float b, float l, float r, float offsetx = 0.0f, float offsety = 0.0f)
+        : top(t), bottom(b), left(l), right(r), offset(offsetx, offsety) {}
 };
 
 struct photon_gui_game{
-    photon_gui_bounds current_item;
+    photon_gui_bounds current_item = {0.44f, 0.04f, -0.6f, -0.2f, 0.0f, -1.0f};
 
-    photon_gui_bounds bar;
-    GLuint bar_texture;
+    photon_gui_bounds bar = {0.5f, 0.0f, -1.0f, 1.0f, 0.0f, -1.0f};
+    GLuint bar_texture = 0;
+
+    photon_gui_bounds pause_menu_button = {0.24f, 0.14f, 0.84f, 0.94f, 0.0f, -1.0f};
+    GLuint pause_menu_button_texture = 0;
+    photon_gui_bounds toggle_fullscreen_button = {0.12f, 0.02f, 0.84f, 0.94f, 0.0f, -1.0f};
+    GLuint toggle_fullscreen_button_texture = 0;
 
     photon_gui_bounds time_display;
     photon_gui_bounds moves_display;
 };
 
+struct photon_gui_container{
+    photon_gui_game game;
+
+    // TODO - add other gui states.
+};
+
 namespace gui{
 
-photon_gui_game InitGameGUI();
+photon_gui_container InitGUI();
 
 void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
-void DrawGameGUI(photon_gui_game &gui, photon_instance &instance);
+void DrawGameGUI(photon_instance &instance);
 
 bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds);
+
+bool HandleMouseClick(photon_instance &instance, int x, int y);
 
 }
 

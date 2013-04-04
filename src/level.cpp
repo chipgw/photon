@@ -90,14 +90,13 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         level.width = std::min(std::max(w, 1), 250);
         level.height = std::min(std::max(h, 1), 250);
 
-
         xmlFree(width_str);
         xmlFree(height_str);
 
         PrintToLog("INFO: Level size %i x %i", level.width, level.height);
 
         //because we fill the edges with indestructible blocks.
-        level.width += 2;
+        level.width  += 2;
         level.height += 2;
 
         // fill the borders with indestructible blocks.

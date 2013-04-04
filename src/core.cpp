@@ -38,7 +38,17 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
             types++;
         }
     }
-    PHYSFS_setWriteDir("data");
+
+    PHYSFS_setWriteDir(PHYSFS_getBaseDir());
+    if(PHYSFS_mkdir("saves")){
+        if(!PHYSFS_setWriteDir("saves")){
+            PrintToLog("ERROR: unable to set saves directory! %s", PHYSFS_getLastError());
+        }else if(!PHYSFS_mount("saves", "/", 0)){ // makes the "saves" directory also work for custom configs and user modding sorts of things. (not that there is much to mod...)
+            PrintToLog("ERROR: unable to mount saves directory! %s", PHYSFS_getLastError());
+        }
+    }else{
+        PrintToLog("ERROR: unable to set saves directory! %s", PHYSFS_getLastError());
+    }
 
     instance.window = window_managment::CreateSDLWindow();
 

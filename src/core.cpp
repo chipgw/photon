@@ -45,12 +45,17 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
     opengl::InitOpenGL(instance.window);
 
     gui::InitFreeType();
+    instance.gui = gui::InitGUI();
+
+    instance.input = input::InitInput();
 
     return instance;
 }
 
 void GarbageCollect(photon_instance &instance){
     PrintToLog("INFO: Doing garbage collection.");
+    input::GarbageCollect(instance.input);
+
     opengl::GarbageCollect(instance.window);
     window_managment::GarbageCollect(instance.window);
 

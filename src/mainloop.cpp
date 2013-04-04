@@ -14,31 +14,13 @@
 namespace photon{
 
 void MainLoop(photon_instance &instance){
-    instance.running = true;
-
 #ifndef NDEBUG
     instance.level = level::LoadLevelXML("/level.xml", instance.player);
 #endif
 
     instance.player.location = glm::vec2(1.0f, 1.0f);
 
-    instance.input = input::LoadConfig("/config/keyboard.xml");
-
-    for(int i = 0; i < SDL_NumJoysticks(); i++){
-        if(SDL_IsGameController(i)){
-            SDL_GameController *controller = SDL_GameControllerOpen(0);
-
-            if(controller != nullptr){
-                instance.input = input::LoadConfig("/config/controller.xml");
-                instance.input.controller = controller;
-
-                PrintToLog("INFO: Game controller found, using...");
-                break;
-            }
-        }
-    }
-
-    instance.gui = gui::InitGUI();
+    instance.running = true;
 
     std::chrono::high_resolution_clock::time_point start_time = std::chrono::high_resolution_clock::now();
     std::chrono::high_resolution_clock::time_point last_time = std::chrono::high_resolution_clock::now();
@@ -51,7 +33,7 @@ void MainLoop(photon_instance &instance){
         frame_delta = std::chrono::duration_cast<std::chrono::microseconds>(current - last_time).count() * 1.0e-6f;
         last_time = current;
 
-        input::DoEvents(instance, frame_delta);
+        input::DoEvents(instance);
 
         input::DoInput(instance, frame_delta);
 

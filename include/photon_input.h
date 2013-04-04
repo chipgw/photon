@@ -46,7 +46,7 @@ struct photon_input{
     // pointer to joystick to use if event is one of the joystick_* types
     SDL_Joystick* joystick = nullptr;
     // pointer to the game controller to use for gamecontroller_* types
-    SDL_GameController *controller = nullptr;
+    SDL_GameController* controller = nullptr;
 
     photon_input_state move_positive_x;
     photon_input_state move_negative_x;
@@ -73,6 +73,11 @@ struct photon_input{
 
     photon_input_state select;
     photon_input_state back;
+
+    bool is_valid = false;
+    // for events to figure out what device to use.
+    std::vector<SDL_Joystick*> open_joysticks;
+    std::vector<SDL_GameController*> open_controllers;
 };
 
 namespace input{
@@ -82,7 +87,7 @@ namespace input{
  * \param instance
  * \param time
 */
-void DoEvents(photon_instance &instance, float time);
+void DoEvents(photon_instance &instance);
 
 /*!
  * \brief run the input handling system.
@@ -99,7 +104,10 @@ photon_input_state CreateKeyboardInput(SDL_Scancode key);
 photon_input_state CreateJoystickAxisInput(int axis, bool negate = false);
 photon_input_state CreateJoystickButtonInput(int button);
 
-photon_input LoadConfig(const std::string &filename);
+bool LoadConfig(const std::string &filename, photon_input &input);
+
+photon_input InitInput();
+void GarbageCollect(photon_input &input);
 
 }
 

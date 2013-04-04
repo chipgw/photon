@@ -113,11 +113,16 @@ void DoInput(photon_instance &instance, float time){
     }
 }
 
-void DoEvents(photon_instance &instance, float time){
+void DoEvents(photon_instance &instance){
     SDL_Event event;
     while(SDL_PollEvent(&event)){
         switch (event.type) {
         case SDL_KEYDOWN:
+            if(!instance.input.is_valid){
+                input::LoadConfig("/config/keyboard.xml", instance.input);
+
+                PrintToLog("INFO: Using keyboard input.");
+            }
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
@@ -157,10 +162,33 @@ void DoEvents(photon_instance &instance, float time){
                 gui::HandleMouseClick(instance, event.button.x, event.button.y);
             }
             break;
+        case SDL_CONTROLLERBUTTONUP:
+            if(!instance.input.is_valid){
+                SDL_GameController *controller = SDL_GameControllerOpen(event.cbutton.which);
+
+                if(controller != nullptr){
+                    input::LoadConfig("/config/controller.xml", instance.input);
+                    instance.input.controller = controller;
+
+                    PrintToLog("INFO: Using Game Controller (device index %i)", event.cbutton.which);
+                }
+            }
+            break;
+        case SDL_CONTROLLERAXISMOTION:
+            if(!instance.input.is_valid){
+                SDL_GameController *controller = SDL_GameControllerOpen(event.caxis.which);
+
+                if(controller != nullptr){
+                    input::LoadConfig("/config/controller.xml", instance.input);
+                    instance.input.controller = controller;
+
+                    PrintToLog("INFO: Using Game Controller (device index %i)", event.caxis.which);
+                }
+            }
+            break;
         }
     }
 }
-
 
 photon_input_state CreateControllerAxisInput(SDL_GameControllerAxis axis, bool negate){
     photon_input_state state;
@@ -269,9 +297,7 @@ photon_input_state LoadInputSingle(xmlNode *node){
     return state;
 }
 
-photon_input LoadConfig(const std::string &filename){
-    photon_input input;
-
+bool LoadConfig(const std::string &filename, photon_input &input){
     if(PHYSFS_exists(filename.c_str())){
         PHYSFS_File *file;
         long length;
@@ -280,7 +306,7 @@ photon_input LoadConfig(const std::string &filename){
         file = PHYSFS_openRead(filename.c_str());
         if(!file){
             PrintToLog("ERROR: unable to open XML input config file \"%s\"", filename.c_str());
-            return input;
+            return false;
         }
 
         length = PHYSFS_fileLength(file);
@@ -293,20 +319,21 @@ photon_input LoadConfig(const std::string &filename){
 
         if(doc == nullptr) {
             PrintToLog("ERROR: Unable to load XML input config: Document not parsed successfully!");
-            return input;
+            return false;
         }
 
         xmlNodePtr root = xmlDocGetRootElement(doc);
         if(root == nullptr) {
             PrintToLog("ERROR: Unable to load XML input config: empty document!");
             xmlFreeDoc(doc);
-            return input;
+            return false;
         }
         if(xmlStrcmp(root->name, (const xmlChar *) "photon_input")) {
             PrintToLog("ERROR: Unable to load XML input config: root node not photon_input!");
             xmlFreeDoc(doc);
-            return input;
+            return false;
         }
+        input.is_valid = false;
 
         xmlChar *device_str = xmlGetProp(root, (const xmlChar *)"device");
         xmlChar *guid_str = xmlGetProp(root, (const xmlChar *)"device_guid");
@@ -357,12 +384,51 @@ photon_input LoadConfig(const std::string &filename){
             node = node->next;
         }
 
+        input.is_valid = true;
+
         free(xml_buffer);
         xmlFreeDoc(doc);
+
+        return true;
     }else{
         PrintToLog("ERROR: Unable to load XML input config: \"%s\" does not exist!", filename.c_str());
     }
+    return false;
+}
+
+photon_input InitInput(){
+    PrintToLog("INFO: Initializing Input System.");
+    photon_input input;
+
+    SDL_GameControllerEventState(SDL_ENABLE);
+    SDL_JoystickEventState(SDL_ENABLE);
+
+    for(int i = 0; i < SDL_NumJoysticks();i++){
+        if(SDL_IsGameController(i)){
+            input.open_controllers.push_back(SDL_GameControllerOpen(i));
+        }else{
+            input.open_joysticks.push_back(SDL_JoystickOpen(i));
+        }
+    }
+    PrintToLog("INFO: Listening for input, press a button on the device you want to use.");
+
     return input;
+}
+
+void GarbageCollect(photon_input &input){
+    for(auto controller : input.open_controllers){
+        if(controller == input.controller){
+            input.controller = nullptr;
+        }
+        SDL_GameControllerClose(controller);
+    }
+    for(auto joystick : input.open_joysticks){
+        if(joystick == input.joystick){
+            input.joystick = nullptr;
+        }
+        SDL_JoystickClose(joystick);
+    }
+    PrintToLog("INFO: Input System garbage collection complete.");
 }
 
 }

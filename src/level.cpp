@@ -113,11 +113,13 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         xmlChar *playerx_str = xmlGetProp(root, "playerx"_xml);
         xmlChar *playery_str = xmlGetProp(root, "playery"_xml);
 
-        player.location.x = atof((char*)playerx_str);
-        player.location.y = atof((char*)playery_str);
+        if(playerx_str && playery_str){
+            player.location.x = atof((char*)playerx_str);
+            player.location.y = atof((char*)playery_str);
 
-        xmlFree(playerx_str);
-        xmlFree(playery_str);
+            xmlFree(playerx_str);
+            xmlFree(playery_str);
+        }
 
         xmlNode *node = root->xmlChildrenNode;
 
@@ -221,8 +223,11 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
     xmlNode *root = xmlNewNode(nullptr, "photon_level"_xml);
     xmlDocSetRootElement(doc, root);
 
-    xmlSetProp(root, "width"_xml, (const xmlChar*)std::to_string(level.width - 2).c_str());
+    xmlSetProp(root, "width"_xml,  (const xmlChar*)std::to_string(level.width  - 2).c_str());
     xmlSetProp(root, "height"_xml, (const xmlChar*)std::to_string(level.height - 2).c_str());
+
+    xmlSetProp(root, "playerx"_xml, (const xmlChar*)std::to_string(player.location.x).c_str());
+    xmlSetProp(root, "playery"_xml, (const xmlChar*)std::to_string(player.location.y).c_str());
 
     xmlNode *inventory = xmlNewNode(nullptr, "inventory"_xml);
     xmlAddChild(root, inventory);

@@ -110,6 +110,15 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
             level.grid[photon_level_coord(level.width - 1, y)].type = indestructible;
         }
 
+        xmlChar *playerx_str = xmlGetProp(root, "playerx"_xml);
+        xmlChar *playery_str = xmlGetProp(root, "playery"_xml);
+
+        player.location.x = atof((char*)playerx_str);
+        player.location.y = atof((char*)playery_str);
+
+        xmlFree(playerx_str);
+        xmlFree(playery_str);
+
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {

@@ -193,6 +193,8 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
             node = node->next;
         }
 
+        level.is_valid = true;
+
         free(xml_buffer);
         xmlFreeDoc(doc);
     }else{

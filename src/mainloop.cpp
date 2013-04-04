@@ -16,7 +16,9 @@ namespace photon{
 void MainLoop(photon_instance &instance){
     instance.running = true;
 
+#ifndef NDEBUG
     instance.level = level::LoadLevelXML("/level.xml", instance.player);
+#endif
 
     instance.player.location = glm::vec2(1.0f, 1.0f);
 
@@ -53,44 +55,49 @@ void MainLoop(photon_instance &instance){
 
         input::DoInput(instance, frame_delta);
 
-        level::AdvanceFrame(instance.level, frame_delta * !instance.paused);
+        if(instance.level.is_valid){
+            level::AdvanceFrame(instance.level, frame_delta * !instance.paused);
 
-        instance.zoom = std::max(0.01f, instance.zoom);
-        opengl::UpdateZoom(instance.zoom);
+            instance.zoom = std::max(0.01f, instance.zoom);
+            opengl::UpdateZoom(instance.zoom);
 
-        instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
+            instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
 
-        opengl::UpdateCenter(instance.player.location);
+            opengl::UpdateCenter(instance.player.location);
 
-        opengl::DrawModeLight(instance.window);
+            opengl::DrawModeLight(instance.window);
 
-        level::DrawBeamsLight(instance.level);
+            level::DrawBeamsLight(instance.level);
 
-        opengl::SetLaserColor(glm::vec3(1.0f));
+            opengl::SetLaserColor(glm::vec3(1.0f));
 
-        opengl::DrawPhotonLight(instance.player.location);
+            opengl::DrawPhotonLight(instance.player.location);
 
-        opengl::DrawModeScene(instance.window);
+            opengl::DrawModeScene(instance.window);
 
-        // TODO - draw a background texture or something...
+            // TODO - draw a background texture or something...
 
-        opengl::DrawModeLaser(instance.window);
+            opengl::DrawModeLaser(instance.window);
 
-        level::DrawBeams(instance.level);
+            level::DrawBeams(instance.level);
 
-        opengl::DrawModeLevel(instance.window);
+            opengl::DrawModeLevel(instance.window);
 
-        level::Draw(instance.level);
+            level::Draw(instance.level);
 
-        opengl::DrawModeFX(instance.window);
+            opengl::DrawModeFX(instance.window);
 
-        opengl::DrawPhoton(instance.player.location);
+            opengl::DrawPhoton(instance.player.location);
 
-        level::DrawFX(instance.level);
+            level::DrawFX(instance.level);
+        }else{
+            // this is so that the screen gets cleared.
+            opengl::DrawModeScene(instance.window);
+        }
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawGameGUI(instance, frame_delta);
+        gui::DrawGUI(instance, frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

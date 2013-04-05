@@ -20,7 +20,7 @@ photon_gui_container InitGUI(){
     return gui;
 }
 
-void DrawBounds(photon_gui_bounds &bounds){
+void DrawBounds(const photon_gui_bounds &bounds){
     opengl::SetCenterGUI(bounds.offset);
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
@@ -35,6 +35,8 @@ void DrawBounds(photon_gui_bounds &bounds){
 }
 
 void DrawGUI(photon_instance &instance, float time){
+    static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
+
     if(!instance.level.is_valid){
         // TODO - draw background.
         photon_gui_main_menu &gui = instance.gui.main_menu;
@@ -77,13 +79,12 @@ void DrawGUI(photon_instance &instance, float time){
         gui::RenderText(gui.fps_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "FPS: %f", 1.0f / time);
 
         if(instance.paused){
-            glBindTexture(GL_TEXTURE_2D, 0);
-
-            photon_gui_bounds tmp(-100.0f, 100.0f, -100.0f, 100.0f);
-            opengl::SetColorGUI(glm::vec4(0.1f, 0.1f, 0.1f, -0.4f));
-            DrawBounds(tmp);
-
             photon_gui_pause_menu &gui = instance.gui.pause_menu;
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            opengl::SetColorGUI(glm::vec4(0.1f, 0.1f, 0.1f, -0.4f));
+            DrawBounds(fill_bounds);
+
             opengl::SetColorGUI(glm::vec4(0.0f));
 
             glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
@@ -102,7 +103,7 @@ void DrawGUI(photon_instance &instance, float time){
     }
 }
 
-bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds){
+bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds){
     coord -= bounds.offset;
     return coord.x > bounds.left && coord.x < bounds.right &&
             coord.y > bounds.bottom && coord.y < bounds.top;

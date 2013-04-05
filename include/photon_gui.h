@@ -47,9 +47,9 @@ struct photon_gui_pause_menu{
 };
 
 struct photon_gui_main_menu{
-    photon_gui_bounds play_button   = { 0.50f, 0.20f, -0.9f, 0.3f};
-    photon_gui_bounds load_button   = { 0.15f,-0.15f, -0.9f, 0.3f};
-    photon_gui_bounds exit_button   = {-0.20f,-0.50f, -0.9f, 0.3f};
+    photon_gui_bounds play_button = { 0.50f, 0.20f,-0.9f, 0.3f};
+    photon_gui_bounds load_button = { 0.15f,-0.15f,-0.9f, 0.3f};
+    photon_gui_bounds exit_button = {-0.20f,-0.50f,-0.9f, 0.3f};
 };
 
 struct photon_gui_container{
@@ -72,7 +72,7 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 
 void DrawGUI(photon_instance &instance, float time);
 
-bool InBounds(glm::vec2 coord, photon_gui_bounds &bounds);
+bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds);
 
 bool HandleMouseClick(photon_instance &instance, int x, int y);
 

@@ -117,6 +117,28 @@ void DoEvents(photon_instance &instance){
     SDL_Event event;
     while(SDL_PollEvent(&event)){
         switch (event.type) {
+        case SDL_TEXTINPUT:
+            if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
+
+                instance.gui.load_save_menu.filename.insert(instance.gui.load_save_menu.cursor, event.text.text);
+
+                for(char* c = event.text.text; *c != '\0'; c++){
+                    instance.gui.load_save_menu.cursor++;
+                }
+                instance.gui.load_save_menu.current_file_index = -1;
+            }else{
+                // if we don't need text input anymore...
+                SDL_StopTextInput();
+            }
+            break;
+        case SDL_TEXTEDITING:
+            if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
+                instance.gui.load_save_menu.filename.insert(event.edit.start, event.edit.text);
+            }else{
+                // if we don't need text input anymore...
+                SDL_StopTextInput();
+            }
+            break;
         case SDL_KEYDOWN:
             if(!instance.input.is_valid){
                 input::LoadConfig("/config/keyboard.xml", instance.input);
@@ -125,10 +147,47 @@ void DoEvents(photon_instance &instance){
             }
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
+            }else if((instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving)){
+                photon_gui_load_save_menu &load_save_menu = instance.gui.load_save_menu;
+                if(event.key.keysym.sym == SDLK_BACKSPACE){
+                    if(load_save_menu.cursor > 0 && load_save_menu.cursor <= load_save_menu.filename.length()){
+                        load_save_menu.filename.erase(--load_save_menu.cursor, 1);
+                        instance.gui.load_save_menu.current_file_index = -1;
+                    }
+                }else if(event.key.keysym.sym == SDLK_DELETE){
+                    if(load_save_menu.cursor >= 0 && load_save_menu.cursor < load_save_menu.filename.length()){
+                        load_save_menu.filename.erase(load_save_menu.cursor, 1);
+                        instance.gui.load_save_menu.current_file_index = -1;
+                    }
+                }else if(event.key.keysym.sym == SDLK_LEFT){
+                    if(--load_save_menu.cursor < 0){
+                        load_save_menu.cursor = 0;
+                    }
+                }else if(event.key.keysym.sym == SDLK_RIGHT){
+                    if(++load_save_menu.cursor > load_save_menu.filename.length()){
+                        load_save_menu.cursor = load_save_menu.filename.length();
+                    }
+                }else if(event.key.keysym.sym == SDLK_UP){
+                    if(--load_save_menu.current_file_index < 0){
+                        load_save_menu.current_file_index = 0;
+                    }
+                    load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
+                }else if(event.key.keysym.sym == SDLK_DOWN){
+                    if(++load_save_menu.current_file_index >= load_save_menu.file_list.size()){
+                        load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
+                    }
+                    load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
+                }else if(event.key.keysym.sym == SDLK_ESCAPE){
+                    instance.gui.load_save_menu.loading = false;
+                    instance.gui.load_save_menu.saving  = false;
+                }else if(event.key.keysym.sym == SDLK_RETURN){
+                    gui::ConfirmLoadSave(instance);
+                }
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
                 instance.paused = !instance.paused;
             }else if(event.key.keysym.sym == SDLK_s && event.key.keysym.mod & KMOD_CTRL){
-                level::SaveLevelXML("save.xml", instance.level, instance.player);
+                instance.paused = true;
+                gui::StartSavingGUI(instance.gui.load_save_menu);
             }
             break;
         case SDL_QUIT:

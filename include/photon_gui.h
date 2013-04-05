@@ -52,10 +52,29 @@ struct photon_gui_main_menu{
     photon_gui_bounds exit_button = {-0.20f,-0.50f,-0.9f, 0.3f};
 };
 
+struct photon_gui_load_save_menu{
+    photon_gui_bounds file_list_bounds = { 0.95f,-0.85f,-0.9f, 0.9f};
+    photon_gui_bounds filename_box     = {-0.65f,-0.75f,-0.4f, 0.4f};
+    GLuint file_list_background = 0;
+    GLuint filename_box_background = 0;
+
+    photon_gui_bounds cancel_button  = {-0.80f,-0.95f,-0.9f,-0.3f};
+    photon_gui_bounds confirm_button = {-0.80f,-0.95f, 0.3f, 0.9f};
+
+    std::vector<std::string> file_list;
+    int current_file_index = -1;
+    std::string filename;
+    int cursor = 0;
+
+    bool loading = false;
+    bool saving  = false;
+};
+
 struct photon_gui_container{
     photon_gui_game game;
     photon_gui_pause_menu pause_menu;
     photon_gui_main_menu main_menu;
+    photon_gui_load_save_menu load_save_menu;
 
     // TODO - add other gui states.
 
@@ -75,6 +94,12 @@ void DrawGUI(photon_instance &instance, float time);
 bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds);
 
 bool HandleMouseClick(photon_instance &instance, int x, int y);
+
+void ConfirmLoadSave(photon_instance &instance);
+
+void StartLoadingGUI(photon_gui_load_save_menu &gui);
+
+void StartSavingGUI(photon_gui_load_save_menu &gui);
 
 }
 

@@ -11,7 +11,8 @@
   <move_down type="keyboard" key="S" />
   <zoom_in type="keyboard" key="+" />
   <zoom_out type="keyboard" key="-" />
-  <gui_select type="keyboard" key="enter" />
+  <pause type="keyboard" key="pause" />
+  <gui_select type="keyboard" key="return" />
   <gui_back type="keyboard" key="backspace" />
   <gui_up type="keyboard" key="up" />
   <gui_down type="keyboard" key="down" />

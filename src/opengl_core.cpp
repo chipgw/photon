@@ -164,7 +164,7 @@ GLenum CheckOpenGLErrors(){
     return err;
 }
 
-void UpdateZoom(float zoom){
+void UpdateZoom(const float &zoom){
     glUseProgram(shader_scene.program);
     glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f/zoom);
     glUseProgram(shader_laser.program);
@@ -175,7 +175,7 @@ void UpdateZoom(float zoom){
     glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"), 1.0f/zoom);
 }
 
-void UpdateCenter(glm::vec2 center){
+void UpdateCenter(const glm::vec2 &center){
     glUseProgram(shader_scene.program);
     glUniform2fv(glGetUniformLocation(shader_scene.program, "center"), 1, glm::value_ptr(center));
     glUseProgram(shader_laser.program);
@@ -242,7 +242,7 @@ void DrawModeLight(photon_window &window){
 }
 
 
-void DrawPhoton(glm::vec2 location){
+void DrawPhoton(const glm::vec2 &location){
     glBindTexture(GL_TEXTURE_2D, photon_texture);
 
     SetFacFX(1.0f);
@@ -263,7 +263,7 @@ void DrawPhoton(glm::vec2 location){
     }glEnd();
 }
 
-void DrawPhotonLight(glm::vec2 location){
+void DrawPhotonLight(const glm::vec2 &location){
     const float size = 16.0f;
 
     glBegin(GL_TRIANGLE_FAN);{
@@ -298,21 +298,21 @@ void DrawModeGUI(photon_window &window){
     glUseProgram(shader_text.program);
 }
 
-void SetColorGUI(glm::vec4 color){
+void SetColorGUI(const glm::vec4 &color){
     glUseProgram(shader_text.program);
     glUniform4fv(glGetUniformLocation(shader_text.program, "color"), 1, glm::value_ptr(color));
 }
 
-void SetCenterGUI(glm::vec2 center){
+void SetCenterGUI(const glm::vec2 &center){
     glUseProgram(shader_text.program);
     glUniform2fv(glGetUniformLocation(shader_text.program, "center"), 1, glm::value_ptr(center));
 }
 
-void SetFacFX(float fac){
+void SetFacFX(const float &fac){
     glUniform1f(glGetUniformLocation(shader_fx.program, "fac"), fac);
 }
 
-void SetLaserColor(glm::vec3 color){
+void SetLaserColor(const glm::vec3 &color){
     glUniform3fv(glGetUniformLocation(shader_laser.program, "color"), 1, glm::value_ptr(color));
     glUniform3fv(glGetUniformLocation(shader_light.program, "color"), 1, glm::value_ptr(color));
 }

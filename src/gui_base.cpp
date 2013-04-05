@@ -8,6 +8,16 @@
 
 namespace photon{
 
+const std::array<std::pair<std::string, photon_gui_bounds>, 5> photon_gui_pause_menu::buttons = {{{"Resume",       { 0.85f, 0.55f, -0.6f, 0.6f}},
+                                                                                                  {"Load",         { 0.50f, 0.20f, -0.6f, 0.6f}},
+                                                                                                  {"Save",         { 0.15f,-0.15f, -0.6f, 0.6f}},
+                                                                                                  {"Exit to Menu", {-0.20f,-0.50f, -0.6f, 0.6f}},
+                                                                                                  {"Exit Game",    {-0.55f,-0.85f, -0.6f, 0.6f}}}};
+
+const std::array<std::pair<std::string, photon_gui_bounds>, 3> photon_gui_main_menu::buttons = {{{"Play",      { 0.50f, 0.20f,-0.9f, 0.3f}},
+                                                                                                 {"Load",      { 0.15f,-0.15f,-0.9f, 0.3f}},
+                                                                                                 {"Exit Game", {-0.20f,-0.50f,-0.9f, 0.3f}}}};
+
 namespace gui{
 
 photon_gui_container InitGUI(){
@@ -39,25 +49,37 @@ void DrawBounds(const photon_gui_bounds &bounds){
     }glEnd();
 }
 
-void DrawGUI(photon_instance &instance, float time){
+void DrawGUI(photon_instance &instance, const float &time){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
+    static const glm::vec4 blank(0.0f);
+    static const glm::vec4 base_color(0.9f);
+    static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
+    static const glm::vec4 background_color(0.1f, 0.1f, 0.1f, -0.4f);
+    static const glm::vec2 small_font(0.05f);
+    static const glm::vec2 medium_font(0.15f);
 
     if(!instance.level.is_valid){
         // TODO - draw background.
-        photon_gui_main_menu &gui = instance.gui.main_menu;
-        opengl::SetColorGUI(glm::vec4(0.0f));
+        opengl::SetColorGUI(blank);
 
         glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
-        DrawBounds(gui.play_button);
-        DrawBounds(gui.load_button);
-        DrawBounds(gui.exit_button);
 
-        RenderText(glm::vec2((gui.play_button.right + gui.play_button.left) / 2.0f, gui.play_button.bottom + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Play");
-        RenderText(glm::vec2((gui.load_button.right + gui.load_button.left) / 2.0f, gui.load_button.bottom + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Load");
-        RenderText(glm::vec2((gui.exit_button.right + gui.exit_button.left) / 2.0f, gui.exit_button.bottom + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Exit");
+        for(auto button : instance.gui.main_menu.buttons){
+            DrawBounds(button.second);
+        }
+
+        for(int i = 0; i < instance.gui.main_menu.buttons.size(); i++){
+            auto button = instance.gui.main_menu.buttons[i];
+
+            if(i == instance.gui.main_menu.highlighted){
+                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first.c_str());
+            }else{
+                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first.c_str());
+            }
+        }
     }else{
         photon_gui_game &gui = instance.gui.game;
-        opengl::SetColorGUI(glm::vec4(0.0f));
+        opengl::SetColorGUI(blank);
 
         glBindTexture(GL_TEXTURE_2D, gui.bar_texture);
         DrawBounds(gui.bar);
@@ -74,46 +96,47 @@ void DrawGUI(photon_instance &instance, float time){
 
             int8_t count = player::GetItemCountCurrent(instance.player);
             if(count < 0){
-                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "infinite");
+                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), small_font, base_color, false, "infinite");
             }else{
-                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), glm::vec2(0.05f), glm::vec4(1.0f), false, "%i", count);
+                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), small_font, base_color, false, "%i", count);
             }
         }
-        gui::RenderText(gui.moves_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "Moves: %i", instance.level.moves);
-        gui::RenderText(gui.time_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "Time: %f", instance.level.time);
-        gui::RenderText(gui.fps_display_location, glm::vec2(0.05f), glm::vec4(0.8f), false, "FPS: %f", 1.0f / time);
+        gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
+        gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %f", instance.level.time);
+        gui::RenderText(gui.fps_display_location,   small_font, base_color, false, "FPS: %f", 1.0f / time);
 
         if(instance.paused){
-            photon_gui_pause_menu &gui = instance.gui.pause_menu;
-
             glBindTexture(GL_TEXTURE_2D, 0);
-            opengl::SetColorGUI(glm::vec4(0.1f, 0.1f, 0.1f, -0.4f));
+            opengl::SetColorGUI(background_color);
             DrawBounds(fill_bounds);
 
-            opengl::SetColorGUI(glm::vec4(0.0f));
+            opengl::SetColorGUI(blank);
 
             glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
-            DrawBounds(gui.resume_button);
-            DrawBounds(gui.load_button);
-            DrawBounds(gui.save_button);
-            DrawBounds(gui.main_menu_button);
-            DrawBounds(gui.exit_button);
 
-            RenderText(glm::vec2((gui.resume_button.right    + gui.resume_button.left)    / 2.0f, gui.resume_button.bottom     + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Resume");
-            RenderText(glm::vec2((gui.load_button.right      + gui.load_button.left)      / 2.0f, gui.load_button.bottom       + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Load");
-            RenderText(glm::vec2((gui.save_button.right      + gui.save_button.left)      / 2.0f, gui.save_button.bottom       + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Save");
-            RenderText(glm::vec2((gui.main_menu_button.right + gui.main_menu_button.left) / 2.0f, gui.main_menu_button.bottom  + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Exit to Menu");
-            RenderText(glm::vec2((gui.exit_button.right      + gui.exit_button.left)      / 2.0f, gui.exit_button.bottom       + 0.1f), glm::vec2(0.15f), glm::vec4(0.9f), true, "Exit");
+            for(auto button : instance.gui.pause_menu.buttons){
+                DrawBounds(button.second);
+            }
+
+            for(int i = 0; i < instance.gui.pause_menu.buttons.size(); i++){
+                auto button = instance.gui.pause_menu.buttons[i];
+
+                if(i == instance.gui.pause_menu.highlighted){
+                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first.c_str());
+                }else{
+                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first.c_str());
+                }
+            }
         }
     }
     if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
         photon_gui_load_save_menu &gui = instance.gui.load_save_menu;
 
         glBindTexture(GL_TEXTURE_2D, 0);
-        opengl::SetColorGUI(glm::vec4(0.1f, 0.1f, 0.1f, -0.4f));
+        opengl::SetColorGUI(background_color);
         DrawBounds(fill_bounds);
 
-        opengl::SetColorGUI(glm::vec4(0.0f));
+        opengl::SetColorGUI(blank);
         glBindTexture(GL_TEXTURE_2D, gui.file_list_background);
         DrawBounds(gui.file_list_bounds);
 
@@ -124,23 +147,23 @@ void DrawGUI(photon_instance &instance, float time){
         DrawBounds(gui.cancel_button);
         DrawBounds(gui.confirm_button);
 
-        RenderText(glm::vec2((gui.cancel_button.right  + gui.cancel_button.left)  / 2.0f, gui.cancel_button.bottom  + 0.05f), glm::vec2(0.05f), glm::vec4(0.9f), true, "Cancel");
-        RenderText(glm::vec2((gui.confirm_button.right + gui.confirm_button.left) / 2.0f, gui.confirm_button.bottom + 0.05f), glm::vec2(0.05f), glm::vec4(0.9f), true, "Confirm");
+        RenderText(glm::vec2((gui.cancel_button.right  + gui.cancel_button.left)  / 2.0f, gui.cancel_button.bottom  + 0.05f), small_font, base_color, true, "Cancel");
+        RenderText(glm::vec2((gui.confirm_button.right + gui.confirm_button.left) / 2.0f, gui.confirm_button.bottom + 0.05f), small_font, base_color, true, "Confirm");
 
-        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), glm::vec2(0.05f), glm::vec4(0.9f), false, gui.filename.c_str());
+        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.c_str());
 
         std::string underscore = gui.filename;
         underscore.replace(gui.cursor, 1, "_");
         underscore.erase(gui.cursor + 1);
-        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), glm::vec2(0.05f), glm::vec4(0.9f), false, underscore.c_str());
+        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, underscore.c_str());
 
         int i = 0;
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);
         for(auto file : gui.file_list){
             if(i == gui.current_file_index){
-                RenderText(location, glm::vec2(0.05f), glm::vec4(0.9f), false, file.c_str());
+                RenderText(location, small_font, highlight_color, false, file.c_str());
             }else{
-                RenderText(location, glm::vec2(0.05f), glm::vec4(0.9f, 0.8f, 0.4f, 0.0f), false, file.c_str());
+                RenderText(location, small_font, base_color, false, file.c_str());
             }
             location.y -= 0.08f;
             i++;
@@ -180,36 +203,18 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
         }
         return true;
     }else if(!instance.level.is_valid){
-        if(InBounds(location, instance.gui.main_menu.play_button)){
-            instance.level = level::LoadLevelXML("/level.xml", instance.player);
-            instance.paused = false;
-        }
-        if(InBounds(location, instance.gui.main_menu.load_button)){
-            StartLoadingGUI(instance.gui.load_save_menu);
-        }
-        if(InBounds(location, instance.gui.main_menu.exit_button)){
-            // TODO - ask for confirmation.
-            Close(instance);
+        for(int i = 0; i < instance.gui.main_menu.buttons.size(); i++){
+            if(InBounds(location, instance.gui.main_menu.buttons[i].second)){
+                ActivateButtonMainMenu(instance, i);
+            }
         }
         // main menu absorbs all clicks.
         return true;
     }else if(instance.paused){
-        if(InBounds(location, instance.gui.pause_menu.resume_button)){
-            instance.paused = false;
-        }
-        if(InBounds(location, instance.gui.pause_menu.load_button)){
-            StartLoadingGUI(instance.gui.load_save_menu);
-        }
-        if(InBounds(location, instance.gui.pause_menu.save_button)){
-            StartSavingGUI(instance.gui.load_save_menu);
-        }
-        if(InBounds(location, instance.gui.pause_menu.main_menu_button)){
-            // TODO - ask for confirmation.
-            instance.level = photon_level();
-        }
-        if(InBounds(location, instance.gui.pause_menu.exit_button)){
-            // TODO - ask for confirmation.
-            Close(instance);
+        for(int i = 0; i < instance.gui.pause_menu.buttons.size(); i++){
+            if(InBounds(location, instance.gui.pause_menu.buttons[i].second)){
+                ActivateButtonPauseMenu(instance, i);
+            }
         }
         // pause menu absorbs all clicks.
         return true;
@@ -237,6 +242,12 @@ void ConfirmLoadSave(photon_instance &instance){
     }else{
         PrintToLog("WARNING: Either both loading and saving were enabled at the same time or something is very wrong...");
     }
+    instance.gui.load_save_menu.loading = false;
+    instance.gui.load_save_menu.saving  = false;
+    SDL_StopTextInput();
+}
+
+void CancelLoadSave(photon_instance &instance){
     instance.gui.load_save_menu.loading = false;
     instance.gui.load_save_menu.saving  = false;
     SDL_StopTextInput();
@@ -284,6 +295,48 @@ void StartSavingGUI(photon_gui_load_save_menu &gui){
     FillFileList(gui);
 
     SDL_StartTextInput();
+}
+
+void ActivateButtonMainMenu(photon_instance &instance, int8_t button){
+    // TODO - make enum or macro or something to make this more human readable...
+    switch(button){
+    case 0:
+        instance.level = level::LoadLevelXML("/level.xml", instance.player);
+        instance.paused = false;
+        break;
+    case 1:
+        StartLoadingGUI(instance.gui.load_save_menu);
+        break;
+    case 2:
+        // TODO - ask for confirmation.
+        Close(instance);
+        break;
+    }
+    instance.gui.main_menu.highlighted = -1;
+}
+
+void ActivateButtonPauseMenu(photon_instance &instance, int8_t button){
+    // TODO - make enum or macro or something to make this more human readable...
+    switch(button){
+    case 0:
+        instance.paused = false;
+        break;
+    case 1:
+        StartLoadingGUI(instance.gui.load_save_menu);
+        break;
+    case 2:
+        StartSavingGUI(instance.gui.load_save_menu);
+        break;
+    case 3:
+        // TODO - ask for confirmation.
+        instance.level = photon_level();
+        break;
+    case 4:
+        // TODO - ask for confirmation.
+        Close(instance);
+        break;
+    }
+    instance.gui.pause_menu.highlighted = -1;
 }
 
 }

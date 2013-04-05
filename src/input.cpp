@@ -75,8 +75,72 @@ void DoInput(photon_instance &instance, float time){
     DoInputSingle(input.select, input);
     DoInputSingle(input.back, input);
 
-    if(instance.paused){
-        // TODO - code goes here...
+    DoInputSingle(input.pause, input);
+
+    if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
+        photon_gui_load_save_menu &load_save_menu = instance.gui.load_save_menu;
+        if(IsActivated(input.select)){
+            gui::ConfirmLoadSave(instance);
+        }
+        if(IsActivated(input.back)){
+            gui::CancelLoadSave(instance);
+        }
+        if(IsActivated(input.left)){
+            if(--load_save_menu.cursor < 0){
+                load_save_menu.cursor = 0;
+            }
+        }
+        if(IsActivated(input.right)){
+            if(++load_save_menu.cursor > load_save_menu.filename.length()){
+                load_save_menu.cursor = load_save_menu.filename.length();
+            }
+        }
+        if(IsActivated(input.up)){
+            if(--load_save_menu.current_file_index < 0){
+                load_save_menu.current_file_index = 0;
+            }
+            load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
+        }
+        if(IsActivated(input.down)){
+            if(++load_save_menu.current_file_index >= load_save_menu.file_list.size()){
+                load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
+            }
+            load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
+        }
+
+    }else if(!instance.level.is_valid){
+        photon_gui_main_menu &menu = instance.gui.main_menu;
+        if(IsActivated(input.select)){
+            gui::ActivateButtonMainMenu(instance, menu.highlighted);
+        }
+        if(IsActivated(input.up)){
+            if(--menu.highlighted < 0){
+                menu.highlighted = 0;
+            }
+        }
+        if(IsActivated(input.down)){
+            if(++menu.highlighted >= menu.buttons.size()){
+                menu.highlighted = menu.buttons.size() - 1;
+            }
+        }
+    }else if(instance.paused){
+        photon_gui_pause_menu &menu = instance.gui.pause_menu;
+        if(IsActivated(input.select)){
+            gui::ActivateButtonPauseMenu(instance, menu.highlighted);
+        }
+        if(IsActivated(input.back) || IsActivated(input.pause)){
+            instance.paused = false;
+        }
+        if(IsActivated(input.up)){
+            if(--menu.highlighted < 0){
+                menu.highlighted = 0;
+            }
+        }
+        if(IsActivated(input.down)){
+            if(++menu.highlighted >= menu.buttons.size()){
+                menu.highlighted = menu.buttons.size() - 1;
+            }
+        }
     }else{
         DoInputSingle(input.interact, input);
         DoInputSingle(input.move_positive_x, input);
@@ -110,6 +174,10 @@ void DoInput(photon_instance &instance, float time){
         }
 
         instance.zoom -= (input.zoom_in.current_state - input.zoom_out.current_state) * instance.zoom * 0.5f * time;
+
+        if(IsActivated(input.pause)){
+            instance.paused = true;
+        }
     }
 }
 
@@ -159,29 +227,16 @@ void DoEvents(photon_instance &instance){
                         load_save_menu.filename.erase(load_save_menu.cursor, 1);
                         instance.gui.load_save_menu.current_file_index = -1;
                     }
-                }else if(event.key.keysym.sym == SDLK_LEFT){
+                }else if(event.key.keysym.sym == SDLK_LEFT && instance.input.left.type != photon_input_state::keyboard){
                     if(--load_save_menu.cursor < 0){
                         load_save_menu.cursor = 0;
                     }
-                }else if(event.key.keysym.sym == SDLK_RIGHT){
+                }else if(event.key.keysym.sym == SDLK_RIGHT && instance.input.right.type != photon_input_state::keyboard){
                     if(++load_save_menu.cursor > load_save_menu.filename.length()){
                         load_save_menu.cursor = load_save_menu.filename.length();
                     }
-                }else if(event.key.keysym.sym == SDLK_UP){
-                    if(--load_save_menu.current_file_index < 0){
-                        load_save_menu.current_file_index = 0;
-                    }
-                    load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
-                }else if(event.key.keysym.sym == SDLK_DOWN){
-                    if(++load_save_menu.current_file_index >= load_save_menu.file_list.size()){
-                        load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
-                    }
-                    load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
                 }else if(event.key.keysym.sym == SDLK_ESCAPE){
-                    instance.gui.load_save_menu.loading = false;
-                    instance.gui.load_save_menu.saving  = false;
-                }else if(event.key.keysym.sym == SDLK_RETURN){
-                    gui::ConfirmLoadSave(instance);
+                    gui::CancelLoadSave(instance);
                 }
             }else if(event.key.keysym.sym == SDLK_ESCAPE){
                 instance.paused = !instance.paused;
@@ -296,59 +351,63 @@ photon_input_state CreateJoystickButtonInput(int button){
     return state;
 }
 
+const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
+    return (const xmlChar*)str;
+}
+
 photon_input_state LoadInputSingle(xmlNode *node){
     photon_input_state state;
-    xmlChar *type_str = xmlGetProp(node, (const xmlChar *)"type");
+    xmlChar *type_str = xmlGetProp(node, "type"_xml);
 
-    if((xmlStrEqual(type_str, (const xmlChar *)"keyboard"))){
+    if((xmlStrEqual(type_str, "keyboard"_xml))){
         state.type = photon_input_state::keyboard;
 
-        xmlChar *key_str = xmlGetProp(node, (const xmlChar *)"key");
-        xmlChar *mod_str = xmlGetProp(node, (const xmlChar *)"modifiers");
+        xmlChar *key_str = xmlGetProp(node, "key"_xml);
+        xmlChar *mod_str = xmlGetProp(node, "modifiers"_xml);
 
         state.key = SDL_GetScancodeFromName((char*)key_str);
 
-        if(xmlStrstr(mod_str, (const xmlChar *)"ctrl")){
+        if(xmlStrstr(mod_str, "ctrl"_xml)){
             state.modifiers |= KMOD_CTRL;
-        }else if(xmlStrstr(mod_str, (const xmlChar *)"shift")){
+        }else if(xmlStrstr(mod_str, "shift"_xml)){
             state.modifiers |= KMOD_SHIFT;
-        }else if(xmlStrstr(mod_str, (const xmlChar *)"alt")){
+        }else if(xmlStrstr(mod_str, "alt"_xml)){
             state.modifiers |= KMOD_ALT;
         }
 
         xmlFree(key_str);
         xmlFree(mod_str);
-    }else if((xmlStrEqual(type_str, (const xmlChar *)"joystick_button"))){
+    }else if((xmlStrEqual(type_str, "joystick_button"_xml))){
         state.type = photon_input_state::joystick_button;
 
-        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"index");
+        xmlChar *index_str = xmlGetProp(node, "index"_xml);
         state.joystick_input_index = atoi((char*)index_str);
 
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, (const xmlChar *)"joystick_axis"))){
+    }else if((xmlStrEqual(type_str, "joystick_axis"_xml))){
         state.type = photon_input_state::joystick_axis;
 
-        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"index");
-        xmlChar *negate_str = xmlGetProp(node, (const xmlChar *)"negate");
+        xmlChar *index_str = xmlGetProp(node, "index"_xml);
+        xmlChar *negate_str = xmlGetProp(node, "negate"_xml);
         state.joystick_input_index = atoi((char*)index_str);
-        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar *)"true");
+        state.axis_input_negate = xmlStrEqual(negate_str, "true"_xml);
 
         xmlFree(negate_str);
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, (const xmlChar *)"controller_button"))){
+    }else if((xmlStrEqual(type_str, "controller_button"_xml))){
         state.type = photon_input_state::gamecontroller_button;
 
-        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"button");
+        xmlChar *index_str = xmlGetProp(node, "button"_xml);
         state.controller_button = SDL_GameControllerGetButtonFromString((char*)index_str);
 
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, (const xmlChar *)"controller_axis"))){
+    }else if((xmlStrEqual(type_str, "controller_axis"_xml))){
         state.type = photon_input_state::gamecontroller_axis;
 
-        xmlChar *index_str = xmlGetProp(node, (const xmlChar *)"axis");
-        xmlChar *negate_str = xmlGetProp(node, (const xmlChar *)"negate");
+        xmlChar *index_str = xmlGetProp(node, "axis"_xml);
+        xmlChar *negate_str = xmlGetProp(node, "negate"_xml);
         state.controller_axis = SDL_GameControllerGetAxisFromString((char*)index_str);
-        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar *)"true");
+        state.axis_input_negate = xmlStrEqual(negate_str, "true"_xml);
 
         xmlFree(negate_str);
         xmlFree(index_str);
@@ -387,15 +446,15 @@ bool LoadConfig(const std::string &filename, photon_input &input){
             xmlFreeDoc(doc);
             return false;
         }
-        if(xmlStrcmp(root->name, (const xmlChar *) "photon_input")) {
+        if(xmlStrcmp(root->name, "photon_input"_xml)) {
             PrintToLog("ERROR: Unable to load XML input config: root node not photon_input!");
             xmlFreeDoc(doc);
             return false;
         }
         input.is_valid = false;
 
-        xmlChar *device_str = xmlGetProp(root, (const xmlChar *)"device");
-        xmlChar *guid_str = xmlGetProp(root, (const xmlChar *)"device_guid");
+        xmlChar *device_str = xmlGetProp(root, "device"_xml);
+        xmlChar *guid_str = xmlGetProp(root, "device_guid"_xml);
 
         xmlFree(device_str);
         xmlFree(guid_str);
@@ -403,41 +462,43 @@ bool LoadConfig(const std::string &filename, photon_input &input){
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
-            if((xmlStrEqual(node->name, (const xmlChar *)"interact"))){
+            if((xmlStrEqual(node->name, "interact"_xml))){
                 input.interact = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"next_item"))){
+            }else if((xmlStrEqual(node->name, "next_item"_xml))){
                 input.next_item = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"previous_item"))){
+            }else if((xmlStrEqual(node->name, "previous_item"_xml))){
                 input.previous_item = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"open_inventory"))){
+            }else if((xmlStrEqual(node->name, "open_inventory"_xml))){
                 input.open_inventory = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"rotate_clockwise"))){
+            }else if((xmlStrEqual(node->name, "rotate_clockwise"_xml))){
                 input.rotate_clockwise = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"rotate_counter_clockwise"))){
+            }else if((xmlStrEqual(node->name, "rotate_counter_clockwise"_xml))){
                 input.rotate_counter_clockwise = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"zoom_in"))){
+            }else if((xmlStrEqual(node->name, "zoom_in"_xml))){
                 input.zoom_in = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"zoom_out"))){
+            }else if((xmlStrEqual(node->name, "zoom_out"_xml))){
                 input.zoom_out = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_right"))){
+            }else if((xmlStrEqual(node->name, "move_right"_xml))){
                 input.move_positive_x = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_left"))){
+            }else if((xmlStrEqual(node->name, "move_left"_xml))){
                 input.move_negative_x = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_up"))){
+            }else if((xmlStrEqual(node->name, "move_up"_xml))){
                 input.move_positive_y = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"move_down"))){
+            }else if((xmlStrEqual(node->name, "move_down"_xml))){
                 input.move_negative_y = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_up"))){
+            }else if((xmlStrEqual(node->name, "pause"_xml))){
+                input.pause = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, "gui_up"_xml))){
                 input.up = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_down"))){
+            }else if((xmlStrEqual(node->name, "gui_down"_xml))){
                 input.down = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_left"))){
+            }else if((xmlStrEqual(node->name, "gui_left"_xml))){
                 input.left = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_right"))){
+            }else if((xmlStrEqual(node->name, "gui_right"_xml))){
                 input.right = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_select"))){
+            }else if((xmlStrEqual(node->name, "gui_select"_xml))){
                 input.select = LoadInputSingle(node);
-            }else if((xmlStrEqual(node->name, (const xmlChar *)"gui_back"))){
+            }else if((xmlStrEqual(node->name, "gui_back"_xml))){
                 input.back = LoadInputSingle(node);
             }
             node = node->next;

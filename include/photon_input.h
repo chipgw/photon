@@ -66,6 +66,8 @@ struct photon_input{
     photon_input_state next_item;
     photon_input_state previous_item;
 
+    photon_input_state pause;
+
     photon_input_state left;
     photon_input_state right;
     photon_input_state up;

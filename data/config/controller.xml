@@ -11,6 +11,7 @@
   <move_down type="controller_axis" axis="lefty" />
   <zoom_in type="controller_axis" axis="righty" negate="true" />
   <zoom_out type="controller_axis" axis="righty" />
+  <pause type="controller_button" button="start" />
   <gui_select type="controller_button" button="a" />
   <gui_back type="controller_button" button="b" />
   <gui_up type="controller_button" button="dpup" />

@@ -81,13 +81,13 @@ photon_shader LoadShaderXML(const std::string &filename);
  * \brief Updates the zoom uniforms in the shaders.
  * \param zoom
  */
-void UpdateZoom(float zoom);
+void UpdateZoom(const float &zoom);
 
 /*!
  * \brief Updates the center of the viewport in the shaders.
  * \param center
  */
-void UpdateCenter(glm::vec2 center);
+void UpdateCenter(const glm::vec2 &center);
 
 /*!
  * \brief switches to the background drawing mode. (clears scene buffer)
@@ -117,21 +117,21 @@ void DrawModeLight(photon_window &window);
  * \brief DrawPhoton
  * \param location
  */
-void DrawPhoton(glm::vec2 location);
+void DrawPhoton(const glm::vec2 &location);
 
-void DrawPhotonLight(glm::vec2 location);
+void DrawPhotonLight(const glm::vec2 &location);
 
 void DrawModeFX(photon_window &window);
 
 void DrawModeGUI(photon_window &window);
 
-void SetColorGUI(glm::vec4 color);
+void SetColorGUI(const glm::vec4 &color);
 
-void SetCenterGUI(glm::vec2 center);
+void SetCenterGUI(const glm::vec2 &center);
 
-void SetLaserColor(glm::vec3 color);
+void SetLaserColor(const glm::vec3 &color);
 
-void SetFacFX(float fac);
+void SetFacFX(const float &fac);
 
 }
 }

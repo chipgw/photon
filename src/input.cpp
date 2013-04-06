@@ -77,6 +77,18 @@ void DoInput(photon_instance &instance, float time){
 
     DoInputSingle(input.pause, input);
 
+    DoInputSingle(input.interact, input);
+    DoInputSingle(input.move_positive_x, input);
+    DoInputSingle(input.move_negative_x, input);
+    DoInputSingle(input.move_positive_y, input);
+    DoInputSingle(input.move_negative_y, input);
+    DoInputSingle(input.rotate_clockwise, input);
+    DoInputSingle(input.rotate_counter_clockwise, input);
+    DoInputSingle(input.zoom_in, input);
+    DoInputSingle(input.zoom_out, input);
+    DoInputSingle(input.next_item, input);
+    DoInputSingle(input.previous_item, input);
+
     if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
         photon_gui_load_save_menu &load_save_menu = instance.gui.load_save_menu;
         if(IsActivated(input.select)){
@@ -142,18 +154,6 @@ void DoInput(photon_instance &instance, float time){
             }
         }
     }else{
-        DoInputSingle(input.interact, input);
-        DoInputSingle(input.move_positive_x, input);
-        DoInputSingle(input.move_negative_x, input);
-        DoInputSingle(input.move_positive_y, input);
-        DoInputSingle(input.move_negative_y, input);
-        DoInputSingle(input.rotate_clockwise, input);
-        DoInputSingle(input.rotate_counter_clockwise, input);
-        DoInputSingle(input.zoom_in, input);
-        DoInputSingle(input.zoom_out, input);
-        DoInputSingle(input.next_item, input);
-        DoInputSingle(input.previous_item, input);
-
         instance.player.location.x += (input.move_positive_x.current_state - input.move_negative_x.current_state) * time * instance.zoom;
         instance.player.location.y += (input.move_positive_y.current_state - input.move_negative_y.current_state) * time * instance.zoom;
 

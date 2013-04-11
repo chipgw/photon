@@ -102,7 +102,7 @@ void DrawGUI(photon_instance &instance, const float &time){
             }
         }
         gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
-        gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %f", instance.level.time);
+        gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
         gui::RenderText(gui.fps_display_location,   small_font, base_color, false, "FPS: %f", 1.0f / time);
 
         if(instance.paused){

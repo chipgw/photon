@@ -92,10 +92,10 @@ void PrintToLog(const char *format,...){
     tm *date = std::localtime(&tnow);
     int microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current.time_since_epoch()).count() % 1000000;
 
-    sprintf(buffer, "%02i:%02i:%02i.%06i: ", date->tm_hour, date->tm_min, date->tm_sec, microseconds);
+    snprintf(buffer, 18, "%02i:%02i:%02i.%06i: ", date->tm_hour, date->tm_min, date->tm_sec, microseconds);
 
     // index 17 is the right place to start after the time has been printed.
-    vsprintf(&buffer[17], format, args);
+    vsnprintf(&buffer[17], 495, format, args);
     va_end(args);
 
     std::string out(buffer);

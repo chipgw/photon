@@ -24,24 +24,30 @@ namespace photon{
 namespace blocks{
 
 void DrawBlock(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
-    glm::vec2 point1(size);
-    glm::vec2 point2(size);
-    point1 = glm::rotate(point1, rotation);
-    point2 = glm::rotate(point2, rotation - 90.0f);
+    static const float verts[] = { 1.0f, 1.0f,
+                                   1.0f,-1.0f,
+                                  -1.0f,-1.0f,
+                                  -1.0f, 1.0f};
 
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point1.x, location.y + point1.y);
+    static const float uv[] = {1.0f, 1.0f,
+                               1.0f, 0.0f,
+                               0.0f, 0.0f,
+                               0.0f, 1.0f};
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point2.x, location.y - point2.y);
+    rotation = glm::radians(rotation);
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - point1.x, location.y - point1.y);
+    glm::mat3 matrix;
+    matrix[0] = glm::vec3( glm::cos(rotation), glm::sin(rotation), 0.0f);
+    matrix[1] = glm::vec3(-glm::sin(rotation), glm::cos(rotation), 0.0f);
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + point2.x, location.y + point2.y);
-    }glEnd();
+    matrix *= size;
+    matrix[2] = glm::vec3(location, 1.0f);
+
+    opengl::SetModelMatrix(matrix);
+
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void Draw(photon_block block, glm::uvec2 location){

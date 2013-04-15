@@ -131,6 +131,8 @@ void SetCenterGUI(const glm::vec2 &center);
 
 void SetLaserColor(const glm::vec3 &color);
 
+void SetModelMatrix(const glm::mat3 &matrix);
+
 void SetFacFX(const float &fac);
 
 }

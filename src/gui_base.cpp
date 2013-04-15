@@ -36,6 +36,7 @@ photon_gui_container InitGUI(){
 }
 
 void DrawBounds(const photon_gui_bounds &bounds){
+    // TODO - ditch immediate mode here also...
     opengl::SetCenterGUI(bounds.offset);
     glBegin(GL_QUADS);{
         glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);

@@ -172,8 +172,9 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         if(!w || !h)
             continue;
 
+        // TODO - ditch immediate mode here as well...
         glBegin(GL_QUADS);{
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x,0);
+            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x, 0);
             glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x,    y);
 
             glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, 0);

@@ -53,7 +53,6 @@ void InitOpenGL(photon_window &window){
     // texture size is 1x1 because it will get resized properly later (on resized event from window creation)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-
     glBindTexture(GL_TEXTURE_2D, 0);
 
     glGenFramebuffers(1, &window.light_buffer);
@@ -73,6 +72,9 @@ void InitOpenGL(photon_window &window){
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_MULTISAMPLE);
+
+    glEnableVertexAttribArray(PHOTON_VERTEX_LOCATION_ATTRIBUTE);
+    glEnableVertexAttribArray(PHOTON_VERTEX_UV_ATTRIBUTE);
 
     shader_scene = LoadShaderXML("/shaders/scene.xml");
     glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f);
@@ -246,45 +248,43 @@ void DrawPhoton(const glm::vec2 &location){
     glBindTexture(GL_TEXTURE_2D, photon_texture);
 
     SetFacFX(1.0f);
-    const float size = 0.2f;
+    static const float verts[] = { 0.2f, 0.2f,
+                                  -0.2f, 0.2f,
+                                  -0.2f,-0.2f,
+                                   0.2f,-0.2f};
 
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y + size);
+    static const float uv[] = {1.0f, 1.0f,
+                               0.0f, 1.0f,
+                               0.0f, 0.0f,
+                               1.0f, 0.0f};
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y + size);
+    opengl::SetModelMatrix(glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, location.x, location.y, 1.0f));
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y - size);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y - size);
-    }glEnd();
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void DrawPhotonLight(const glm::vec2 &location){
-    const float size = 16.0f;
+    static const float verts[] = {  0.0f,  0.0f,
+                                   16.0f,  0.0f,
+                                    0.0f, 16.0f,
+                                  -16.0f,  0.0f,
+                                    0.0f,-16.0f,
+                                   16.0f,  0.0f};
 
-    glBegin(GL_TRIANGLE_FAN);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y);
+    static const float uv[] = {  0.0f, 0.0f,
+                                 1.5f, 0.0f,
+                                 0.0f, 1.5f,
+                                 1.5f, 0.0f,
+                                 0.0f, 1.5f,
+                                 1.5f, 0.0f};
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y);
+    opengl::SetModelMatrix(glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, location.x, location.y, 1.0f));
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.5f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x , location.y + size);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x - size, location.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.5f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x, location.y - size);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.5f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,location.x + size, location.y);
-    }glEnd();
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 }
 
 void DrawModeGUI(photon_window &window){
@@ -315,6 +315,13 @@ void SetFacFX(const float &fac){
 void SetLaserColor(const glm::vec3 &color){
     glUniform3fv(glGetUniformLocation(shader_laser.program, "color"), 1, glm::value_ptr(color));
     glUniform3fv(glGetUniformLocation(shader_light.program, "color"), 1, glm::value_ptr(color));
+}
+
+void SetModelMatrix(const glm::mat3 &matrix){
+    glUniformMatrix3fv(glGetUniformLocation(shader_fx.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniformMatrix3fv(glGetUniformLocation(shader_laser.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniformMatrix3fv(glGetUniformLocation(shader_light.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniformMatrix3fv(glGetUniformLocation(shader_scene.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void DrawModeFX(photon_window &window){

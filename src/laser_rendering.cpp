@@ -1,7 +1,11 @@
 #include "photon_opengl.h"
 #include "photon_laser.h"
-
 #include <glm/gtx/rotate_vector.hpp>
+
+// TODO - maybe this would be better elswhere?
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433832795
+#endif
 
 namespace photon{
 

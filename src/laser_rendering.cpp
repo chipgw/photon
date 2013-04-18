@@ -12,7 +12,14 @@ namespace photon{
 namespace opengl{
 
 void DrawLaserSegment(photon_lasersegment &segment){
-    // TODO - ditch immediate mode here as well... this will be more difficult because of the parent_offset & child_offset.
+    // TODO - this function is really messy, I should probably clean it up...
+    static const float uv[] = { 1.0f, 0.0f,
+                                0.0f, 0.0f,
+                                0.0f, 0.0f,
+                                1.0f, 0.0f,
+                                0.0f, 0.0f,
+                                0.0f, 0.0f};
+
     opengl::SetLaserColor(segment.color);
     glm::vec2 tangent = 0.2f * glm::normalize(glm::rotate(glm::vec2(segment.start) - glm::vec2(segment.end), 90.0f));
 
@@ -32,32 +39,20 @@ void DrawLaserSegment(photon_lasersegment &segment){
         parent_offset = glm::rotate(tangent * glm::tan(glm::radians(parent_angle)), 90.0f);
     }
 
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, segment.start.x, segment.start.y);
+    glm::vec2 fstart = glm::vec2(segment.start);
+    glm::vec2 fend = glm::vec2(segment.end);
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, segment.start.x - tangent.x + parent_offset.x, segment.start.y - tangent.y + parent_offset.y);
+    glm::vec2 verts[] = {fstart,
+                         fstart - tangent + parent_offset,
+                         fend - tangent - child_offset,
+                         fend,
+                         fend + tangent + child_offset,
+                         fstart + tangent - parent_offset};
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,segment.end.x - tangent.x - child_offset.x, segment.end.y - tangent.y - child_offset.y);
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, uv);
 
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,segment.end.x, segment.end.y);
-
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, segment.start.x, segment.start.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, segment.start.x + tangent.x - parent_offset.x, segment.start.y + tangent.y - parent_offset.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,segment.end.x + tangent.x + child_offset.x, segment.end.y + tangent.y + child_offset.y);
-
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f,0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE,segment.end.x, segment.end.y);
-    }glEnd();
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 }
 
 void DrawLaser(photon_laserbeam &beam){
@@ -92,7 +87,6 @@ void DrawLaserSegmentLight(photon_lasersegment &segment){
     glm::mat3 matrix = glm::mat3( glm::cos(radians) * size, glm::sin(radians) * size, 0.0f,
                                  -glm::sin(radians) * dist, glm::cos(radians) * dist, 0.0f,
                                   segment.start.x, segment.start.y, 1.0f);
-
 
     opengl::SetModelMatrix(matrix);
 

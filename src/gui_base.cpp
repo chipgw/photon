@@ -36,18 +36,22 @@ photon_gui_container InitGUI(){
 }
 
 void DrawBounds(const photon_gui_bounds &bounds){
-    // TODO - ditch immediate mode here also...
+    static const float uv[] = {0.0f, 0.0f,
+                               0.0f, 1.0f,
+                               1.0f, 1.0f,
+                               1.0f, 0.0f};
+
+    float verts[] = {bounds.left, bounds.bottom,
+                     bounds.left, bounds.top,
+                     bounds.right, bounds.top,
+                     bounds.right, bounds.bottom};
+
     opengl::SetCenterGUI(bounds.offset);
-    glBegin(GL_QUADS);{
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.left, bounds.bottom);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 0.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.left, bounds.top);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 1.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.right, bounds.top);
-        glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, 1.0f, 0.0f);
-        glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, bounds.right, bounds.bottom);
-    }glEnd();
+
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, uv);
+
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void DrawGUI(photon_instance &instance, const float &time){

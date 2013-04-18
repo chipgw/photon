@@ -1,6 +1,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "physfs.h"
+#include <physfs.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "photon_core.h"
 #include "photon_opengl.h"
@@ -157,6 +158,8 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         position -= offset / 2.0f;
     }
 
+    std::vector<glm::vec2> verts;
+    std::vector<glm::vec2> uv;
 
     for(const unsigned char *c = (const unsigned char*)out.c_str(); *c; c++) {
         character_info &character = main_atlas.characters[*c];
@@ -172,21 +175,24 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         if(!w || !h)
             continue;
 
-        // TODO - ditch immediate mode here as well...
-        glBegin(GL_QUADS);{
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x, 0);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x,    y);
 
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, 0);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x + w, y);
+        uv.push_back(glm::vec2(character.x, 0.0f));
+        verts.push_back(glm::vec2(x, y));
 
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x + character.width / main_atlas.width, character.rows / FONT_SIZE);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x + w, y - h);
+        uv.push_back(glm::vec2(character.x + character.width / main_atlas.width, 0.0f));
+        verts.push_back(glm::vec2(x + w, y));
 
-            glVertexAttrib2f(PHOTON_VERTEX_UV_ATTRIBUTE, character.x, character.rows / FONT_SIZE);
-            glVertexAttrib2f(PHOTON_VERTEX_LOCATION_ATTRIBUTE, x,     y - h);
-        }glEnd();
+        uv.push_back(glm::vec2(character.x + character.width / main_atlas.width, character.rows / FONT_SIZE));
+        verts.push_back(glm::vec2(x + w, y - h));
+
+        uv.push_back(glm::vec2(character.x, character.rows / FONT_SIZE));
+        verts.push_back(glm::vec2(x, y - h));
     }
+
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
+
+    glDrawArrays(GL_QUADS, 0, verts.size());
 }
 
 }

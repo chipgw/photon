@@ -318,10 +318,12 @@ void SetLaserColor(const glm::vec3 &color){
 }
 
 void SetModelMatrix(const glm::mat3 &matrix){
-    glUniformMatrix3fv(glGetUniformLocation(shader_fx.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
-    glUniformMatrix3fv(glGetUniformLocation(shader_laser.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
-    glUniformMatrix3fv(glGetUniformLocation(shader_light.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
-    glUniformMatrix3fv(glGetUniformLocation(shader_scene.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+    GLint program = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+    GLint uniform = glGetUniformLocation(program, "model");
+    if(uniform > -1){
+        glUniformMatrix3fv(uniform, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
 }
 
 void DrawModeFX(photon_window &window){

@@ -54,7 +54,7 @@ void DrawBounds(const photon_gui_bounds &bounds){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void DrawGUI(photon_instance &instance, const float &time){
+void DrawGUI(photon_instance &instance){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
     static const glm::vec4 base_color(0.9f);
@@ -108,7 +108,13 @@ void DrawGUI(photon_instance &instance, const float &time){
         }
         gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
         gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
-        gui::RenderText(gui.fps_display_location,   small_font, base_color, false, "FPS: %f", 1.0f / time);
+
+        if(instance.level.mode == photon_level::destruction){
+            gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Destroy %i more blocks", instance.level.goal - instance.level.blocks_destroyed);
+        }
+        if(instance.level.mode == photon_level::tnt_harvester){
+            gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Gather %i more TNT", instance.level.goal - player::GetItemCount(instance.player, tnt));
+        }
 
         if(instance.paused){
             glBindTexture(GL_TEXTURE_2D, 0);

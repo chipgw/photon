@@ -102,6 +102,15 @@ void Draw(photon_block block, glm::uvec2 location){
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
         DrawBlock(location, 0.5f, block.data);
         break;
+    case reciever:
+    case reciever_white:
+    case reciever_red:
+    case reciever_green:
+    case reciever_blue:
+        // TODO - make a seperate texture.
+        glBindTexture(GL_TEXTURE_2D, texture_emitter);
+        DrawBlock(location, 0.5f, block.data);
+        break;
     }
 }
 

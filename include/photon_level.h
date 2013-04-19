@@ -11,6 +11,14 @@ struct photon_player;
 typedef std::pair<uint8_t, uint8_t>  photon_level_coord;
 
 struct photon_level{
+    enum game_mode{
+        none,           // nothin.
+        power,          // power up all the recievers to win.
+        targets,        // destroy all the targets to win.
+        destruction,    // destroy all or <goal> blocks to win.
+        tnt_harvester   // gather all or <goal> TNT blocks to win.
+    };
+
     std::map<photon_level_coord, photon_block> grid;
     std::vector<photon_laserbeam> beams;
 
@@ -20,6 +28,11 @@ struct photon_level{
     float time = 0.0f;
     uint32_t moves = 0;
     bool is_valid = false;
+
+    game_mode mode = none;
+
+    int16_t blocks_destroyed = 0;
+    int16_t goal = 0;
 };
 
 namespace level{

@@ -120,6 +120,30 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
             xmlFree(playery_str);
         }
 
+        xmlChar *mode_str = xmlGetProp(root, "mode"_xml);
+
+        if(xmlStrEqual(mode_str, "power"_xml)){
+            level.mode = photon_level::power;
+        }else if(xmlStrEqual(mode_str, "targets"_xml)){
+            level.mode = photon_level::targets;
+        }else if(xmlStrEqual(mode_str, "destruction"_xml)){
+            level.mode = photon_level::destruction;
+        }else if(xmlStrEqual(mode_str, "tnt_harvester"_xml)){
+            level.mode = photon_level::tnt_harvester;
+        }else{
+            level.mode = photon_level::none;
+        }
+
+        xmlChar *goal_str = xmlGetProp(root, "goal"_xml);
+
+        if(goal_str != nullptr){
+            level.goal = atoi((char*)goal_str);
+
+            xmlFree(goal_str);
+        }
+
+        xmlFree(mode_str);
+
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
@@ -158,7 +182,10 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                                 if(block.type == mirror || block.type == mirror_locked ||
                                         block.type == emitter_white || block.type == emitter_red ||
-                                        block.type == emitter_green || block.type == emitter_blue){
+                                        block.type == emitter_green || block.type == emitter_blue ||
+                                        block.type == reciever_white || block.type == reciever_red ||
+                                        block.type == reciever_green || block.type == reciever_blue ||
+                                        block.type == reciever){
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 

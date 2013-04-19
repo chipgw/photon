@@ -156,6 +156,14 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
             level.moves++;
         }
         break;
+    case reciever:
+    case reciever_red:
+    case reciever_green:
+    case reciever_blue:
+    case reciever_white:
+        // TODO - check if game is complete & show victory screen.
+        level = photon_level();
+        break;
     }
     // if for some reason nothing happened to this block after it was added...
     if(block.type == air){

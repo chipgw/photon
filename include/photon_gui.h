@@ -34,9 +34,9 @@ struct photon_gui_game{
     photon_gui_bounds toggle_fullscreen_button = {0.12f, 0.02f, 0.84f, 0.94f, 0.0f, -1.0f};
     GLuint toggle_fullscreen_button_texture = 0;
 
-    glm::vec2 moves_display_location = glm::vec2(-0.1f, 0.18f);
-    glm::vec2 time_display_location  = glm::vec2(-0.1f, 0.10f);
-    glm::vec2 fps_display_location   = glm::vec2(-0.1f, 0.02f);
+    glm::vec2 moves_display_location     = glm::vec2(-0.1f, 0.18f);
+    glm::vec2 time_display_location      = glm::vec2(-0.1f, 0.10f);
+    glm::vec2 mode_data_display_location = glm::vec2(-0.1f, 0.02f);
 };
 
 struct photon_gui_pause_menu{
@@ -88,7 +88,7 @@ void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
-void DrawGUI(photon_instance &instance, const float &time);
+void DrawGUI(photon_instance &instance);
 
 bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds);
 

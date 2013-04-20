@@ -65,7 +65,7 @@ void Draw(photon_block block, glm::uvec2 location){
     case mirror:
     case mirror_locked:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
-        DrawBlock(location, 0.4f, block.data);
+        DrawBlock(location, 0.4f, block.angle);
         break;
     case tnt:
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
@@ -100,7 +100,7 @@ void Draw(photon_block block, glm::uvec2 location){
     case emitter_green:
     case emitter_blue:
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
-        DrawBlock(location, 0.5f, block.data);
+        DrawBlock(location, 0.5f, block.angle);
         break;
     case reciever:
     case reciever_white:
@@ -109,7 +109,7 @@ void Draw(photon_block block, glm::uvec2 location){
     case reciever_blue:
         // TODO - make a seperate texture.
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
-        DrawBlock(location, 0.5f, block.data);
+        DrawBlock(location, 0.5f, block.angle);
         break;
     }
 }
@@ -166,12 +166,12 @@ void DrawFX(photon_block block, glm::uvec2 location){
     case tnt:
         // TODO - draw some warmup thing...
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
-        opengl::SetFacFX(block.data * 0.5f);
+        opengl::SetFacFX(block.power * 0.5f);
         DrawBlock(location);
         break;
     case tnt_fireball:
         glBindTexture(GL_TEXTURE_2D, texture_explosion);
-        opengl::SetFacFX(block.data);
+        opengl::SetFacFX(block.power);
         DrawBlock(location, 1.5);
         break;
     }

@@ -190,7 +190,7 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 
-                                    block.data = atof((char*)angle_str);
+                                    block.angle = atof((char*)angle_str);
 
                                     xmlFree(angle_str);
                                 }
@@ -287,7 +287,7 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
         case emitter_red:
         case emitter_green:
         case emitter_blue:
-            xmlSetProp(block_xml, "angle"_xml, (const xmlChar*)std::to_string(block.second.data).c_str());
+            xmlSetProp(block_xml, "angle"_xml, (const xmlChar*)std::to_string(block.second.angle).c_str());
         case tnt:
             // TODO - store TNT warmup.
             break;
@@ -348,10 +348,18 @@ bool CheckVictory(photon_level &level, photon_player &player){
     case photon_level::none:
         return true;
         break;
-    case photon_level::power:
-        // todo - implement.
+    case photon_level::power:{
+        for(auto &block : level.grid){
+            if(block.second.type == reciever){
+                // if any reciever is not powered return false.
+                if(block.second.power < 0.9f){
+                    return false;
+                }
+            }
+        }
         return true;
         break;
+    }
     case photon_level::targets:
         // TODO - implement.
         return true;

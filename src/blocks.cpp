@@ -20,7 +20,35 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         default:
             break;
         case reciever:
-            // TODO - make trigger
+            block.power++;
+            // stops tracing the laser.
+            return nullptr;
+            break;
+        case reciever_red:
+            if(segment->color.r > 0.8f){
+                block.power++;
+            }
+            // stops tracing the laser.
+            return nullptr;
+            break;
+        case reciever_green:
+            if(segment->color.g > 0.8f){
+                block.power++;
+            }
+            // stops tracing the laser.
+            return nullptr;
+            break;
+        case reciever_blue:
+            if(segment->color.b > 0.8f){
+                block.power++;
+            }
+            // stops tracing the laser.
+            return nullptr;
+            break;
+        case reciever_white:
+            if(segment->color.r > 0.8f && segment->color.g > 0.8f && segment->color.b > 0.8f){
+                block.power++;
+            }
             // stops tracing the laser.
             return nullptr;
             break;
@@ -35,17 +63,17 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             break;
         case mirror:
         case mirror_locked:{
-            float angle = segment->angle - block.data;
+            float angle = segment->angle - block.angle;
             if(fmod(angle, 180.0f) == 0.0f){
                 return nullptr;
             }
             angle = fmod(angle + 180.0f, 360.0f) - 180.0f;
             segment = tracer::CreateChildBeam(segment);
-            segment->angle = block.data - angle;
+            segment->angle = block.angle - angle;
             break;
         }
         case tnt:
-            block.data += time;
+            block.power += time;
             // stops tracing the laser.
             return nullptr;
             break;
@@ -183,9 +211,9 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
             break;
         case mirror:
             if(counter_clockwise){
-                block.data += 22.5f;
+                block.angle += 22.5f;
             }else{
-                block.data -= 22.5f;
+                block.angle -= 22.5f;
             }
             level.moves++;
             break;
@@ -202,24 +230,24 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             break;
         case tnt:
             // if block is triggered, explode.
-            if(block.data > 1.0f){
+            if(block.power > 1.0f){
                 DamageAroundPoint(location, level, 4.0f);
                 // TODO - KABOOM goes here...
                 PrintToLog("INFO: KABOOM!");
                 block.type = tnt_fireball;
                 // cooldown of fireball
-                block.data = 1.0f;
+                block.power = 1.0f;
                 break;
             }
             // if block was not activated last frame cool down timer.
             if(!block.activated){
-                block.data -= time;
-                block.data = std::max(block.data, 0.0f);
+                block.power -= time;
+                block.power = std::max(block.power, 0.0f);
             }
             break;
         case tnt_fireball:
-            block.data -= time * 3.0f;
-            if(block.data < 0.0f){
+            block.power -= time * 3.0f;
+            if(block.power < 0.0f){
                 level.grid.erase(coord);
             }
             break;
@@ -228,7 +256,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             photon_laserbeam &beam = level.beams.back();
             beam.color = glm::vec3(0.9f,0.9f,0.9f);
             beam.origin = location;
-            beam.origin_angle = block.data;
+            beam.origin_angle = block.angle;
             break;
         }
         case emitter_red:{
@@ -236,7 +264,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             photon_laserbeam &beam = level.beams.back();
             beam.color = glm::vec3(0.9f,0.2f,0.1f);
             beam.origin = location;
-            beam.origin_angle = block.data;
+            beam.origin_angle = block.angle;
             break;
         }
         case emitter_green:{
@@ -244,7 +272,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             photon_laserbeam &beam = level.beams.back();
             beam.color = glm::vec3(0.1f,0.9f,0.2f);
             beam.origin = location;
-            beam.origin_angle = block.data;
+            beam.origin_angle = block.angle;
             break;
         }
         case emitter_blue:{
@@ -252,9 +280,16 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             photon_laserbeam &beam = level.beams.back();
             beam.color = glm::vec3(0.1f,0.2f,0.9f);
             beam.origin = location;
-            beam.origin_angle = block.data;
+            beam.origin_angle = block.angle;
             break;
         }
+        case reciever:
+        case reciever_red:
+        case reciever_green:
+        case reciever_blue:
+        case reciever_white:
+            block.power = 0.0f;
+            break;
         }
         block.activated = false;
     }
@@ -274,7 +309,7 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
             break;
         case tnt:
             // will make explosions trigger nearby TNT...
-            block.data += damage * 2.0f;
+            block.power += damage * 2.0f;
             break;
         }
     }

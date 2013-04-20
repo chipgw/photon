@@ -50,8 +50,10 @@ struct photon_block{
     // block type.
     block_type type = air;
 
+    // the angle in degrees of a block, only used by mirrors, emitters & recievers.
+    float angle = 0.0f;
     // used for various things depending on the block type...
-    float data = 0.0f;
+    float power = 0.0f;
 
     // used to tell if a laser intersected with it last frame.
     bool activated = false;

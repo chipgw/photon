@@ -1,6 +1,7 @@
 #include <physfs.h>
 #include <libxml/parser.h>
 #include "photon_level.h"
+#include "photon_player.h"
 #include "photon_blocks.h"
 #include "photon_core.h"
 
@@ -340,6 +341,33 @@ void AdvanceFrame(photon_level &level, float time){
     }
 
     level.time += time;
+}
+
+bool CheckVictory(photon_level &level, photon_player &player){
+    switch(level.mode){
+    case photon_level::none:
+        return true;
+        break;
+    case photon_level::power:
+        // todo - implement.
+        return true;
+        break;
+    case photon_level::targets:
+        // TODO - implement.
+        return true;
+        break;
+    case photon_level::destruction:
+        // TODO - implement.
+        return true;
+        break;
+    case photon_level::tnt_harvester:
+        if(player::GetItemCount(player, tnt) >= level.goal){
+            return true;
+        }
+        break;
+    }
+
+    return false;
 }
 
 }

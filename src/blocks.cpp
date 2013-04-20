@@ -161,8 +161,11 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
     case reciever_green:
     case reciever_blue:
     case reciever_white:
-        // TODO - check if game is complete & show victory screen.
-        level = photon_level();
+        if(level::CheckVictory(level, player)){
+            // TODO - show victory screen.
+            level = photon_level();
+        }
+        // TODO - show some indication of incompleteness.
         break;
     }
     // if for some reason nothing happened to this block after it was added...

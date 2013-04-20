@@ -51,6 +51,8 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
 
 void AdvanceFrame(photon_level &level, float time);
 
+bool CheckVictory(photon_level &level, photon_player &player);
+
 }
 
 }

@@ -26,6 +26,7 @@ photon_shader shader_fx;
 photon_shader shader_text;
 
 GLuint photon_texture;
+GLuint background;
 
 void InitOpenGL(photon_window &window){
     PrintToLog("INFO: Initializing OpenGL.");
@@ -93,6 +94,7 @@ void InitOpenGL(photon_window &window){
     blocks::LoadTextures();
 
     photon_texture = texture::Load("/textures/photon.png");
+    background = texture::Load("/textures/background.png");
 
     if(!opengl::CheckOpenGLErrors()){
         PrintToLog("INFO: OpenGL succesfully initilized.");
@@ -168,13 +170,13 @@ GLenum CheckOpenGLErrors(){
 
 void UpdateZoom(const float &zoom){
     glUseProgram(shader_scene.program);
-    glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f/zoom);
+    glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f / zoom);
     glUseProgram(shader_laser.program);
-    glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f/zoom);
+    glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f / zoom);
     glUseProgram(shader_light.program);
-    glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f/zoom);
+    glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f / zoom);
     glUseProgram(shader_fx.program);
-    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"), 1.0f/zoom);
+    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"),    1.0f / zoom);
 }
 
 void UpdateCenter(const glm::vec2 &center){
@@ -185,7 +187,7 @@ void UpdateCenter(const glm::vec2 &center){
     glUseProgram(shader_light.program);
     glUniform2fv(glGetUniformLocation(shader_light.program, "center"), 1, glm::value_ptr(center));
     glUseProgram(shader_fx.program);
-    glUniform2fv(glGetUniformLocation(shader_fx.program, "center"), 1, glm::value_ptr(center));
+    glUniform2fv(glGetUniformLocation(shader_fx.program, "center"),    1, glm::value_ptr(center));
 }
 
 void DrawModeScene(photon_window &window){
@@ -339,6 +341,37 @@ void DrawModeFX(photon_window &window){
     glActiveTexture(PHOTON_TEXTURE_UNIT_LIGHT);
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
+}
+
+void DrawBackground(photon_instance &instance){
+    static const float verts[] = { 1.0f, 1.0f,
+                                   1.0f,-1.0f,
+                                   -1.0f,-1.0f,
+                                   -1.0f, 1.0f};
+
+    static const float uv[] = {1.0f, 1.0f,
+                               1.0f, 0.0f,
+                               0.0f, 0.0f,
+                               0.0f, 1.0f};
+    DrawModeLevel(instance.window);
+
+    glBindTexture(GL_TEXTURE_2D, background);
+
+    glm::mat3 matrix(instance.zoom);
+
+    float aspect = float(instance.window.width) / float(instance.window.height);
+    if(aspect > 1.0f){
+        matrix *= aspect;
+    }else if(aspect < 1.0f){
+        matrix /= aspect;
+    }
+    matrix[2] = glm::vec3(instance.player.location, 1.0f);
+
+    opengl::SetModelMatrix(matrix);
+
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 }

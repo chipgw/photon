@@ -8,6 +8,7 @@
 
 namespace photon{
 struct photon_window;
+struct photon_instance;
 
 struct photon_shader{
     bool is_valid = false;
@@ -134,6 +135,8 @@ void SetLaserColor(const glm::vec3 &color);
 void SetModelMatrix(const glm::mat3 &matrix);
 
 void SetFacFX(const float &fac);
+
+void DrawBackground(photon_instance &instance);
 
 }
 }

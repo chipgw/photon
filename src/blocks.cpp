@@ -2,7 +2,6 @@
 #include "photon_level.h"
 #include "photon_laser.h"
 #include "photon_core.h"
-
 #include <glm/gtx/norm.hpp>
 
 namespace photon{

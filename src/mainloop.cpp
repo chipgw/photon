@@ -55,7 +55,7 @@ void MainLoop(photon_instance &instance){
 
             opengl::DrawModeScene(instance.window);
 
-            // TODO - draw a background texture or something...
+            opengl::DrawBackground(instance);
 
             opengl::DrawModeLaser(instance.window);
 

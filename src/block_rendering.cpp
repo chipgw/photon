@@ -164,9 +164,8 @@ void DrawFX(photon_block block, glm::uvec2 location){
     default:
         break;
     case tnt:
-        // TODO - draw some warmup thing...
-        glBindTexture(GL_TEXTURE_2D, texture_explosion);
-        opengl::SetFacFX(block.power * 0.5f);
+        glBindTexture(GL_TEXTURE_2D, texture_filter_red);
+        opengl::SetFacFX(block.power);
         DrawBlock(location);
         break;
     case tnt_fireball:

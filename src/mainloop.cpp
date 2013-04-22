@@ -36,7 +36,9 @@ void MainLoop(photon_instance &instance){
         input::DoInput(instance, frame_delta);
 
         if(instance.level.is_valid){
-            level::AdvanceFrame(instance.level, frame_delta * !instance.paused);
+            if(!instance.paused){
+                level::AdvanceFrame(instance.level, instance.player, frame_delta);
+            }
 
             instance.zoom = std::max(0.01f, instance.zoom);
             opengl::UpdateZoom(instance.zoom);

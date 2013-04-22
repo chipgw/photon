@@ -26,6 +26,10 @@ struct photon_level{
     uint8_t height = 0;
 
     float time = 0.0f;
+    // the time of either victory or defeat.
+    float end_time = INFINITY;
+    int8_t victory_state = 0;
+
     uint32_t moves = 0;
     bool is_valid = false;
 
@@ -49,9 +53,9 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player);
 
 void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player);
 
-void AdvanceFrame(photon_level &level, float time);
+void AdvanceFrame(photon_level &level, photon_player &player, float time);
 
-bool CheckVictory(photon_level &level, photon_player &player);
+int8_t CheckVictory(photon_level &level, photon_player &player);
 
 }
 

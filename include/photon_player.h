@@ -13,7 +13,7 @@ struct photon_player{
     glm::vec2 location = glm::vec2(0.0f);
 
     std::map<block_type, int8_t> items;
-    block_type current_item;
+    block_type current_item = invalid_block;
 };
 
 namespace player{

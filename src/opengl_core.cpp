@@ -349,6 +349,8 @@ void DrawBackground(photon_instance &instance){
                                1.0f, 0.0f,
                                0.0f, 0.0f,
                                0.0f, 1.0f};
+
+
     DrawModeLevel(instance.window);
 
     glBindTexture(GL_TEXTURE_2D, background);
@@ -367,6 +369,11 @@ void DrawBackground(photon_instance &instance){
 
     glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
     glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    DrawModeFX(instance.window);
+    SetFacFX(0.4f);
+    opengl::SetModelMatrix(matrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 

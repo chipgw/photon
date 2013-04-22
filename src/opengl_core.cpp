@@ -268,25 +268,21 @@ void DrawPhoton(const glm::vec2 &location){
 }
 
 void DrawPhotonLight(const glm::vec2 &location){
-    static const float verts[] = {  0.0f,  0.0f,
-                                   16.0f,  0.0f,
-                                    0.0f, 16.0f,
-                                  -16.0f,  0.0f,
-                                    0.0f,-16.0f,
-                                   16.0f,  0.0f};
+    static const float verts[] = { 16.0f, 16.0f,
+                                  -16.0f, 16.0f,
+                                  -16.0f,-16.0f,
+                                   16.0f,-16.0f};
 
-    static const float uv[] = {  0.0f, 0.0f,
-                                 1.5f, 0.0f,
-                                 0.0f, 1.5f,
-                                 1.5f, 0.0f,
-                                 0.0f, 1.5f,
-                                 1.5f, 0.0f};
+    static const float uv[] = {  1.0f, 1.0f,
+                                -1.0f, 1.0f,
+                                -1.0f,-1.0f,
+                                 1.0f,-1.0f};
 
     opengl::SetModelMatrix(glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, location.x, location.y, 1.0f));
 
     glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
     glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void DrawModeGUI(photon_window &window){

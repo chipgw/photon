@@ -1,4 +1,3 @@
-#include "photon_laser.h"
 #include "photon_level.h"
 
 #include <glm/gtx/rotate_vector.hpp>

@@ -1,5 +1,4 @@
 #include "photon_core.h"
-#include "photon_input.h"
 
 namespace photon{
 

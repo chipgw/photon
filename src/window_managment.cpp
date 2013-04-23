@@ -1,7 +1,4 @@
 #include "photon_core.h"
-#include "photon_window_managment.h"
-#include "photon_opengl.h"
-#include <glm/gtx/vector_angle.hpp>
 
 #include <SDL_opengl.h>
 #include <SDL_gamecontroller.h>

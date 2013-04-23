@@ -1,15 +1,9 @@
+#include "photon_core.h"
+#include "photon_texture.h"
+
 #include <GL/glew.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-
-#include "photon_core.h"
-#include "photon_opengl.h"
-#include "photon_texture.h"
-#include "photon_level.h"
-#include "photon_laser.h"
-#include "photon_blocks.h"
-#include "photon_input.h"
-#include "photon_gui.h"
 
 namespace photon{
 

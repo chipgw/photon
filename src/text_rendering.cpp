@@ -1,10 +1,9 @@
+#include "photon_core.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <physfs.h>
 #include <glm/gtc/type_ptr.hpp>
-
-#include "photon_core.h"
-#include "photon_opengl.h"
 
 #define FONT_SIZE 32
 #define FONT_FIRST_CHAR 32

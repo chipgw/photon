@@ -1,5 +1,6 @@
 #include "photon_opengl.h"
 #include "photon_laser.h"
+
 #include <glm/gtx/rotate_vector.hpp>
 
 // TODO - maybe this would be better elswhere?

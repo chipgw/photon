@@ -1,5 +1,4 @@
 #include "photon_core.h"
-#include "photon_opengl.h"
 #include "photon_texture.h"
 
 #include <SOIL.h>

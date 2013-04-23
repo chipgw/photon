@@ -1,13 +1,8 @@
-#include <GL/glew.h>
-#include <stdio.h>
+#include "photon_core.h"
+
 #include <stdlib.h>
 #include <stdarg.h>
-#include <ctime>
 #include <physfs.h>
-
-#include "photon_core.h"
-#include "photon_opengl.h"
-#include "photon_gui.h"
 
 namespace photon{
 FILE* logfile;

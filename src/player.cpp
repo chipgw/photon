@@ -1,4 +1,3 @@
-#include "photon_player.h"
 #include "photon_core.h"
 
 #include <glm/gtx/norm.hpp>

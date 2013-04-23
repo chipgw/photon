@@ -1,10 +1,10 @@
 #ifndef _PHOTON_SDL_H_
 #define _PHOTON_SDL_H_
 
+#include "photon_opengl.h"
+
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <string>
-#include "photon_opengl.h"
 
 namespace photon{
 /*!

@@ -1,7 +1,6 @@
 #ifndef _PHOTON_TEXTURE_H_
 #define _PHOTON_TEXTURE_H_
 
-#include <string>
 #include "photon_opengl.h"
 
 namespace photon{

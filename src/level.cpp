@@ -1,5 +1,3 @@
-#include "photon_level.h"
-#include "photon_player.h"
 #include "photon_core.h"
 
 namespace photon{

@@ -1,10 +1,11 @@
 #ifndef _PHOTON_GUI_H_
 #define _PHOTON_GUI_H_
 
+#include "photon_opengl.h"
+
 #include <glm/glm.hpp>
 #include <string>
 #include <array>
-#include "photon_opengl.h"
 
 namespace photon{
 struct photon_level;

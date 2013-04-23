@@ -1,5 +1,5 @@
-#include <photon_assert.h>
-#include <photon_core.h>
+#include "photon_assert.h"
+#include "photon_core.h"
 
 namespace photon{
 

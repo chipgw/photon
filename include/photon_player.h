@@ -1,11 +1,10 @@
 #ifndef _PHOTON_PLAYER_H_
 #define _PHOTON_PLAYER_H_
 
-#include <glm/glm.hpp>
-#include <vector>
-#include <map>
 #include "photon_laser.h"
 #include "photon_blocks.h"
+
+#include <map>
 
 namespace photon{
 

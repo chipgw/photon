@@ -1,10 +1,8 @@
-#include <physfs.h>
-#include <algorithm>
-#include "photon_gui.h"
-#include "photon_level.h"
-#include "photon_opengl.h"
 #include "photon_texture.h"
 #include "photon_core.h"
+
+#include <physfs.h>
+#include <algorithm>
 
 namespace photon{
 

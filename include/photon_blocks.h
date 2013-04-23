@@ -1,7 +1,6 @@
 #ifndef _PHOTON_BLOCKS_H_
 #define _PHOTON_BLOCKS_H_
 
-#include <glm/glm.hpp>
 #include "photon_opengl.h"
 
 namespace photon{

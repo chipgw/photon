@@ -1,20 +1,9 @@
-#include "GL/glew.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
-#include "photon_opengl.h"
-#include "photon_window_managment.h"
 #include "photon_core.h"
-#include "photon_blocks.h"
 #include "photon_texture.h"
 
-#include <physfs.h>
-#include <SOIL.h>
+#include <GL/glew.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 namespace photon{
 
@@ -78,17 +67,9 @@ void InitOpenGL(photon_window &window){
     glEnableVertexAttribArray(PHOTON_VERTEX_UV_ATTRIBUTE);
 
     shader_scene = LoadShaderXML("/shaders/scene.xml");
-    glUniform1f(glGetUniformLocation(shader_scene.program, "zoom"), 1.0f);
-
     shader_laser = LoadShaderXML("/shaders/laser.xml");
-    glUniform1f(glGetUniformLocation(shader_laser.program, "zoom"), 1.0f);
-
     shader_light = LoadShaderXML("/shaders/light.xml");
-    glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f);
-
     shader_fx = LoadShaderXML("/shaders/fx.xml");
-    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"), 1.0f);
-
     shader_text = LoadShaderXML("/shaders/text.xml");
 
     blocks::LoadTextures();
@@ -128,7 +109,7 @@ void OnResize(uint32_t width, uint32_t height, photon_window &window){
     glUseProgram(shader_light.program);
     glUniform1f(glGetUniformLocation(shader_light.program, "aspect"), aspect);
     glUseProgram(shader_fx.program);
-    glUniform1f(glGetUniformLocation(shader_fx.program, "aspect"), aspect);
+    glUniform1f(glGetUniformLocation(shader_fx.program,   "aspect"), aspect);
     glUseProgram(shader_text.program);
     glUniform1f(glGetUniformLocation(shader_text.program, "aspect"), aspect);
 
@@ -176,7 +157,7 @@ void UpdateZoom(const float &zoom){
     glUseProgram(shader_light.program);
     glUniform1f(glGetUniformLocation(shader_light.program, "zoom"), 1.0f / zoom);
     glUseProgram(shader_fx.program);
-    glUniform1f(glGetUniformLocation(shader_fx.program, "zoom"),    1.0f / zoom);
+    glUniform1f(glGetUniformLocation(shader_fx.program,    "zoom"), 1.0f / zoom);
 }
 
 void UpdateCenter(const glm::vec2 &center){
@@ -187,7 +168,7 @@ void UpdateCenter(const glm::vec2 &center){
     glUseProgram(shader_light.program);
     glUniform2fv(glGetUniformLocation(shader_light.program, "center"), 1, glm::value_ptr(center));
     glUseProgram(shader_fx.program);
-    glUniform2fv(glGetUniformLocation(shader_fx.program, "center"),    1, glm::value_ptr(center));
+    glUniform2fv(glGetUniformLocation(shader_fx.program,    "center"), 1, glm::value_ptr(center));
 }
 
 void DrawModeScene(photon_window &window){
@@ -208,7 +189,7 @@ void DrawModeLaser(photon_window &window){
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE);
+    glBlendFunc(GL_ONE, GL_ONE);
 
     glUseProgram(shader_laser.program);
 }
@@ -219,7 +200,7 @@ void DrawModeLevel(photon_window &window){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shader_scene.program);
 
@@ -236,7 +217,7 @@ void DrawModeLight(photon_window &window){
     glClear(GL_COLOR_BUFFER_BIT);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE);
+    glBlendFunc(GL_ONE, GL_ONE);
 
     glUseProgram(shader_light.program);
 
@@ -247,9 +228,6 @@ void DrawModeLight(photon_window &window){
 
 
 void DrawPhoton(const glm::vec2 &location){
-    glBindTexture(GL_TEXTURE_2D, photon_texture);
-
-    SetFacFX(1.0f);
     static const float verts[] = { 0.2f, 0.2f,
                                   -0.2f, 0.2f,
                                   -0.2f,-0.2f,
@@ -259,6 +237,10 @@ void DrawPhoton(const glm::vec2 &location){
                                0.0f, 1.0f,
                                0.0f, 0.0f,
                                1.0f, 0.0f};
+
+    glBindTexture(GL_TEXTURE_2D, photon_texture);
+
+    SetFacFX(1.0f);
 
     opengl::SetModelMatrix(glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, location.x, location.y, 1.0f));
 
@@ -273,10 +255,10 @@ void DrawPhotonLight(const glm::vec2 &location){
                                   -16.0f,-16.0f,
                                    16.0f,-16.0f};
 
-    static const float uv[] = {  1.0f, 1.0f,
-                                -1.0f, 1.0f,
-                                -1.0f,-1.0f,
-                                 1.0f,-1.0f};
+    static const float uv[] = { 1.0f, 1.0f,
+                               -1.0f, 1.0f,
+                               -1.0f,-1.0f,
+                                1.0f,-1.0f};
 
     opengl::SetModelMatrix(glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, location.x, location.y, 1.0f));
 
@@ -291,7 +273,7 @@ void DrawModeGUI(photon_window &window){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shader_text.program);
 }
@@ -330,7 +312,7 @@ void DrawModeFX(photon_window &window){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE);
+    glBlendFunc(GL_ONE, GL_ONE);
 
     glUseProgram(shader_fx.program);
 
@@ -342,8 +324,8 @@ void DrawModeFX(photon_window &window){
 void DrawBackground(photon_instance &instance){
     static const float verts[] = { 1.0f, 1.0f,
                                    1.0f,-1.0f,
-                                   -1.0f,-1.0f,
-                                   -1.0f, 1.0f};
+                                  -1.0f,-1.0f,
+                                  -1.0f, 1.0f};
 
     static const float uv[] = {1.0f, 1.0f,
                                1.0f, 0.0f,

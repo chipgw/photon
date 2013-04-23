@@ -1,6 +1,5 @@
-#include "photon_opengl.h"
-#include "photon_texture.h"
 #include "photon_core.h"
+#include "photon_texture.h"
 
 #include <physfs.h>
 #include <libxml/parser.h>

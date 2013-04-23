@@ -1,6 +1,3 @@
-#include "photon_blocks.h"
-#include "photon_opengl.h"
-#include "photon_level.h"
 #include "photon_texture.h"
 #include "photon_core.h"
 

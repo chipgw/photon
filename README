@@ -5,11 +5,10 @@ NOTE: compiler must support C++11
 NOTE: I use some GCC specific compiler flags, so it will probably take some modification to get it working with anything else... (I use gcc on linux and mingw-w64 on windows) 
 
 libraries:
-  Boost (1.5x, boost.org)
   Freetype2 (freetype.org)
   GLEW (glew.sourceforge.net)
   LibXML2 (xmlsoft.org/)
-  OpenGL
+  OpenGL (2 or later)
   PhysFS (2 or later, icculus.org/physfs/)
   SDL2 (hg, libsdl.org)
   SOIL (lonesock.net/soil.html)

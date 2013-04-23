@@ -226,7 +226,6 @@ void DrawModeLight(photon_window &window){
     glActiveTexture(PHOTON_TEXTURE_UNIT_COLOR);
 }
 
-
 void DrawPhoton(const glm::vec2 &location){
     static const float verts[] = { 0.2f, 0.2f,
                                   -0.2f, 0.2f,

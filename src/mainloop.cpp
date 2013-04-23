@@ -69,6 +69,9 @@ void MainLoop(photon_instance &instance){
         }else{
             // this is so that the screen gets cleared.
             opengl::DrawModeScene(instance.window);
+
+            // TODO - use a seperate background for the main menu.
+            opengl::DrawBackground(instance);
         }
 
         opengl::DrawModeGUI(instance.window);
@@ -87,9 +90,9 @@ void MainLoop(photon_instance &instance){
     PrintToLog("INFO: Total Frames: %i", instance.total_frames);
 
     // print average draw time by dividing the total amount of time from the start of the main loop by the total amount of frames.
-    PrintToLog("INFO: Average Draw Time: %fms.", (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() * 1.0e-3f) / (float)instance.total_frames);
+    PrintToLog("INFO: Average Draw Time: %fms.", (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() * 1.0e-3f) / float(instance.total_frames));
     // print average framerate by inverting the total draw time.
-    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() / (float)instance.total_frames)) * 1.0e6f);
+    PrintToLog("INFO: Average Framerate: %f fps.", (1.0f / (std::chrono::duration_cast<std::chrono::microseconds>(current - start_time).count() / float(instance.total_frames))) * 1.0e6f);
 }
 
 }

@@ -332,8 +332,7 @@ void DrawBackground(photon_instance &instance){
                                0.0f, 0.0f,
                                0.0f, 1.0f};
 
-
-    DrawModeLevel(instance.window);
+    DrawModeFX(instance.window);
 
     glBindTexture(GL_TEXTURE_2D, background);
 
@@ -347,15 +346,11 @@ void DrawBackground(photon_instance &instance){
     }
     matrix[2] = glm::vec3(instance.player.location, 1.0f);
 
-    opengl::SetModelMatrix(matrix);
+    SetFacFX(0.5f);
+    SetModelMatrix(matrix);
 
     glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
     glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE,       2, GL_FLOAT, GL_FALSE, 0, uv);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-    DrawModeFX(instance.window);
-    SetFacFX(0.4f);
-    opengl::SetModelMatrix(matrix);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 

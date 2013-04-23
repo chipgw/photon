@@ -248,7 +248,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         case tnt_fireball:
             block.power -= time * 3.0f;
             if(block.power > 0.4f){
-                DamageAroundPoint(location, level, (1.4f - block.power) * time * 1.4e3f);
+                DamageAroundPoint(location, level, 4.0f * (1.2f - block.power));
             }else if(block.power < 0.0f){
                 level.grid.erase(coord);
             }

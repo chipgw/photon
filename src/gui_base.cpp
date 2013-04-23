@@ -165,13 +165,18 @@ void DrawGUI(photon_instance &instance){
         RenderText(glm::vec2((gui.cancel_button.right  + gui.cancel_button.left)  / 2.0f, gui.cancel_button.bottom  + 0.05f), small_font, base_color, true, "Cancel");
         RenderText(glm::vec2((gui.confirm_button.right + gui.confirm_button.left) / 2.0f, gui.confirm_button.bottom + 0.05f), small_font, base_color, true, "Confirm");
 
-        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.c_str());
+        float text_width = gui.filename_box.right - gui.filename_box.left - 0.05f;
+        if(GetTextWidth(gui.filename, small_font) > text_width){
+            auto limits = GetTextLimits(gui.filename, text_width, small_font, gui.cursor + 4);
 
-        std::string underscore = gui.filename;
-        underscore.replace(gui.cursor, 1, "_");
-        underscore.erase(gui.cursor + 1);
-        RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, underscore.c_str());
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first).c_str());
 
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, limits.first, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
+        }else{
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.c_str());
+
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
+        }
         int i = 0;
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);
         for(auto file : gui.file_list){

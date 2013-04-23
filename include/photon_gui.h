@@ -89,6 +89,10 @@ void InitFreeType();
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *text,...);
 
+float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos = 0, int32_t end_pos = -1);
+
+std::pair<int32_t, int32_t> GetTextLimits(const std::string &text, float desired_width, glm::vec2 scale, int32_t end_pos);
+
 void DrawGUI(photon_instance &instance);
 
 bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds);

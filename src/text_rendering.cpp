@@ -194,6 +194,51 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
     glDrawArrays(GL_QUADS, 0, verts.size());
 }
 
+float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos, int32_t end_pos){
+    if(start_pos > text.size()){
+        return 0.0f;
+    }
+    if(end_pos < 0 || end_pos > text.size()){
+        end_pos = text.size();
+    }
+
+    scale /= FONT_SIZE;
+
+    glm::vec2 size(0.0f);
+    for(int32_t c = start_pos; c < end_pos; c++){
+        size += main_atlas.characters[text[c]].advance * scale;
+    }
+    return size.x;
+}
+
+std::pair<int32_t, int32_t> GetTextLimits(const std::string &text, float desired_width, glm::vec2 scale, int32_t end_pos){
+    scale /= FONT_SIZE;
+
+    if(end_pos < 0){
+        end_pos = 0;
+    }else if(end_pos > text.size()){
+        end_pos = text.size();
+    }
+
+    glm::vec2 size(0.0f);
+    for(int32_t c = std::min(end_pos, int32_t(text.size())); c > 0; c--){
+        size += main_atlas.characters[text[c]].advance * scale;
+        if(size.x >= desired_width){
+            return std::pair<int32_t, int32_t>(c + 1, end_pos);
+        }
+    }
+
+    size = glm::vec2(0.0f);
+    // if going from the end did not reach the full width go from start.
+    for(int32_t c = 0; c < text.length(); c++){
+        size += main_atlas.characters[text[c]].advance * scale;
+        if(size.x >= desired_width){
+            return std::pair<int32_t, int32_t>(0, c - 1);
+        }
+    }
+    return std::pair<int32_t, int32_t>(0, text.size());
+}
+
 }
 
 }

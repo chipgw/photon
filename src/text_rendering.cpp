@@ -137,12 +137,18 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
     va_list args;
     va_start(args, format);
 
-    char buffer[512];
-    vsprintf(buffer, format, args);
+    std::string out;
+
+    // TODO - maybe calculate this somehow?
+    out.reserve(512);
+
+    vsnprintf(&out[0], out.capacity(), format, args);
     va_end(args);
 
-    std::string out(buffer);
+    RenderText(position, scale, color, center, out);
+}
 
+void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const std::string &text) {
     scale /= FONT_SIZE;
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
 
@@ -150,7 +156,7 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 
     if(center){
         glm::vec2 offset(0.0f);
-        for(const unsigned char *c = (const unsigned char*)out.c_str(); *c; c++) {
+        for(const unsigned char *c = (const unsigned char*)text.c_str(); *c; c++) {
             character_info &character = main_atlas.characters[*c];
             offset += character.advance * scale;
         }
@@ -160,7 +166,7 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
     std::vector<glm::vec2> verts;
     std::vector<glm::vec2> uv;
 
-    for(const unsigned char *c = (const unsigned char*)out.c_str(); *c; c++) {
+    for(const unsigned char *c = (const unsigned char*)text.c_str(); *c; c++) {
         character_info &character = main_atlas.characters[*c];
         float x =  position.x + character.left * scale.x;
         float y = position.y + character.top * scale.y;

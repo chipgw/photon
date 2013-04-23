@@ -75,9 +75,9 @@ void DrawGUI(photon_instance &instance){
             auto button = instance.gui.main_menu.buttons[i];
 
             if(i == instance.gui.main_menu.highlighted){
-                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first.c_str());
+                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first);
             }else{
-                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first.c_str());
+                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first);
             }
         }
     }else{
@@ -137,9 +137,9 @@ void DrawGUI(photon_instance &instance){
                 auto button = instance.gui.pause_menu.buttons[i];
 
                 if(i == instance.gui.pause_menu.highlighted){
-                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first.c_str());
+                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first);
                 }else{
-                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first.c_str());
+                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first);
                 }
             }
         }
@@ -169,11 +169,11 @@ void DrawGUI(photon_instance &instance){
         if(GetTextWidth(gui.filename, small_font) > text_width){
             auto limits = GetTextLimits(gui.filename, text_width, small_font, gui.cursor + 4);
 
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first).c_str());
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first));
 
             RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, limits.first, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
         }else{
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.c_str());
+            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename);
 
             RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
         }
@@ -181,9 +181,9 @@ void DrawGUI(photon_instance &instance){
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);
         for(auto file : gui.file_list){
             if(i == gui.current_file_index){
-                RenderText(location, small_font, highlight_color, false, file.c_str());
+                RenderText(location, small_font, highlight_color, false, file);
             }else{
-                RenderText(location, small_font, base_color, false, file.c_str());
+                RenderText(location, small_font, base_color, false, file);
             }
             location.y -= 0.08f;
             i++;

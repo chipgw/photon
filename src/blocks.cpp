@@ -247,7 +247,9 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             break;
         case tnt_fireball:
             block.power -= time * 3.0f;
-            if(block.power < 0.0f){
+            if(block.power > 0.4f){
+                DamageAroundPoint(location, level, (1.4f - block.power) * time * 1.4e3f);
+            }else if(block.power < 0.0f){
                 level.grid.erase(coord);
             }
             break;
@@ -309,7 +311,7 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
             break;
         case tnt:
             // will make explosions trigger nearby TNT...
-            block.power += damage * 2.0f;
+            block.power += damage;
             break;
         }
     }

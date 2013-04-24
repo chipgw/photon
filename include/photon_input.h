@@ -48,11 +48,17 @@ struct photon_input{
     // pointer to the game controller to use for gamecontroller_* types
     SDL_GameController* controller = nullptr;
 
-    photon_input_state move_positive_x;
-    photon_input_state move_negative_x;
+    photon_input_state move_right;
+    photon_input_state move_left;
 
-    photon_input_state move_positive_y;
-    photon_input_state move_negative_y;
+    photon_input_state move_up;
+    photon_input_state move_down;
+
+    photon_input_state camera_right;
+    photon_input_state camera_left;
+
+    photon_input_state camera_up;
+    photon_input_state camera_down;
 
     photon_input_state interact;
 

@@ -34,12 +34,12 @@ void MainLoop(photon_instance &instance){
                 level::AdvanceFrame(instance.level, instance.player, frame_delta);
             }
 
-            instance.zoom = std::max(0.01f, instance.zoom);
-            opengl::UpdateZoom(instance.zoom);
+            instance.camera_offset.z = std::max(0.01f, instance.camera_offset.z);
+            opengl::UpdateZoom(instance.camera_offset.z);
 
             instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
 
-            opengl::UpdateCenter(instance.player.location);
+            opengl::UpdateCenter(instance.player.location + glm::vec2(instance.camera_offset));
 
             opengl::DrawModeLight(instance.window);
 

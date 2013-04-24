@@ -73,10 +73,14 @@ void DoInput(photon_instance &instance, float time){
     DoInputSingle(input.pause, input);
 
     DoInputSingle(input.interact, input);
-    DoInputSingle(input.move_positive_x, input);
-    DoInputSingle(input.move_negative_x, input);
-    DoInputSingle(input.move_positive_y, input);
-    DoInputSingle(input.move_negative_y, input);
+    DoInputSingle(input.move_right, input);
+    DoInputSingle(input.move_left, input);
+    DoInputSingle(input.move_up, input);
+    DoInputSingle(input.move_down, input);
+    DoInputSingle(input.camera_right, input);
+    DoInputSingle(input.camera_left, input);
+    DoInputSingle(input.camera_up, input);
+    DoInputSingle(input.camera_down, input);
     DoInputSingle(input.rotate_clockwise, input);
     DoInputSingle(input.rotate_counter_clockwise, input);
     DoInputSingle(input.zoom_in, input);
@@ -149,8 +153,15 @@ void DoInput(photon_instance &instance, float time){
             }
         }
     }else{
-        instance.player.location.x += (input.move_positive_x.current_state - input.move_negative_x.current_state) * time * instance.zoom;
-        instance.player.location.y += (input.move_positive_y.current_state - input.move_negative_y.current_state) * time * instance.zoom;
+        instance.player.location.x += (input.move_right.current_state - input.move_left.current_state) * time * instance.camera_offset.z;
+        instance.player.location.y += (input.move_up.current_state - input.move_down.current_state) * time * instance.camera_offset.z;
+
+        glm::vec3 cam_offset = instance.camera_offset;
+        cam_offset.x = (input.camera_right.current_state - input.camera_left.current_state) * instance.camera_offset.z * 0.5f;
+        cam_offset.y = (input.camera_up.current_state - input.camera_down.current_state) * instance.camera_offset.z * 0.5f;
+
+        instance.camera_offset += cam_offset * (time * 2.0f);
+        instance.camera_offset /= 1.0f + (time * 2.0f);
 
         if(IsActivated(input.interact)){
             blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, instance.player);
@@ -168,7 +179,7 @@ void DoInput(photon_instance &instance, float time){
             player::PreviousItem(instance.player);
         }
 
-        instance.zoom -= (input.zoom_in.current_state - input.zoom_out.current_state) * instance.zoom * 0.5f * time;
+        instance.camera_offset.z -= (input.zoom_in.current_state - input.zoom_out.current_state) * instance.camera_offset.z * 0.5f * time;
 
         if(IsActivated(input.pause)){
             instance.paused = true;
@@ -263,7 +274,7 @@ void DoEvents(photon_instance &instance){
             break;
         case SDL_MOUSEWHEEL:
             if(!instance.paused){
-                instance.zoom -= event.wheel.y * instance.zoom * 0.02f;
+                instance.camera_offset.z -= event.wheel.y * instance.camera_offset.z * 0.02f;
             }
             break;
         case SDL_MOUSEBUTTONUP:

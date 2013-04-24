@@ -135,13 +135,21 @@ bool LoadConfig(const std::string &filename, photon_input &input){
             }else if((xmlStrEqual(node->name, "zoom_out"_xml))){
                 input.zoom_out = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_right"_xml))){
-                input.move_positive_x = LoadInputSingle(node);
+                input.move_right = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_left"_xml))){
-                input.move_negative_x = LoadInputSingle(node);
+                input.move_left = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_up"_xml))){
-                input.move_positive_y = LoadInputSingle(node);
+                input.move_up = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_down"_xml))){
-                input.move_negative_y = LoadInputSingle(node);
+                input.move_down = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, "camera_right"_xml))){
+                input.camera_right = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, "camera_left"_xml))){
+                input.camera_left = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, "camera_up"_xml))){
+                input.camera_up = LoadInputSingle(node);
+            }else if((xmlStrEqual(node->name, "camera_down"_xml))){
+                input.camera_down = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "pause"_xml))){
                 input.pause = LoadInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_up"_xml))){

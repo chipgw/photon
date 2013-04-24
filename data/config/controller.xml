@@ -9,8 +9,12 @@
   <move_left type="controller_axis" axis="leftx" negate="true" />
   <move_up type="controller_axis" axis="lefty" negate="true" />
   <move_down type="controller_axis" axis="lefty" />
-  <zoom_in type="controller_axis" axis="righty" negate="true" />
-  <zoom_out type="controller_axis" axis="righty" />
+  <camera_right type="controller_axis" axis="rightx" />
+  <camera_left type="controller_axis" axis="rightx" negate="true" />
+  <camera_up type="controller_axis" axis="righty" negate="true" />
+  <camera_down type="controller_axis" axis="righty" />
+  <zoom_in type="controller_axis" axis="lefttrigger" />
+  <zoom_out type="controller_axis" axis="righttrigger" />
   <pause type="controller_button" button="start" />
   <gui_select type="controller_button" button="a" />
   <gui_back type="controller_button" button="b" />

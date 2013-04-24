@@ -335,7 +335,7 @@ void DrawBackground(photon_instance &instance){
 
     glBindTexture(GL_TEXTURE_2D, background);
 
-    glm::mat3 matrix(instance.zoom);
+    glm::mat3 matrix(instance.camera_offset.z);
 
     float aspect = float(instance.window.width) / float(instance.window.height);
     if(aspect > 1.0f){
@@ -343,7 +343,7 @@ void DrawBackground(photon_instance &instance){
     }else if(aspect < 1.0f){
         matrix /= aspect;
     }
-    matrix[2] = glm::vec3(instance.player.location, 1.0f);
+    matrix[2] = glm::vec3(instance.player.location + glm::vec2(instance.camera_offset), 1.0f);
 
     SetFacFX(0.5f);
     SetModelMatrix(matrix);

@@ -30,7 +30,7 @@ struct photon_instance{
     /*! \brief is set to true when the main loop starts, set to false to end loop. */
     bool running = false;
 
-    float zoom = 4.0f;
+    glm::vec3 camera_offset = glm::vec3(0.0f, 0.0f, 4.0f);
 };
 
 photon_instance Init(int argc, char *argv[], bool parseconfig = true);

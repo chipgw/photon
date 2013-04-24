@@ -108,13 +108,13 @@ void DoInput(photon_instance &instance, float time){
         }
         if(IsActivated(input.up)){
             if(--load_save_menu.current_file_index < 0){
-                load_save_menu.current_file_index = 0;
+                load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
             }
             load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
         }
         if(IsActivated(input.down)){
             if(++load_save_menu.current_file_index >= load_save_menu.file_list.size()){
-                load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
+                load_save_menu.current_file_index = 0;
             }
             load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
         }
@@ -226,12 +226,12 @@ void DoEvents(photon_instance &instance){
                 if(event.key.keysym.sym == SDLK_BACKSPACE){
                     if(load_save_menu.cursor > 0 && load_save_menu.cursor <= load_save_menu.filename.length()){
                         load_save_menu.filename.erase(--load_save_menu.cursor, 1);
-                        instance.gui.load_save_menu.current_file_index = -1;
+                        load_save_menu.current_file_index = -1;
                     }
                 }else if(event.key.keysym.sym == SDLK_DELETE){
                     if(load_save_menu.cursor >= 0 && load_save_menu.cursor < load_save_menu.filename.length()){
                         load_save_menu.filename.erase(load_save_menu.cursor, 1);
-                        instance.gui.load_save_menu.current_file_index = -1;
+                        load_save_menu.current_file_index = -1;
                     }
                 }else if(event.key.keysym.sym == SDLK_LEFT && instance.input.left.type != photon_input_state::keyboard){
                     if(--load_save_menu.cursor < 0){
@@ -240,6 +240,20 @@ void DoEvents(photon_instance &instance){
                 }else if(event.key.keysym.sym == SDLK_RIGHT && instance.input.right.type != photon_input_state::keyboard){
                     if(++load_save_menu.cursor > load_save_menu.filename.length()){
                         load_save_menu.cursor = load_save_menu.filename.length();
+                    }
+                }else if(event.key.keysym.sym == SDLK_HOME){
+                    if(load_save_menu.current_file_index == -1){
+                        load_save_menu.cursor = 0;
+                    }else{
+                        load_save_menu.current_file_index = 0;
+                        load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
+                    }
+                }else if(event.key.keysym.sym == SDLK_END){
+                    if(load_save_menu.current_file_index == -1){
+                        load_save_menu.cursor = load_save_menu.filename.length();
+                    }else{
+                        load_save_menu.current_file_index = load_save_menu.file_list.size() - 1;
+                        load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
                     }
                 }else if(event.key.keysym.sym == SDLK_ESCAPE){
                     gui::CancelLoadSave(instance);

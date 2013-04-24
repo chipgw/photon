@@ -126,12 +126,12 @@ void DoInput(photon_instance &instance, float time){
         }
         if(IsActivated(input.up)){
             if(--menu.highlighted < 0){
-                menu.highlighted = 0;
+                menu.highlighted = menu.buttons.size() - 1;
             }
         }
         if(IsActivated(input.down)){
             if(++menu.highlighted >= menu.buttons.size()){
-                menu.highlighted = menu.buttons.size() - 1;
+                menu.highlighted = 0;
             }
         }
     }else if(instance.paused){
@@ -144,12 +144,12 @@ void DoInput(photon_instance &instance, float time){
         }
         if(IsActivated(input.up)){
             if(--menu.highlighted < 0){
-                menu.highlighted = 0;
+                menu.highlighted = menu.buttons.size() - 1;
             }
         }
         if(IsActivated(input.down)){
             if(++menu.highlighted >= menu.buttons.size()){
-                menu.highlighted = menu.buttons.size() - 1;
+                menu.highlighted = 0;
             }
         }
     }else{

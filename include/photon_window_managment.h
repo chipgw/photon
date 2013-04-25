@@ -1,5 +1,5 @@
-#ifndef _PHOTON_SDL_H_
-#define _PHOTON_SDL_H_
+#ifndef _PHOTON_WINDOW_MANAGMENT_H_
+#define _PHOTON_WINDOW_MANAGMENT_H_
 
 #include "photon_opengl.h"
 
@@ -65,5 +65,6 @@ void ToggleFullscreen(photon_window &window);
 void SetWindowIcon(photon_window &window, const std::string &filename);
 
 }
+
 }
 #endif

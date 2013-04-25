@@ -13,8 +13,8 @@
   <camera_left type="keyboard" key="left" />
   <camera_up type="keyboard" key="up"/>
   <camera_down type="keyboard" key="down" />
-  <zoom_in type="keyboard" key="+" />
-  <zoom_out type="keyboard" key="-" />
+  <zoom_in type="keyboard" key="keypad +" />
+  <zoom_out type="keyboard" key="keypad -" />
   <pause type="keyboard" key="pause" />
   <gui_select type="keyboard" key="return" />
   <gui_back type="keyboard" key="backspace" />

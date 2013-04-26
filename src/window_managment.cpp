@@ -5,11 +5,7 @@
 #include <SOIL.h>
 #include <physfs.h>
 
-#ifdef NDEBUG
-#define PHOTON_WINDOW_FLAGS SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_FULLSCREEN
-#else
 #define PHOTON_WINDOW_FLAGS SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED
-#endif
 
 namespace photon{
 
@@ -50,6 +46,7 @@ photon_window CreateSDLWindow(){
     // Don't cap framerate on debug builds.
 #ifdef NDEBUG
     SDL_GL_SetSwapInterval(1);
+    ToggleFullscreen(window);
 #else
     SDL_GL_SetSwapInterval(0);
 #endif

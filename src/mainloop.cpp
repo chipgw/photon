@@ -20,8 +20,6 @@ void MainLoop(photon_instance &instance){
 
     PrintToLog("INFO: Main loop started at: %f seconds.", (start_time - instance.creation_time));
 
-    opengl::UpdateZoom(instance.camera_offset.z);
-
     while(instance.running){
         std::chrono::high_resolution_clock::time_point current = std::chrono::high_resolution_clock::now();
         frame_delta = std::chrono::duration_cast<std::chrono::microseconds>(current - last_time).count() * 1.0e-6f;
@@ -31,13 +29,13 @@ void MainLoop(photon_instance &instance){
 
         input::DoInput(instance, frame_delta);
 
+        instance.camera_offset.z = std::max(0.01f, instance.camera_offset.z);
+        opengl::UpdateZoom(instance.camera_offset.z);
+
         if(instance.level.is_valid){
             if(!instance.paused){
                 level::AdvanceFrame(instance.level, instance.player, frame_delta);
             }
-
-            instance.camera_offset.z = std::max(0.01f, instance.camera_offset.z);
-            opengl::UpdateZoom(instance.camera_offset.z);
 
             instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
 

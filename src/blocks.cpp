@@ -49,6 +49,8 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             // stops tracing the laser.
             return nullptr;
             break;
+        case tnt:
+            block.power += time;
         case emitter_white:
         case emitter_red:
         case emitter_green:
@@ -69,11 +71,6 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             segment->angle = block.angle - angle;
             break;
         }
-        case tnt:
-            block.power += time;
-            // stops tracing the laser.
-            return nullptr;
-            break;
         case filter_red:{
             glm::vec3 color = segment->color;
             color.g = glm::min(color.g, 0.2f);

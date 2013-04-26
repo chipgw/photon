@@ -308,7 +308,9 @@ void DoEvents(photon_instance &instance){
             break;
         case SDL_MOUSEBUTTONUP:
             if(event.button.button == SDL_BUTTON_LEFT){
-                gui::HandleMouseClick(instance, event.button.x, event.button.y);
+                if(instance.input.is_valid && !gui::HandleMouseClick(instance, event.button.x, event.button.y)){
+                    // TODO - use mouse input for game.
+                }
             }
             break;
         case SDL_CONTROLLERBUTTONUP:

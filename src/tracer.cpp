@@ -23,12 +23,10 @@ void TraceBeam(photon_laserbeam& beam, photon_level &level, float time){
     glm::uvec2 last_trace_location = segment->start;
 
     while(segment != nullptr){
-        glm::vec2 trace(1.0,0.0);
-        trace = glm::rotate(trace, segment->angle);
+        glm::vec2 trace = glm::rotate(glm::vec2(1.0f, 0.0f), segment->angle);
 
-        // laser should always be at anle that is a multiple of 45, so rounding each coordinate to 1 will keep it as such.
-        trace.x = std::floor(trace.x + 0.5f);
-        trace.y = std::floor(trace.y + 0.5f);
+        // laser should always be at angle that is a multiple of 45, so rounding the coordinates to 1 will keep it as such.
+        trace = glm::round(trace);
 
         glm::uvec2 trace_location = last_trace_location + glm::uvec2(trace);
 

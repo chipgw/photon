@@ -62,7 +62,6 @@ void DrawGUI(photon_instance &instance){
     static const glm::vec2 medium_font(0.15f);
 
     if(!instance.level.is_valid){
-        // TODO - draw background.
         opengl::SetColorGUI(blank);
 
         glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
@@ -176,7 +175,7 @@ void DrawGUI(photon_instance &instance){
 
             RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom) + 0.025f, small_font, base_color, false, "_");
         }
-        int i = 0;
+        uint16_t i = 0;
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);
         for(auto file : gui.file_list){
             if(i == gui.current_file_index){

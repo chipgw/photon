@@ -202,7 +202,6 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                     item = item->next;
                 }
             }
-            // TODO - load game mode & victory condition.
             node = node->next;
         }
 

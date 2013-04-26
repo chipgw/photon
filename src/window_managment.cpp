@@ -38,6 +38,7 @@ photon_window CreateSDLWindow(){
     window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS);
 
     if (!window.window_SDL){
+        PrintToLog("ERROR: Unable to create window!");
         throw;
     }
 
@@ -68,8 +69,9 @@ void GarbageCollect(photon_window &window, bool quitSDL){
     SDL_GL_DeleteContext(window.context_SDL);
     SDL_DestroyWindow(window.window_SDL);
 
-    if(quitSDL)
+    if(quitSDL){
         SDL_Quit();
+    }
 
     PrintToLog("INFO: SDL garbage collection complete.");
 }
@@ -117,7 +119,7 @@ void SetWindowIcon(photon_window &window, const std::string &filename){
             const uint32_t amask = 0xff000000;
 #endif
 
-            SDL_Surface *icon = SDL_CreateRGBSurfaceFrom(image, width, height, channels*8, channels*width, rmask, gmask, bmask, amask);
+            SDL_Surface *icon = SDL_CreateRGBSurfaceFrom(image, width, height, channels * 8, channels*width, rmask, gmask, bmask, amask);
 
 
             if(icon == nullptr){

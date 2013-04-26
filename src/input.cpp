@@ -160,10 +160,13 @@ void DoInput(photon_instance &instance, float time){
                              input.camera_up.current_state - input.camera_down.current_state);
 
         // TODO - make a setting that enables/disables screen edges.
-        glm::ivec2 mouse;
-        SDL_GetMouseState(&mouse.x, &mouse.y);
-        cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
-        cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
+        // if only SDL_GetMouseState worked when the cursor is outside the window... oh well...
+        if(SDL_GetMouseFocus() == instance.window.window_SDL){
+            glm::ivec2 mouse;
+            SDL_GetMouseState(&mouse.x, &mouse.y);
+            cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
+            cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
+        }
 
         cam_offset *= instance.camera_offset.z * 0.5f * time * 2.0f;
 

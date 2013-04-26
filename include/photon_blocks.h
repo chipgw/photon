@@ -69,6 +69,8 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
 
 void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise = false);
 
+void OnRotate(glm::uvec2 location, photon_level &level, float to_angle);
+
 void OnFrame(glm::uvec2 location, photon_level &level, float time);
 
 void OnDamage(glm::uvec2 location, photon_level &level, float damage);

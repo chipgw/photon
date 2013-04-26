@@ -4,6 +4,19 @@ namespace photon{
 
 namespace input{
 
+glm::vec2 WindowToWorldCoord(photon_instance &instance, int x, int y){
+    float widthfac = instance.window.width / 2.0f;
+    float heightfac = instance.window.height / 2.0f;
+
+    glm::vec2 location((x - widthfac), (heightfac - y));
+    location /= std::min(widthfac, heightfac);
+    location *= instance.camera_offset.z;
+    location.x += instance.player.location.x + instance.camera_offset.x;
+    location.y += instance.player.location.y + instance.camera_offset.y;
+
+    return location;
+}
+
 void DoInputSingle(photon_input_state &state, photon_input &input){
     state.last_state = state.current_state;
     switch(state.type){
@@ -163,9 +176,21 @@ void DoInput(photon_instance &instance, float time){
         // if only SDL_GetMouseState worked when the cursor is outside the window... oh well...
         if(SDL_GetMouseFocus() == instance.window.window_SDL){
             glm::ivec2 mouse;
-            SDL_GetMouseState(&mouse.x, &mouse.y);
+            uint32_t buttons = SDL_GetMouseState(&mouse.x, &mouse.y);
             cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
             cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
+
+            glm::vec2 delta = WindowToWorldCoord(instance, mouse.x, mouse.y) - instance.player.location;
+            if(buttons & SDL_BUTTON_LMASK){
+                if(glm::length(delta) > 0.5f){
+                    instance.player.location += delta * time;
+                }
+            }
+            if(buttons & SDL_BUTTON_RMASK){
+                float angle = glm::degrees(glm::atan(delta.y, delta.x));
+
+                blocks::OnRotate(glm::uvec2(instance.player.location + 0.5f), instance.level, angle);
+            }
         }
 
         cam_offset *= instance.camera_offset.z * 0.5f * time * 2.0f;
@@ -307,9 +332,15 @@ void DoEvents(photon_instance &instance){
             }
             break;
         case SDL_MOUSEBUTTONUP:
-            if(event.button.button == SDL_BUTTON_LEFT){
-                if(instance.input.is_valid && !gui::HandleMouseClick(instance, event.button.x, event.button.y)){
-                    // TODO - use mouse input for game.
+            if(!instance.input.is_valid){
+                input::LoadConfig("/config/keyboard.xml", instance.input);
+
+                PrintToLog("INFO: Using mouse & keyboard input.");
+            }else if(event.button.button == SDL_BUTTON_LEFT){
+                if(!gui::HandleMouseClick(instance, event.button.x, event.button.y)){
+                    if(glm::length(instance.player.location - WindowToWorldCoord(instance, event.button.x, event.button.y)) < 0.5f){
+                        blocks::OnPhotonInteract(glm::uvec2(instance.player.location + 0.5f), instance.level, instance.player);
+                    }
                 }
             }
             break;

@@ -205,8 +205,6 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
     if(level.grid.count(coord)){
         photon_block &block = level.grid[coord];
         switch(block.type){
-        default:
-            break;
         case mirror:
             if(counter_clockwise){
                 block.angle += 22.5f;
@@ -214,6 +212,26 @@ void OnRotate(glm::uvec2 location, photon_level &level, bool counter_clockwise){
                 block.angle -= 22.5f;
             }
             level.moves++;
+        default:
+            break;
+        }
+    }
+}
+
+void OnRotate(glm::uvec2 location, photon_level &level, float to_angle){
+    photon_level_coord coord(location.x, location.y);
+    if(level.grid.count(coord)){
+        photon_block &block = level.grid[coord];
+        switch(block.type){
+        case mirror:{
+            float angle = round(to_angle / 22.5f) * 22.5f;
+            PrintToLog("%f, %f", to_angle, angle);
+            if(block.angle != angle){
+                block.angle = angle;
+                level.moves++;
+            }
+        }
+        default:
             break;
         }
     }

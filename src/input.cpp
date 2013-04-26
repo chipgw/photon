@@ -156,12 +156,21 @@ void DoInput(photon_instance &instance, float time){
         instance.player.location.x += (input.move_right.current_state - input.move_left.current_state) * time * instance.camera_offset.z;
         instance.player.location.y += (input.move_up.current_state - input.move_down.current_state) * time * instance.camera_offset.z;
 
-        glm::vec3 cam_offset = instance.camera_offset;
-        cam_offset.x = (input.camera_right.current_state - input.camera_left.current_state) * instance.camera_offset.z * 0.5f;
-        cam_offset.y = (input.camera_up.current_state - input.camera_down.current_state) * instance.camera_offset.z * 0.5f;
+        glm::vec2 cam_offset(input.camera_right.current_state - input.camera_left.current_state,
+                             input.camera_up.current_state - input.camera_down.current_state);
 
-        instance.camera_offset += cam_offset * (time * 2.0f);
-        instance.camera_offset /= 1.0f + (time * 2.0f);
+        // TODO - make a setting that enables/disables screen edges.
+        glm::ivec2 mouse;
+        SDL_GetMouseState(&mouse.x, &mouse.y);
+        cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
+        cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
+
+        cam_offset *= instance.camera_offset.z * 0.5f * time * 2.0f;
+
+        instance.camera_offset.x += cam_offset.x;
+        instance.camera_offset.y += cam_offset.y;
+        instance.camera_offset.x /= 1.0f + (time * 2.0f);
+        instance.camera_offset.y /= 1.0f + (time * 2.0f);
 
         if(IsActivated(input.interact)){
             blocks::OnPhotonInteract(glm::uvec2(instance.player.location + glm::vec2(0.5f)), instance.level, instance.player);

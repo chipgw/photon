@@ -114,8 +114,7 @@ void DrawGUI(photon_instance &instance){
         }else{
             if(instance.level.mode == photon_level::destruction){
                 gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Destroy %i more blocks", instance.level.goal - instance.level.blocks_destroyed);
-            }
-            if(instance.level.mode == photon_level::tnt_harvester){
+            }else if(instance.level.mode == photon_level::tnt_harvester){
                 gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Gather %i more TNT", instance.level.goal - player::GetItemCount(instance.player, tnt));
             }
         }
@@ -169,13 +168,13 @@ void DrawGUI(photon_instance &instance){
         if(GetTextWidth(gui.filename, small_font) > text_width){
             auto limits = GetTextLimits(gui.filename, text_width, small_font, gui.cursor + 4);
 
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first));
+            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first));
 
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, limits.first, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
+            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, small_font, limits.first, gui.cursor), gui.filename_box.bottom) + 0.025f, small_font, base_color, false, "_");
         }else{
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f, gui.filename_box.bottom + 0.025f), small_font, base_color, false, gui.filename);
+            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, small_font, base_color, false, gui.filename);
 
-            RenderText(glm::vec2(gui.filename_box.left + 0.025f + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom + 0.025f), small_font, base_color, false, "_");
+            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom) + 0.025f, small_font, base_color, false, "_");
         }
         int i = 0;
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);

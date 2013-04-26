@@ -189,6 +189,14 @@ void DrawGUI(photon_instance &instance){
             i++;
         }
     }
+
+    if(!instance.input.is_valid){
+        glBindTexture(GL_TEXTURE_2D, 0);
+        opengl::SetColorGUI(background_color);
+        DrawBounds(fill_bounds);
+        opengl::SetCenterGUI(glm::vec2(0.0f));
+        RenderText(glm::vec2(0.0f), small_font, base_color, true, "Press a button on the device to use...");
+    }
 }
 
 bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds){

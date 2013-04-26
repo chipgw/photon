@@ -221,6 +221,9 @@ void DoEvents(photon_instance &instance){
             }
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
+            }else if(event.key.keysym.sym == SDLK_i && event.key.keysym.mod & KMOD_CTRL){
+                // re-detect input.
+                instance.input.is_valid = false;
             }else if((instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving)){
                 photon_gui_load_save_menu &load_save_menu = instance.gui.load_save_menu;
                 if(event.key.keysym.sym == SDLK_BACKSPACE){
@@ -378,7 +381,7 @@ photon_input InitInput(){
     SDL_GameControllerEventState(SDL_ENABLE);
     SDL_JoystickEventState(SDL_ENABLE);
 
-    for(int i = 0; i < SDL_NumJoysticks();i++){
+    for(int i = 0; i < SDL_NumJoysticks(); i++){
         if(SDL_IsGameController(i)){
             input.open_controllers.push_back(SDL_GameControllerOpen(i));
         }else{

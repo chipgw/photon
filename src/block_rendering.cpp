@@ -15,6 +15,7 @@ GLuint texture_filter_yellow;
 GLuint texture_filter_cyan;
 GLuint texture_filter_magenta;
 GLuint texture_emitter;
+GLuint texture_target;
 
 namespace photon{
 
@@ -63,6 +64,10 @@ void Draw(photon_block block, glm::uvec2 location){
     case mirror_locked:
         glBindTexture(GL_TEXTURE_2D, texture_mirror);
         DrawBlock(location, 0.4f, block.angle);
+        break;
+    case target:
+        glBindTexture(GL_TEXTURE_2D, texture_target);
+        DrawBlock(location);
         break;
     case tnt:
         glBindTexture(GL_TEXTURE_2D, texture_tnt);
@@ -186,6 +191,7 @@ void LoadTextures(){
     texture_filter_magenta = texture::Load("/textures/blocks/filter_magenta.png");;
     texture_emitter = texture::Load("/textures/blocks/emitter.png");
     texture_explosion = texture::Load("/textures/explosion.png");
+    texture_target = texture::Load("/textures/blocks/target.png");
 }
 
 

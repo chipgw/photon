@@ -70,7 +70,12 @@ int8_t CheckVictory(photon_level &level, photon_player &player){
             break;
         }
         case photon_level::targets:
-            // TODO - implement.
+            for(auto &block : level.grid){
+                if(block.second.type == target){
+                    // if there is any target in existense return false.
+                    return 0;
+                }
+            }
             return SetVictoryState(level, 1);
             break;
         case photon_level::destruction:

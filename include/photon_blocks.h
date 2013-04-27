@@ -32,6 +32,8 @@ enum block_type{
     reciever_green,
     reciever_blue,
 
+    target, // things to destroy in targets game mode.
+
     tnt, // KABOOM!!! blows up when the laser triggers it (by pointing at it for a couple seconds)
     tnt_fireball, // draws the fireball after the TNT explodes.
 

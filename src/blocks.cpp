@@ -57,6 +57,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         case emitter_blue:
         case plain:
         case indestructible:
+        case target:
             // stops tracing the laser.
             return nullptr;
             break;
@@ -222,7 +223,6 @@ void OnRotate(glm::uvec2 location, photon_level &level, float to_angle){
         switch(block.type){
         case mirror:{
             float angle = round(to_angle / 22.5f) * 22.5f;
-            PrintToLog("%f, %f", to_angle, angle);
             if(block.angle != angle){
                 block.angle = angle;
                 level.moves++;
@@ -315,9 +315,8 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
     if(level.grid.count(coord)){
         photon_block &block = level.grid[coord];
         switch(block.type){
-        default:
-            break;
         case plain:
+        case target:
             if(damage > 0.5f){
                 level.grid.erase(coord);
             }
@@ -325,6 +324,7 @@ void OnDamage(glm::uvec2 location, photon_level &level, float damage){
         case tnt:
             // will make explosions trigger nearby TNT...
             block.power += damage;
+        default:
             break;
         }
     }
@@ -362,6 +362,7 @@ const char* GetBlockName(block_type type){
         CASESTR(reciever_red);
         CASESTR(reciever_green);
         CASESTR(reciever_blue);
+        CASESTR(target);
         CASESTR(tnt);
         CASESTR(tnt_fireball);
         CASESTR(filter_red);
@@ -391,6 +392,7 @@ block_type GetBlockFromName(const char* name){
     else CASESTR(reciever_red)
     else CASESTR(reciever_green)
     else CASESTR(reciever_blue)
+    else CASESTR(target)
     else CASESTR(tnt)
     else CASESTR(tnt_fireball)
     else CASESTR(filter_red)

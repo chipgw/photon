@@ -154,19 +154,27 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 
     opengl::SetColorGUI(color);
 
-    if(center){
-        glm::vec2 offset(0.0f);
-        for(const unsigned char *c = (const unsigned char*)text.c_str(); *c; c++) {
-            character_info &character = main_atlas.characters[*c];
-            offset += character.advance * scale;
+    std::vector<glm::vec2> origin{position};
+
+    for(const unsigned char *c = (const unsigned char*)text.c_str(); *c; c++) {
+        if(*c == '\n'){
+            origin.push_back(glm::vec2(position.x, position.y - scale.y * FONT_SIZE * origin.size()));
+        }else if(center){
+            origin.back() -= main_atlas.characters[*c].advance * scale * 0.5f;
         }
-        position -= offset / 2.0f;
     }
+
+    position = origin[0];
+    uint8_t current_line = 0;
 
     std::vector<glm::vec2> verts;
     std::vector<glm::vec2> uv;
 
     for(const unsigned char *c = (const unsigned char*)text.c_str(); *c; c++) {
+        if(*c == '\n'){
+            position = origin[++current_line];
+            continue;
+        }
         character_info &character = main_atlas.characters[*c];
         float x =  position.x + character.left * scale.x;
         float y = position.y + character.top * scale.y;
@@ -179,7 +187,6 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         // Skip glyphs that have no pixels
         if(!w || !h)
             continue;
-
 
         uv.push_back(glm::vec2(character.x, 0.0f));
         verts.push_back(glm::vec2(x, y));

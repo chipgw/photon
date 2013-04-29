@@ -1,4 +1,5 @@
 #include "photon_core.h"
+#include "photon_lua.h"
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -51,6 +52,8 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
     instance.gui = gui::InitGUI();
 
     instance.input = input::InitInput();
+
+    lua::InitLua(instance, "/init.lua");
 
     return instance;
 }

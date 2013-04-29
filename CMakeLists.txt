@@ -23,13 +23,14 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp.in" "${CMAKE_CURRENT
 # files not needed in build, but included so they show up in IDE.
 file(GLOB HEADERS "include/*.h")
 file(GLOB GLSL_SOURCES "data/shaders/*.xml" "data/shaders/*.vert" "data/shaders/*.frag")
+file(GLOB LUA_SOURCES "data/*.lua")
 
 file(GLOB SOURCES "src/*.cpp")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc" @ONLY)
 set(WINDRES "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc")
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${HEADERS} ${WINDRES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADERS} ${WINDRES})
 
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
@@ -58,3 +59,7 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
 find_package(Freetype REQUIRED)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${FREETYPE_LIBRARY})
+
+find_package(Lua52 REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${LUA_LIBRARIES})

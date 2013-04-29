@@ -8,10 +8,6 @@
 namespace photon{
 
 void MainLoop(photon_instance &instance){
-#ifndef NDEBUG
-    instance.level = level::LoadLevelXML("/level.xml", instance.player);
-#endif
-
     instance.running = true;
 
     std::chrono::high_resolution_clock::time_point start_time = std::chrono::high_resolution_clock::now();

@@ -106,17 +106,6 @@ void DrawGUI(photon_instance &instance){
         gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
         gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
 
-        if(instance.level.victory_state > 0){
-            gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Victory! exit through a reciever.", instance.level.goal - instance.level.blocks_destroyed);
-        }else if(instance.level.victory_state < 0){
-            gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Defeat! game is unwinnable!", instance.level.goal - instance.level.blocks_destroyed);
-        }else{
-            if(instance.level.mode == photon_level::destruction){
-                gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Destroy %i more blocks", instance.level.goal - instance.level.blocks_destroyed);
-            }else if(instance.level.mode == photon_level::tnt_harvester){
-                gui::RenderText(gui.mode_data_display_location,  small_font, base_color, false, "Gather %i more TNT", instance.level.goal - player::GetItemCount(instance.player, tnt));
-            }
-        }
 
         if(instance.paused){
             glBindTexture(GL_TEXTURE_2D, 0);

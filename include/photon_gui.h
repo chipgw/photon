@@ -25,7 +25,7 @@ struct photon_gui_bounds{
 };
 
 struct photon_gui_game{
-    photon_gui_bounds current_item = {0.44f, 0.04f, -0.6f, -0.2f, 0.0f, -1.0f};
+    photon_gui_bounds current_item = {0.44f, 0.04f, -0.8f, -0.4f, 0.0f, -1.0f};
 
     photon_gui_bounds bar = {0.5f, 0.0f, -1.0f, 1.0f, 0.0f, -1.0f};
     GLuint bar_texture = 0;
@@ -35,9 +35,8 @@ struct photon_gui_game{
     photon_gui_bounds toggle_fullscreen_button = {0.12f, 0.02f, 0.84f, 0.94f, 0.0f, -1.0f};
     GLuint toggle_fullscreen_button_texture = 0;
 
-    glm::vec2 moves_display_location     = glm::vec2(-0.1f, 0.18f);
-    glm::vec2 time_display_location      = glm::vec2(-0.1f, 0.10f);
-    glm::vec2 mode_data_display_location = glm::vec2(-0.1f, 0.02f);
+    glm::vec2 moves_display_location     = glm::vec2(-0.3f, 0.16f);
+    glm::vec2 time_display_location      = glm::vec2(-0.3f, 0.06f);
 };
 
 struct photon_gui_pause_menu{

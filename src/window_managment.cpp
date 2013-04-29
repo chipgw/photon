@@ -47,7 +47,6 @@ photon_window CreateSDLWindow(){
     // Don't cap framerate on debug builds.
 #ifdef NDEBUG
     SDL_GL_SetSwapInterval(1);
-    ToggleFullscreen(window);
 #else
     SDL_GL_SetSwapInterval(0);
 #endif

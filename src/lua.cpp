@@ -105,6 +105,29 @@ const luaL_Reg funcs[] = {
 };
 }
 
+namespace build_info{
+
+static int IsDebug(lua_State *L) {
+#ifdef NDEBUG
+    lua_pushboolean(L, false);
+#else
+    lua_pushboolean(L, true);
+#endif
+    return 1;
+}
+
+static int GitSHA1(lua_State *L) {
+    lua_pushstring(L, version::git_sha1);
+    return 1;
+}
+
+const luaL_Reg funcs[] = {
+    {"is_debug", IsDebug},
+    {"git_sha1", GitSHA1},
+    {nullptr, nullptr}
+};
+}
+
 void InitLua(photon_instance &in, const std::string &initscript){
     PrintToLog("INFO: Initializing Lua.");
     lua = luaL_newstate();
@@ -134,6 +157,13 @@ void InitLua(photon_instance &in, const std::string &initscript){
     // photon.level
     luaL_newlib(lua, level_funcs::funcs);
     lua_setfield(lua, 1, "level");
+
+    // photon
+    lua_settop(lua, 1);
+
+    // photon.build
+    luaL_newlib(lua, build_info::funcs);
+    lua_setfield(lua, 1, "build");
 
     // photon
     lua_settop(lua, 1);

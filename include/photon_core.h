@@ -52,7 +52,7 @@ void PrintToLog(const char *format,...);
 /*!
  * \brief holds version information.
  */
-namespace version{
+namespace build_info{
 /*!
  * \brief holds the builds git sha1 value.
  */
@@ -62,6 +62,11 @@ extern const char* git_sha1;
  * \brief holds the build type (as defined in CMake by CMAKE_BUILD_TYPE)
  */
 extern const char* build_type;
+
+/*!
+ * \brief version
+ */
+extern const char* version;
 }
 
 }

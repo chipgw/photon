@@ -14,9 +14,9 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
     logfile = fopen("photon.log", "w");
     PrintToLog("INFO: Starting up Photon. Executable: \"%s\"", argv[0]);
 
-    PrintToLog("INFO: Photon Git Version: %s", version::git_sha1);
+    PrintToLog("INFO: Photon %s, git sha1: %s", build_info::version, build_info::git_sha1);
 
-    PrintToLog("INFO: Running on %s, Build Type: %s", SDL_GetPlatform(), version::build_type);
+    PrintToLog("INFO: Running on %s, Build Type: %s", SDL_GetPlatform(), build_info::build_type);
 
     PHYSFS_init(argv[0]);
     if(!PHYSFS_mount("data", "/", 0)){

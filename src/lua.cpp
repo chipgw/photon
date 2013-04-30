@@ -105,6 +105,38 @@ const luaL_Reg funcs[] = {
 };
 }
 
+namespace gui_funcs{
+
+static int SetMessage(lua_State *L) {
+    if(instance != nullptr){
+        int n = lua_gettop(L);  /* number of arguments */
+        if(n == 1 || n == 2){
+            if(n == 2){
+                instance->gui.game.message_timeout = lua_tonumber(lua, 2);
+            }else{
+                instance->gui.game.message_timeout = INFINITY;
+            }
+            lua_getglobal(L, "tostring");
+            lua_pushvalue(L, -1);  /* function to be called */
+            lua_pushvalue(L, 1);   /* value to print */
+            lua_call(L, 1, 1);
+            instance->gui.game.message = lua_tostring(L, -1);  /* get result */
+            lua_pop(L, 1);  /* pop result */
+
+            PrintToLog("INFO: Lua set message to %s", instance->gui.game.message.c_str());
+        }else{
+            PrintToLog("LUA WARNING: set_message() called with the wrong number of arguments! expected 1 or 2 got %i!", n);
+        }
+    }
+    return 0;
+}
+
+const luaL_Reg funcs[] = {
+    {"set_message", SetMessage},
+    {nullptr, nullptr}
+};
+}
+
 namespace build_info_funcs{
 
 static int IsDebug(lua_State *L) {
@@ -157,6 +189,7 @@ void InitLua(photon_instance &in, const std::string &initscript){
     PHOTON_API_ENTRY("window", window_funcs);
     PHOTON_API_ENTRY("level", level_funcs);
     PHOTON_API_ENTRY("build", build_info_funcs);
+    PHOTON_API_ENTRY("gui", gui_funcs);
 
     lua_setglobal(lua, "photon");
 

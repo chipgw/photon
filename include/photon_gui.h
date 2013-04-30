@@ -35,6 +35,11 @@ struct photon_gui_game{
     photon_gui_bounds toggle_fullscreen_button = {0.12f, 0.02f, 0.84f, 0.94f, 0.0f, -1.0f};
     GLuint toggle_fullscreen_button_texture = 0;
 
+    std::string message;
+    float message_timeout = INFINITY;
+    photon_gui_bounds message_area = {0.7f, 0.4f, -0.3f, 1.0f, 0.0f, -1.0f};
+    GLuint message_background_texture = 0;
+
     glm::vec2 moves_display_location     = glm::vec2(-0.3f, 0.16f);
     glm::vec2 time_display_location      = glm::vec2(-0.3f, 0.06f);
 };
@@ -94,7 +99,7 @@ float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos 
 
 std::pair<int32_t, int32_t> GetTextLimits(const std::string &text, float desired_width, glm::vec2 scale, int32_t end_pos);
 
-void DrawGUI(photon_instance &instance);
+void DrawGUI(photon_instance &instance, float time);
 
 bool InBounds(glm::vec2 coord, const photon_gui_bounds &bounds);
 

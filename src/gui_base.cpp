@@ -52,7 +52,7 @@ void DrawBounds(const photon_gui_bounds &bounds){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void DrawGUI(photon_instance &instance){
+void DrawGUI(photon_instance &instance, float time){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
     static const glm::vec4 base_color(0.9f);
@@ -106,6 +106,20 @@ void DrawGUI(photon_instance &instance){
         gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
         gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
 
+        if(!gui.message.empty() && gui.message_timeout > 0.0f){
+            gui.message_timeout -= time;
+            float strength = std::min(gui.message_timeout, 1.0f);
+            glm::vec4 color = background_color;
+            color.a += strength - 1.0f;
+            // TODO - use a texture for this...
+            glBindTexture(GL_TEXTURE_2D, 0);
+            opengl::SetColorGUI(color);
+            DrawBounds(gui.message_area);
+
+            color = base_color;
+            color.a += strength - 2.0f;
+            RenderText(glm::vec2(gui.message_area.left + 0.04f, gui.message_area.top - small_font.y - 0.04f), small_font, color, false, gui.message);
+        }
 
         if(instance.paused){
             glBindTexture(GL_TEXTURE_2D, 0);

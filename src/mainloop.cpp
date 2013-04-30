@@ -72,7 +72,7 @@ void MainLoop(photon_instance &instance){
 
         opengl::DrawModeGUI(instance.window);
 
-        gui::DrawGUI(instance);
+        gui::DrawGUI(instance, frame_delta);
 
         window_managment::UpdateWindow(instance.window);
 

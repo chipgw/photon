@@ -5,3 +5,5 @@ if photon.build.is_debug() then
 else
   photon.window.toggle_fullscreen()
 end
+
+photon.gui.set_message("testing the message system...", 4)

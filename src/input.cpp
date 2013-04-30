@@ -259,8 +259,10 @@ void DoEvents(photon_instance &instance){
             if(event.key.keysym.sym == SDLK_f && event.key.keysym.mod & KMOD_CTRL){
                 window_managment::ToggleFullscreen(instance.window);
             }else if(event.key.keysym.sym == SDLK_i && event.key.keysym.mod & KMOD_CTRL){
-                // re-detect input.
-                instance.input.is_valid = false;
+                // re-detect input. by doing a garbage collect and an init over again it will detect newly connected controllers.
+                PrintToLog("INFO: Reinitilizing input system to redetect available devices...");
+                GarbageCollect(instance.input);
+                instance.input = InitInput();
             }else if((instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving)){
                 photon_gui_load_save_menu &load_save_menu = instance.gui.load_save_menu;
                 if(event.key.keysym.sym == SDLK_BACKSPACE){

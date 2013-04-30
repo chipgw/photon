@@ -105,6 +105,52 @@ const luaL_Reg funcs[] = {
 };
 }
 
+namespace player_funcs{
+
+static int GetItemCount(lua_State *L) {
+    if(instance != nullptr){
+        int n = lua_gettop(L);  /* number of arguments */
+        if(n == 1){
+            lua_getglobal(L, "tostring");
+            lua_pushvalue(L, -1);  /* function to be called */
+            lua_pushvalue(L, 1);   /* value to print */
+            lua_call(L, 1, 1);
+            std::string type = lua_tostring(L, -1);  /* get result */
+            lua_pop(L, 1);  /* pop result */
+
+            lua_pushnumber(L, player::GetItemCount(instance->player, blocks::GetBlockFromName(type.c_str())));
+            return 1;
+        }else if(n == 0){
+            lua_pushnumber(L, player::GetItemCountCurrent(instance->player));
+            return 1;
+        }else{
+            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+        }
+    }
+    return 0;
+}
+
+static int SetLocation(lua_State *L) {
+    if(instance != nullptr){
+        int n = lua_gettop(L);  /* number of arguments */
+        if(n == 2){
+            instance->player.location.x = lua_tonumber(L, 1);
+            instance->player.location.y = lua_tonumber(L, 2);
+            return 0;
+        }else{
+            PrintToLog("LUA WARNING: set_location() called with the wrong number of arguments! expected 2 got %i!", n);
+        }
+    }
+    return 0;
+}
+
+const luaL_Reg funcs[] = {
+    {"get_item_count", GetItemCount},
+    {"set_location", SetLocation},
+    {nullptr, nullptr}
+};
+}
+
 namespace gui_funcs{
 
 static int SetMessage(lua_State *L) {
@@ -188,8 +234,9 @@ void InitLua(photon_instance &in, const std::string &initscript){
 
     PHOTON_API_ENTRY("window", window_funcs);
     PHOTON_API_ENTRY("level", level_funcs);
-    PHOTON_API_ENTRY("build", build_info_funcs);
+    PHOTON_API_ENTRY("player", player_funcs);
     PHOTON_API_ENTRY("gui", gui_funcs);
+    PHOTON_API_ENTRY("build", build_info_funcs);
 
     lua_setglobal(lua, "photon");
 
@@ -218,7 +265,7 @@ int DoFile(const std::string &filename){
 
             int state = luaL_dostring(lua, buffer);
 
-            if(state!=0){
+            if(state != 0){
                 PrintToLog("LUA ERROR: %s\n", lua_tostring(lua, -1));
                 lua_pop(lua, 1);
             }else{

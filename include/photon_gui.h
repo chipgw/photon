@@ -24,6 +24,26 @@ struct photon_gui_bounds{
         : top(t), bottom(b), left(l), right(r), offset(offsetx, offsety) {}
 };
 
+struct photon_gui_button{
+    photon_gui_bounds bounds;
+    std::string text;
+
+    photon_gui_button(std::string t) : text(t) {}
+    photon_gui_button(std::string t, photon_gui_bounds b) : text(t), bounds(b) {}
+};
+
+struct photon_gui_textbox{
+    photon_gui_bounds bounds;
+    GLuint bounds_texture = 0;
+    std::string text;
+    int16_t cursor = 0;
+};
+
+struct photon_gui_button_list{
+    std::vector<photon_gui_button> buttons;
+    int8_t highlighted = -1;
+};
+
 struct photon_gui_game{
     photon_gui_bounds current_item = {0.44f, 0.04f, -0.8f, -0.4f, 0.0f, -1.0f};
 
@@ -44,26 +64,14 @@ struct photon_gui_game{
     glm::vec2 time_display_location      = glm::vec2(-0.3f, 0.06f);
 };
 
-struct photon_gui_pause_menu{
-    static const std::array<std::pair<std::string, photon_gui_bounds>, 5> buttons;
-
-    int8_t highlighted = -1;
-};
-
-struct photon_gui_main_menu{
-    static const std::array<std::pair<std::string, photon_gui_bounds>, 3> buttons;
-
-    int8_t highlighted = -1;
-};
-
 struct photon_gui_load_save_menu{
     photon_gui_bounds file_list_bounds = { 0.95f,-0.85f,-0.9f, 0.9f};
     photon_gui_bounds filename_box     = {-0.65f,-0.75f,-0.4f, 0.4f};
     GLuint file_list_background = 0;
     GLuint filename_box_background = 0;
 
-    photon_gui_bounds cancel_button  = {-0.80f,-0.95f,-0.9f,-0.3f};
-    photon_gui_bounds confirm_button = {-0.80f,-0.95f, 0.3f, 0.9f};
+    photon_gui_button cancel_button  = {"Cancel",  {-0.80f,-0.95f,-0.9f,-0.3f}};
+    photon_gui_button confirm_button = {"Confirm", {-0.80f,-0.95f, 0.3f, 0.9f}};
 
     std::vector<std::string> file_list;
     int current_file_index = -1;
@@ -76,8 +84,8 @@ struct photon_gui_load_save_menu{
 
 struct photon_gui_container{
     photon_gui_game game;
-    photon_gui_pause_menu pause_menu;
-    photon_gui_main_menu main_menu;
+    photon_gui_button_list pause_menu;
+    photon_gui_button_list main_menu;
     photon_gui_load_save_menu load_save_menu;
 
     // TODO - add other gui states.
@@ -116,6 +124,8 @@ void StartSavingGUI(photon_gui_load_save_menu &gui);
 void ActivateButtonMainMenu(photon_instance &instance, int8_t button);
 
 void ActivateButtonPauseMenu(photon_instance &instance, int8_t button);
+
+void CalculateButtonListBounds(photon_gui_button_list &list, photon_gui_bounds base, float padding);
 
 }
 

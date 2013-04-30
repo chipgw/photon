@@ -6,17 +6,10 @@
 
 namespace photon{
 
-const std::array<std::pair<std::string, photon_gui_bounds>, 5> photon_gui_pause_menu::buttons = {{{"Resume",       { 0.85f, 0.55f, -0.6f, 0.6f}},
-                                                                                                  {"Load",         { 0.50f, 0.20f, -0.6f, 0.6f}},
-                                                                                                  {"Save",         { 0.15f,-0.15f, -0.6f, 0.6f}},
-                                                                                                  {"Exit to Menu", {-0.20f,-0.50f, -0.6f, 0.6f}},
-                                                                                                  {"Exit Game",    {-0.55f,-0.85f, -0.6f, 0.6f}}}};
-
-const std::array<std::pair<std::string, photon_gui_bounds>, 3> photon_gui_main_menu::buttons = {{{"Play",      { 0.50f, 0.20f,-0.9f, 0.3f}},
-                                                                                                 {"Load",      { 0.15f,-0.15f,-0.9f, 0.3f}},
-                                                                                                 {"Exit Game", {-0.20f,-0.50f,-0.9f, 0.3f}}}};
-
 namespace gui{
+
+static const glm::vec4 base_color(0.9f);
+static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
 
 photon_gui_container InitGUI(){
     photon_gui_container gui;
@@ -29,6 +22,18 @@ photon_gui_container InitGUI(){
 
     gui.load_save_menu.file_list_background = texture::Load("/textures/gui/file_list.png");
     gui.load_save_menu.filename_box_background = texture::Load("/textures/gui/text_input_box.png");
+
+    gui.pause_menu.buttons.push_back(photon_gui_button{"Resume"});
+    gui.pause_menu.buttons.push_back(photon_gui_button{"Load"});
+    gui.pause_menu.buttons.push_back(photon_gui_button{"Save"});
+    gui.pause_menu.buttons.push_back(photon_gui_button{"Exit to Menu"});
+    gui.pause_menu.buttons.push_back(photon_gui_button{"Exit Game"});
+    CalculateButtonListBounds(gui.pause_menu, { 0.15f,-0.15f, -0.6f, 0.6f}, 0.02f);
+
+    gui.main_menu.buttons.push_back(photon_gui_button{"Play"});
+    gui.main_menu.buttons.push_back(photon_gui_button{"Load"});
+    gui.main_menu.buttons.push_back(photon_gui_button{"Exit Game"});
+    CalculateButtonListBounds(gui.main_menu, { 0.15f,-0.15f, -0.9f, 0.3f}, 0.02f);
 
     return gui;
 }
@@ -52,33 +57,39 @@ void DrawBounds(const photon_gui_bounds &bounds){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
+void DrawButtonText(photon_gui_button &button, bool highlighted){
+    float padding = (button.bounds.top - button.bounds.bottom) / 3.0f;
+    glm::vec2 size(button.bounds.top - button.bounds.bottom - padding * 1.5f);
+
+    if(highlighted){
+        RenderText(glm::vec2((button.bounds.right + button.bounds.left) / 2.0f, button.bounds.bottom + padding), size, highlight_color, true, button.text);
+    }else{
+        RenderText(glm::vec2((button.bounds.right + button.bounds.left) / 2.0f, button.bounds.bottom + padding), size, base_color, true, button.text);
+    }
+}
+
+void DrawButtonList(photon_gui_button_list &list){
+    for(auto button : list.buttons){
+        DrawBounds(button.bounds);
+    }
+
+    for(uint8_t i = 0; i < list.buttons.size(); i++){
+        DrawButtonText(list.buttons[i], i == list.highlighted);
+    }
+}
+
 void DrawGUI(photon_instance &instance, float time){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
-    static const glm::vec4 base_color(0.9f);
-    static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
     static const glm::vec4 background_color(0.1f, 0.1f, 0.1f, -0.4f);
     static const glm::vec2 small_font(0.05f);
-    static const glm::vec2 medium_font(0.15f);
 
     if(!instance.level.is_valid){
         opengl::SetColorGUI(blank);
 
         glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
 
-        for(auto button : instance.gui.main_menu.buttons){
-            DrawBounds(button.second);
-        }
-
-        for(int i = 0; i < instance.gui.main_menu.buttons.size(); i++){
-            auto button = instance.gui.main_menu.buttons[i];
-
-            if(i == instance.gui.main_menu.highlighted){
-                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first);
-            }else{
-                RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first);
-            }
-        }
+        DrawButtonList(instance.gui.main_menu);
     }else{
         photon_gui_game &gui = instance.gui.game;
         opengl::SetColorGUI(blank);
@@ -130,19 +141,7 @@ void DrawGUI(photon_instance &instance, float time){
 
             glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
 
-            for(auto button : instance.gui.pause_menu.buttons){
-                DrawBounds(button.second);
-            }
-
-            for(int i = 0; i < instance.gui.pause_menu.buttons.size(); i++){
-                auto button = instance.gui.pause_menu.buttons[i];
-
-                if(i == instance.gui.pause_menu.highlighted){
-                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, highlight_color, true, button.first);
-                }else{
-                    RenderText(glm::vec2((button.second.right + button.second.left) / 2.0f, button.second.bottom + 0.1f), medium_font, base_color, true, button.first);
-                }
-            }
+            DrawButtonList(instance.gui.pause_menu);
         }
     }
     if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
@@ -160,11 +159,11 @@ void DrawGUI(photon_instance &instance, float time){
         DrawBounds(gui.filename_box);
 
         glBindTexture(GL_TEXTURE_2D, instance.gui.text_button_texture);
-        DrawBounds(gui.cancel_button);
-        DrawBounds(gui.confirm_button);
+        DrawBounds(gui.cancel_button.bounds);
+        DrawBounds(gui.confirm_button.bounds);
 
-        RenderText(glm::vec2((gui.cancel_button.right  + gui.cancel_button.left)  / 2.0f, gui.cancel_button.bottom  + 0.05f), small_font, base_color, true, "Cancel");
-        RenderText(glm::vec2((gui.confirm_button.right + gui.confirm_button.left) / 2.0f, gui.confirm_button.bottom + 0.05f), small_font, base_color, true, "Confirm");
+        DrawButtonText(gui.cancel_button, false);
+        DrawButtonText(gui.confirm_button, false);
 
         float text_width = gui.filename_box.right - gui.filename_box.left - 0.05f;
         if(GetTextWidth(gui.filename, small_font) > text_width){
@@ -215,10 +214,10 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
 
     // TODO - check other gui states. (you know, the ones that don't exist yet...)
     if(instance.gui.load_save_menu.loading || instance.gui.load_save_menu.saving){
-        if(InBounds(location, instance.gui.load_save_menu.confirm_button)){
+        if(InBounds(location, instance.gui.load_save_menu.confirm_button.bounds)){
             ConfirmLoadSave(instance);
         }
-        if(InBounds(location, instance.gui.load_save_menu.cancel_button)){
+        if(InBounds(location, instance.gui.load_save_menu.cancel_button.bounds)){
             instance.gui.load_save_menu.loading = false;
             instance.gui.load_save_menu.saving  = false;
             SDL_StopTextInput();
@@ -233,7 +232,7 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
         return true;
     }else if(!instance.level.is_valid){
         for(int i = 0; i < instance.gui.main_menu.buttons.size(); i++){
-            if(InBounds(location, instance.gui.main_menu.buttons[i].second)){
+            if(InBounds(location, instance.gui.main_menu.buttons[i].bounds)){
                 ActivateButtonMainMenu(instance, i);
             }
         }
@@ -241,7 +240,7 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
         return true;
     }else if(instance.paused){
         for(int i = 0; i < instance.gui.pause_menu.buttons.size(); i++){
-            if(InBounds(location, instance.gui.pause_menu.buttons[i].second)){
+            if(InBounds(location, instance.gui.pause_menu.buttons[i].bounds)){
                 ActivateButtonPauseMenu(instance, i);
             }
         }
@@ -366,6 +365,18 @@ void ActivateButtonPauseMenu(photon_instance &instance, int8_t button){
         break;
     }
     instance.gui.pause_menu.highlighted = -1;
+}
+
+void CalculateButtonListBounds(photon_gui_button_list &list, photon_gui_bounds base, float padding){
+    float button_height = base.top - base.bottom + padding;
+    float v = (list.buttons.size() - 1) - (list.buttons.size() - 1) / 2.0f;
+
+    for(uint8_t i = 0; i < list.buttons.size(); i++){
+        float y = button_height * (v - i);
+        list.buttons[i].bounds = base;
+        list.buttons[i].bounds.top += y;
+        list.buttons[i].bounds.bottom += y;
+    }
 }
 
 }

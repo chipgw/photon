@@ -133,7 +133,7 @@ void DoInput(photon_instance &instance, float time){
         }
 
     }else if(!instance.level.is_valid){
-        photon_gui_main_menu &menu = instance.gui.main_menu;
+        photon_gui_button_list &menu = instance.gui.main_menu;
         if(IsActivated(input.select)){
             gui::ActivateButtonMainMenu(instance, menu.highlighted);
         }
@@ -148,7 +148,7 @@ void DoInput(photon_instance &instance, float time){
             }
         }
     }else if(instance.paused){
-        photon_gui_pause_menu &menu = instance.gui.pause_menu;
+        photon_gui_button_list &menu = instance.gui.pause_menu;
         if(IsActivated(input.select)){
             gui::ActivateButtonPauseMenu(instance, menu.highlighted);
         }

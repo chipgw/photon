@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<photon_level width="20" height="20" playerx="1" playery="1" mode="script" script="level.lua">
+<photon_level width="20" height="20" playerx="1" playery="1" mode="tnt_harvester" goal="42">
   <inventory>
     <item type="mirror" amount="infinite" />
     <item type="filter_red" amount="infinite" />

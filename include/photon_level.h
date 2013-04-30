@@ -16,7 +16,8 @@ struct photon_level{
         power,          // power up all the recievers to win.
         targets,        // destroy all the targets to win.
         destruction,    // destroy all or <goal> blocks to win.
-        tnt_harvester   // gather all or <goal> TNT blocks to win.
+        tnt_harvester,  // gather all or <goal> TNT blocks to win.
+        script          // uses a script to do the objectives.
     };
 
     std::map<photon_level_coord, photon_block> grid;
@@ -25,6 +26,7 @@ struct photon_level{
     uint8_t width = 0;
     uint8_t height = 0;
 
+    // the time spent on the level.
     float time = 0.0f;
     // the time of either victory or defeat.
     float end_time = INFINITY;

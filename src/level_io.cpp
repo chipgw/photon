@@ -3,6 +3,7 @@
 #include "photon_level.h"
 #include "photon_player.h"
 #include "photon_core.h"
+#include "photon_lua.h"
 
 const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
     return (const xmlChar*)str;
@@ -96,30 +97,6 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
             xmlFree(playery_str);
         }
 
-        xmlChar *mode_str = xmlGetProp(root, "mode"_xml);
-
-        if(xmlStrEqual(mode_str, "power"_xml)){
-            level.mode = photon_level::power;
-        }else if(xmlStrEqual(mode_str, "targets"_xml)){
-            level.mode = photon_level::targets;
-        }else if(xmlStrEqual(mode_str, "destruction"_xml)){
-            level.mode = photon_level::destruction;
-        }else if(xmlStrEqual(mode_str, "tnt_harvester"_xml)){
-            level.mode = photon_level::tnt_harvester;
-        }else{
-            level.mode = photon_level::none;
-        }
-
-        xmlChar *goal_str = xmlGetProp(root, "goal"_xml);
-
-        if(goal_str != nullptr){
-            level.goal = atoi((char*)goal_str);
-
-            xmlFree(goal_str);
-        }
-
-        xmlFree(mode_str);
-
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
@@ -203,6 +180,41 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
                 }
             }
             node = node->next;
+        }
+
+        xmlChar *mode_str = xmlGetProp(root, "mode"_xml);
+
+        if(xmlStrEqual(mode_str, "power"_xml)){
+            level.mode = photon_level::power;
+        }else if(xmlStrEqual(mode_str, "targets"_xml)){
+            level.mode = photon_level::targets;
+        }else if(xmlStrEqual(mode_str, "destruction"_xml)){
+            level.mode = photon_level::destruction;
+        }else if(xmlStrEqual(mode_str, "tnt_harvester"_xml)){
+            level.mode = photon_level::tnt_harvester;
+        }else if(xmlStrEqual(mode_str, "script"_xml)){
+            xmlChar *script_str = xmlGetProp(root, "script"_xml);
+
+            if(script_str != nullptr){
+                if(!lua::DoFile((char*)script_str)){
+                    // only set the mode as script if it worked.
+                    level.mode = photon_level::script;
+                }
+
+                xmlFree(script_str);
+            }
+        }else{
+            level.mode = photon_level::none;
+        }
+
+        xmlFree(mode_str);
+
+        xmlChar *goal_str = xmlGetProp(root, "goal"_xml);
+
+        if(goal_str != nullptr){
+            level.goal = atoi((char*)goal_str);
+
+            xmlFree(goal_str);
         }
 
         level.is_valid = true;

@@ -21,46 +21,20 @@ void DrawButtonList(photon_gui_button_list &list){
     }
 }
 
-void ActivateButtonMainMenu(photon_instance &instance, int8_t button){
-    // TODO - make enum or macro or something to make this more human readable...
-    switch(button){
-    case 0:
-        instance.level = level::LoadLevelXML("/level.xml", instance.player);
-        instance.paused = false;
-        break;
-    case 1:
-        StartLoadingGUI(instance.gui.load_save_menu);
-        break;
-    case 2:
-        // TODO - ask for confirmation.
-        Close(instance);
-        break;
+void ActivateButton(photon_instance &instance, photon_gui_button_list &list, glm::vec2 coordinate){
+    for(int i = 0; i < list.buttons.size(); i++){
+        if(InBounds(coordinate, list.buttons[i].bounds)){
+            ActivateButton(instance, list, i);
+        }
     }
-    instance.gui.main_menu.highlighted = -1;
 }
 
-void ActivateButtonPauseMenu(photon_instance &instance, int8_t button){
-    // TODO - make enum or macro or something to make this more human readable...
-    switch(button){
-    case 0:
-        instance.paused = false;
-        break;
-    case 1:
-        StartLoadingGUI(instance.gui.load_save_menu);
-        break;
-    case 2:
-        StartSavingGUI(instance.gui.load_save_menu);
-        break;
-    case 3:
-        // TODO - ask for confirmation.
-        instance.level = photon_level();
-        break;
-    case 4:
-        // TODO - ask for confirmation.
-        Close(instance);
-        break;
+void ActivateButton(photon_instance &instance, photon_gui_button_list &list, int8_t button){
+    if(button >= 0 && button < list.buttons.size() && list.buttons[button].action != nullptr){
+        list.buttons[button].action(instance);
+
+        list.highlighted = -1;
     }
-    instance.gui.pause_menu.highlighted = -1;
 }
 
 void CalculateButtonListBounds(photon_gui_button_list &list, photon_gui_bounds base, float padding){

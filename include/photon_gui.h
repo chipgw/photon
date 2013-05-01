@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <array>
+#include <functional>
 
 namespace photon{
 struct photon_level;
@@ -28,8 +29,11 @@ struct photon_gui_button{
     photon_gui_bounds bounds;
     std::string text;
 
+    std::function<void(photon_instance&)> action;
+
     photon_gui_button(std::string t) : text(t) {}
-    photon_gui_button(std::string t, photon_gui_bounds b) : text(t), bounds(b) {}
+    photon_gui_button(std::string t, photon_gui_bounds b) : bounds(b), text(t) {}
+    photon_gui_button(std::string t, std::function<void(photon_instance&)> a) : text(t), action(a) {}
 };
 
 struct photon_gui_textbox{
@@ -117,13 +121,13 @@ void ConfirmLoadSave(photon_instance &instance);
 
 void CancelLoadSave(photon_instance &instance);
 
-void StartLoadingGUI(photon_gui_load_save_menu &gui);
+void StartLoadingGUI(photon_instance &instance);
 
-void StartSavingGUI(photon_gui_load_save_menu &gui);
+void StartSavingGUI(photon_instance &instance);
 
-void ActivateButtonMainMenu(photon_instance &instance, int8_t button);
+void ActivateButton(photon_instance &instance, photon_gui_button_list &list, glm::vec2 coordinate);
 
-void ActivateButtonPauseMenu(photon_instance &instance, int8_t button);
+void ActivateButton(photon_instance &instance, photon_gui_button_list &list, int8_t button);
 
 void DrawBounds(const photon_gui_bounds &bounds);
 

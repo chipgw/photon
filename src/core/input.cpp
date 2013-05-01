@@ -135,7 +135,7 @@ void DoInput(photon_instance &instance, float time){
     }else if(!instance.level.is_valid){
         photon_gui_button_list &menu = instance.gui.main_menu;
         if(IsActivated(input.select)){
-            gui::ActivateButtonMainMenu(instance, menu.highlighted);
+            gui::ActivateButton(instance, menu, menu.highlighted);
         }
         if(IsActivated(input.up)){
             if(--menu.highlighted < 0){
@@ -150,7 +150,7 @@ void DoInput(photon_instance &instance, float time){
     }else if(instance.paused){
         photon_gui_button_list &menu = instance.gui.pause_menu;
         if(IsActivated(input.select)){
-            gui::ActivateButtonPauseMenu(instance, menu.highlighted);
+            gui::ActivateButton(instance, menu, menu.highlighted);
         }
         if(IsActivated(input.back) || IsActivated(input.pause)){
             instance.paused = false;
@@ -304,7 +304,7 @@ void DoEvents(photon_instance &instance){
                 instance.paused = !instance.paused;
             }else if(event.key.keysym.sym == SDLK_s && event.key.keysym.mod & KMOD_CTRL){
                 instance.paused = true;
-                gui::StartSavingGUI(instance.gui.load_save_menu);
+                gui::StartSavingGUI(instance);
             }
             break;
         case SDL_QUIT:

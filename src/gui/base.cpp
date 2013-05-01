@@ -23,16 +23,27 @@ photon_gui_container InitGUI(){
     gui.load_save_menu.file_list_background = texture::Load("/textures/gui/file_list.png");
     gui.load_save_menu.filename_box_background = texture::Load("/textures/gui/text_input_box.png");
 
-    gui.pause_menu.buttons.push_back(photon_gui_button{"Resume"});
-    gui.pause_menu.buttons.push_back(photon_gui_button{"Load"});
-    gui.pause_menu.buttons.push_back(photon_gui_button{"Save"});
-    gui.pause_menu.buttons.push_back(photon_gui_button{"Exit to Menu"});
-    gui.pause_menu.buttons.push_back(photon_gui_button{"Exit Game"});
+    gui.pause_menu.buttons.push_back({"Resume",
+                                      [](photon_instance &instance) {
+                                          instance.paused = false;
+                                      } });
+    gui.pause_menu.buttons.push_back({"Load", StartLoadingGUI });
+    gui.pause_menu.buttons.push_back({"Save", StartSavingGUI });
+    gui.pause_menu.buttons.push_back({"Exit to Menu",
+                                      [](photon_instance &instance) {
+                                          instance.level = photon_level();
+                                      } });
+    gui.pause_menu.buttons.push_back({"Exit Game", Close });
+
     CalculateButtonListBounds(gui.pause_menu, { 0.15f,-0.15f, -0.6f, 0.6f}, 0.02f);
 
-    gui.main_menu.buttons.push_back(photon_gui_button{"Play"});
-    gui.main_menu.buttons.push_back(photon_gui_button{"Load"});
-    gui.main_menu.buttons.push_back(photon_gui_button{"Exit Game"});
+    gui.main_menu.buttons.push_back({"Play",
+                                     [](photon_instance &instance) {
+                                         instance.level = level::LoadLevelXML("/level.xml", instance.player);
+                                         instance.paused = false;
+                                     } });
+    gui.main_menu.buttons.push_back({"Load", StartSavingGUI });
+    gui.main_menu.buttons.push_back({"Exit Game", Close});
     CalculateButtonListBounds(gui.main_menu, { 0.15f,-0.15f, -0.9f, 0.3f}, 0.02f);
 
     return gui;
@@ -210,19 +221,11 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
         }
         return true;
     }else if(!instance.level.is_valid){
-        for(int i = 0; i < instance.gui.main_menu.buttons.size(); i++){
-            if(InBounds(location, instance.gui.main_menu.buttons[i].bounds)){
-                ActivateButtonMainMenu(instance, i);
-            }
-        }
+        ActivateButton(instance, instance.gui.main_menu, location);
         // main menu absorbs all clicks.
         return true;
     }else if(instance.paused){
-        for(int i = 0; i < instance.gui.pause_menu.buttons.size(); i++){
-            if(InBounds(location, instance.gui.pause_menu.buttons[i].bounds)){
-                ActivateButtonPauseMenu(instance, i);
-            }
-        }
+        ActivateButton(instance, instance.gui.pause_menu, location);
         // pause menu absorbs all clicks.
         return true;
     }else{
@@ -286,20 +289,20 @@ void FillFileList(photon_gui_load_save_menu &gui){
     }
 }
 
-void StartLoadingGUI(photon_gui_load_save_menu &gui){
-    gui.loading = true;
-    gui.saving  = false;
+void StartLoadingGUI(photon_instance &instance){
+    instance.gui.load_save_menu.loading = true;
+    instance.gui.load_save_menu.saving  = false;
 
-    FillFileList(gui);
+    FillFileList(instance.gui.load_save_menu);
 
     SDL_StartTextInput();
 }
 
-void StartSavingGUI(photon_gui_load_save_menu &gui){
-    gui.loading = false;
-    gui.saving  = true;
+void StartSavingGUI(photon_instance &instance){
+    instance.gui.load_save_menu.loading = false;
+    instance.gui.load_save_menu.saving  = true;
 
-    FillFileList(gui);
+    FillFileList(instance.gui.load_save_menu);
 
     SDL_StartTextInput();
 }

@@ -20,7 +20,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/core/version.cpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/version.cpp" @ONLY)
 
 # files not needed in build, but included so they show up in IDE.
 file(GLOB HEADERS "include/*.h")
@@ -33,6 +33,20 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_
 set(WINDRES "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADERS} ${WINDRES})
+
+file(GLOB CORE_SOURCES "src/core/*.cpp")
+add_library(${PROJECT_NAME}_core STATIC ${CORE_SOURCES})
+
+file(GLOB GAME_SOURCES "src/game/*.cpp")
+add_library(${PROJECT_NAME}_game STATIC ${GAME_SOURCES})
+
+file(GLOB OPENGL_SOURCES "src/opengl/*.cpp")
+add_library(${PROJECT_NAME}_opengl STATIC ${OPENGL_SOURCES})
+
+file(GLOB GUI_SOURCES "src/gui/*.cpp")
+add_library(${PROJECT_NAME}_gui STATIC ${GUI_SOURCES})
+
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_core ${PROJECT_NAME}_game ${PROJECT_NAME}_opengl ${PROJECT_NAME}_gui)
 
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})

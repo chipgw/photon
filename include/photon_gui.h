@@ -125,6 +125,12 @@ void ActivateButtonMainMenu(photon_instance &instance, int8_t button);
 
 void ActivateButtonPauseMenu(photon_instance &instance, int8_t button);
 
+void DrawBounds(const photon_gui_bounds &bounds);
+
+void DrawButtonText(photon_gui_button &button, bool highlighted);
+
+void DrawButtonList(photon_gui_button_list &list);
+
 void CalculateButtonListBounds(photon_gui_button_list &list, photon_gui_bounds base, float padding);
 
 }

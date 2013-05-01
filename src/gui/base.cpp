@@ -57,27 +57,6 @@ void DrawBounds(const photon_gui_bounds &bounds){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void DrawButtonText(photon_gui_button &button, bool highlighted){
-    float padding = (button.bounds.top - button.bounds.bottom) / 3.0f;
-    glm::vec2 size(button.bounds.top - button.bounds.bottom - padding * 1.5f);
-
-    if(highlighted){
-        RenderText(glm::vec2((button.bounds.right + button.bounds.left) / 2.0f, button.bounds.bottom + padding), size, highlight_color, true, button.text);
-    }else{
-        RenderText(glm::vec2((button.bounds.right + button.bounds.left) / 2.0f, button.bounds.bottom + padding), size, base_color, true, button.text);
-    }
-}
-
-void DrawButtonList(photon_gui_button_list &list){
-    for(auto button : list.buttons){
-        DrawBounds(button.bounds);
-    }
-
-    for(uint8_t i = 0; i < list.buttons.size(); i++){
-        DrawButtonText(list.buttons[i], i == list.highlighted);
-    }
-}
-
 void DrawGUI(photon_instance &instance, float time){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
@@ -323,60 +302,6 @@ void StartSavingGUI(photon_gui_load_save_menu &gui){
     FillFileList(gui);
 
     SDL_StartTextInput();
-}
-
-void ActivateButtonMainMenu(photon_instance &instance, int8_t button){
-    // TODO - make enum or macro or something to make this more human readable...
-    switch(button){
-    case 0:
-        instance.level = level::LoadLevelXML("/level.xml", instance.player);
-        instance.paused = false;
-        break;
-    case 1:
-        StartLoadingGUI(instance.gui.load_save_menu);
-        break;
-    case 2:
-        // TODO - ask for confirmation.
-        Close(instance);
-        break;
-    }
-    instance.gui.main_menu.highlighted = -1;
-}
-
-void ActivateButtonPauseMenu(photon_instance &instance, int8_t button){
-    // TODO - make enum or macro or something to make this more human readable...
-    switch(button){
-    case 0:
-        instance.paused = false;
-        break;
-    case 1:
-        StartLoadingGUI(instance.gui.load_save_menu);
-        break;
-    case 2:
-        StartSavingGUI(instance.gui.load_save_menu);
-        break;
-    case 3:
-        // TODO - ask for confirmation.
-        instance.level = photon_level();
-        break;
-    case 4:
-        // TODO - ask for confirmation.
-        Close(instance);
-        break;
-    }
-    instance.gui.pause_menu.highlighted = -1;
-}
-
-void CalculateButtonListBounds(photon_gui_button_list &list, photon_gui_bounds base, float padding){
-    float button_height = base.top - base.bottom + padding;
-    float v = (list.buttons.size() - 1) - (list.buttons.size() - 1) / 2.0f;
-
-    for(uint8_t i = 0; i < list.buttons.size(); i++){
-        float y = button_height * (v - i);
-        list.buttons[i].bounds = base;
-        list.buttons[i].bounds.top += y;
-        list.buttons[i].bounds.bottom += y;
-    }
 }
 
 }

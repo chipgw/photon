@@ -158,7 +158,7 @@ static int SetMessage(lua_State *L) {
         int n = lua_gettop(L);  /* number of arguments */
         if(n == 1 || n == 2){
             if(n == 2){
-                instance->gui.game.message_timeout = lua_tonumber(lua, 2);
+                instance->gui.game.message_timeout = instance->level.time + lua_tonumber(lua, 2);
             }else{
                 instance->gui.game.message_timeout = INFINITY;
             }

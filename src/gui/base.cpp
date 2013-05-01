@@ -75,7 +75,7 @@ void DrawBounds(const photon_gui_bounds &bounds){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void DrawGUI(photon_instance &instance, float time){
+void DrawGUI(photon_instance &instance){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
 
@@ -112,9 +112,8 @@ void DrawGUI(photon_instance &instance, float time){
         gui::RenderText(gui.moves_display_location, instance.gui.small_font, instance.gui.base_color, false, "Moves: %i", instance.level.moves);
         gui::RenderText(gui.time_display_location,  instance.gui.small_font, instance.gui.base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
 
-        if(!gui.message.empty() && gui.message_timeout > 0.0f){
-            gui.message_timeout -= time;
-            float strength = std::min(gui.message_timeout, 1.0f);
+        if(!gui.message.empty() && gui.message_timeout - instance.level.time > 0.0f){
+            float strength = std::min(gui.message_timeout - instance.level.time, 1.0f);
             glm::vec4 color = instance.gui.background_color;
             color.a += strength - 1.0f;
             // TODO - use a texture for this...

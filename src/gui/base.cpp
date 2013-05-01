@@ -8,11 +8,14 @@ namespace photon{
 
 namespace gui{
 
-static const glm::vec4 base_color(0.9f);
-static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
 
 photon_gui_container InitGUI(){
     photon_gui_container gui;
+
+    gui.base_color = glm::vec4(0.9f);
+    gui.highlight_color = glm::vec4(0.9f, 0.8f, 0.4f, 0.9f);
+    gui.background_color = glm::vec4(0.1f, 0.1f, 0.1f, -0.4f);
+    gui.small_font = glm::vec2(0.05f);
 
     gui.game.bar_texture = texture::Load("/textures/gui/bar.png");
     gui.game.pause_menu_button_texture = texture::Load("/textures/gui/pause_button.png");
@@ -36,6 +39,8 @@ photon_gui_container InitGUI(){
     gui.pause_menu.buttons.push_back({"Exit Game", Close });
 
     CalculateButtonListBounds(gui.pause_menu, { 0.15f,-0.15f, -0.6f, 0.6f}, 0.02f);
+    gui.pause_menu.base_color = gui.base_color;
+    gui.pause_menu.highlight_color = gui.highlight_color;
 
     gui.main_menu.buttons.push_back({"Play",
                                      [](photon_instance &instance) {
@@ -45,6 +50,8 @@ photon_gui_container InitGUI(){
     gui.main_menu.buttons.push_back({"Load", StartSavingGUI });
     gui.main_menu.buttons.push_back({"Exit Game", Close});
     CalculateButtonListBounds(gui.main_menu, { 0.15f,-0.15f, -0.9f, 0.3f}, 0.02f);
+    gui.main_menu.base_color = gui.base_color;
+    gui.main_menu.highlight_color = gui.highlight_color;
 
     return gui;
 }
@@ -71,8 +78,6 @@ void DrawBounds(const photon_gui_bounds &bounds){
 void DrawGUI(photon_instance &instance, float time){
     static const photon_gui_bounds fill_bounds(-100.0f, 100.0f, -100.0f, 100.0f);
     static const glm::vec4 blank(0.0f);
-    static const glm::vec4 background_color(0.1f, 0.1f, 0.1f, -0.4f);
-    static const glm::vec2 small_font(0.05f);
 
     if(!instance.level.is_valid){
         opengl::SetColorGUI(blank);
@@ -99,32 +104,32 @@ void DrawGUI(photon_instance &instance, float time){
 
             int8_t count = player::GetItemCountCurrent(instance.player);
             if(count < 0){
-                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), small_font, base_color, false, "infinite");
+                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), instance.gui.small_font, instance.gui.base_color, false, "infinite");
             }else{
-                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), small_font, base_color, false, "%i", count);
+                RenderText(glm::vec2(gui.current_item.left, gui.current_item.bottom), instance.gui.small_font, instance.gui.base_color, false, "%i", count);
             }
         }
-        gui::RenderText(gui.moves_display_location, small_font, base_color, false, "Moves: %i", instance.level.moves);
-        gui::RenderText(gui.time_display_location,  small_font, base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
+        gui::RenderText(gui.moves_display_location, instance.gui.small_font, instance.gui.base_color, false, "Moves: %i", instance.level.moves);
+        gui::RenderText(gui.time_display_location,  instance.gui.small_font, instance.gui.base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
 
         if(!gui.message.empty() && gui.message_timeout > 0.0f){
             gui.message_timeout -= time;
             float strength = std::min(gui.message_timeout, 1.0f);
-            glm::vec4 color = background_color;
+            glm::vec4 color = instance.gui.background_color;
             color.a += strength - 1.0f;
             // TODO - use a texture for this...
             glBindTexture(GL_TEXTURE_2D, 0);
             opengl::SetColorGUI(color);
             DrawBounds(gui.message_area);
 
-            color = base_color;
+            color = instance.gui.base_color;
             color.a += strength - 2.0f;
-            RenderText(glm::vec2(gui.message_area.left + 0.04f, gui.message_area.top - small_font.y - 0.04f), small_font, color, false, gui.message);
+            RenderText(glm::vec2(gui.message_area.left + 0.04f, gui.message_area.top - instance.gui.small_font.y - 0.04f), instance.gui.small_font, color, false, gui.message);
         }
 
         if(instance.paused){
             glBindTexture(GL_TEXTURE_2D, 0);
-            opengl::SetColorGUI(background_color);
+            opengl::SetColorGUI(instance.gui.background_color);
             DrawBounds(fill_bounds);
 
             opengl::SetColorGUI(blank);
@@ -138,7 +143,7 @@ void DrawGUI(photon_instance &instance, float time){
         photon_gui_load_save_menu &gui = instance.gui.load_save_menu;
 
         glBindTexture(GL_TEXTURE_2D, 0);
-        opengl::SetColorGUI(background_color);
+        opengl::SetColorGUI(instance.gui.background_color);
         DrawBounds(fill_bounds);
 
         opengl::SetColorGUI(blank);
@@ -152,28 +157,28 @@ void DrawGUI(photon_instance &instance, float time){
         DrawBounds(gui.cancel_button.bounds);
         DrawBounds(gui.confirm_button.bounds);
 
-        DrawButtonText(gui.cancel_button, false);
-        DrawButtonText(gui.confirm_button, false);
+        DrawButtonText(gui.cancel_button, false, instance.gui.base_color, instance.gui.highlight_color);
+        DrawButtonText(gui.confirm_button, false, instance.gui.base_color, instance.gui.highlight_color);
 
         float text_width = gui.filename_box.right - gui.filename_box.left - 0.05f;
-        if(GetTextWidth(gui.filename, small_font) > text_width){
-            auto limits = GetTextLimits(gui.filename, text_width, small_font, gui.cursor + 4);
+        if(GetTextWidth(gui.filename, instance.gui.small_font) > text_width){
+            auto limits = GetTextLimits(gui.filename, text_width, instance.gui.small_font, gui.cursor + 4);
 
-            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, small_font, base_color, false, gui.filename.substr(limits.first, limits.second - limits.first));
+            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, instance.gui.small_font, instance.gui.base_color, false, gui.filename.substr(limits.first, limits.second - limits.first));
 
-            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, small_font, limits.first, gui.cursor), gui.filename_box.bottom) + 0.025f, small_font, base_color, false, "_");
+            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, instance.gui.small_font, limits.first, gui.cursor), gui.filename_box.bottom) + 0.025f, instance.gui.small_font, instance.gui.base_color, false, "_");
         }else{
-            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, small_font, base_color, false, gui.filename);
+            RenderText(glm::vec2(gui.filename_box.left, gui.filename_box.bottom) + 0.025f, instance.gui.small_font, instance.gui.base_color, false, gui.filename);
 
-            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, small_font, 0, gui.cursor), gui.filename_box.bottom) + 0.025f, small_font, base_color, false, "_");
+            RenderText(glm::vec2(gui.filename_box.left + GetTextWidth(gui.filename, instance.gui.small_font, 0, gui.cursor), gui.filename_box.bottom) + 0.025f, instance.gui.small_font, instance.gui.base_color, false, "_");
         }
         uint16_t i = 0;
         glm::vec2 location(gui.file_list_bounds.left + 0.1f, gui.file_list_bounds.top - 0.15f);
         for(auto file : gui.file_list){
             if(i == gui.current_file_index){
-                RenderText(location, small_font, highlight_color, false, file);
+                RenderText(location, instance.gui.small_font, instance.gui.highlight_color, false, file);
             }else{
-                RenderText(location, small_font, base_color, false, file);
+                RenderText(location, instance.gui.small_font, instance.gui.base_color, false, file);
             }
             location.y -= 0.08f;
             i++;
@@ -182,10 +187,10 @@ void DrawGUI(photon_instance &instance, float time){
 
     if(!instance.input.is_valid){
         glBindTexture(GL_TEXTURE_2D, 0);
-        opengl::SetColorGUI(background_color);
+        opengl::SetColorGUI(instance.gui.background_color);
         DrawBounds(fill_bounds);
         opengl::SetCenterGUI(glm::vec2(0.0f));
-        RenderText(glm::vec2(0.0f), small_font, base_color, true, "Press a button on the device to use...");
+        RenderText(glm::vec2(0.0f), instance.gui.small_font, instance.gui.base_color, true, "Press a button on the device to use...");
     }
 }
 

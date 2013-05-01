@@ -8,10 +8,7 @@ namespace photon{
 
 namespace gui{
 
-static const glm::vec4 base_color(0.9f);
-static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
-
-void DrawButtonText(photon_gui_button &button, bool highlighted){
+void DrawButtonText(photon_gui_button &button, bool highlighted, const glm::vec4 &base_color, const glm::vec4 &highlight_color){
     float padding = (button.bounds.top - button.bounds.bottom) / 3.0f;
     glm::vec2 size(button.bounds.top - button.bounds.bottom - padding * 1.5f);
 

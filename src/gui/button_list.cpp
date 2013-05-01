@@ -8,16 +8,13 @@ namespace photon{
 
 namespace gui{
 
-static const glm::vec4 base_color(0.9f);
-static const glm::vec4 highlight_color(0.9f, 0.8f, 0.4f, 0.9f);
-
 void DrawButtonList(photon_gui_button_list &list){
     for(auto button : list.buttons){
         DrawBounds(button.bounds);
     }
 
     for(uint8_t i = 0; i < list.buttons.size(); i++){
-        DrawButtonText(list.buttons[i], i == list.highlighted);
+        DrawButtonText(list.buttons[i], i == list.highlighted, list.base_color, list.highlight_color);
     }
 }
 

@@ -46,6 +46,9 @@ struct photon_gui_textbox{
 struct photon_gui_button_list{
     std::vector<photon_gui_button> buttons;
     int8_t highlighted = -1;
+
+    glm::vec4 base_color;
+    glm::vec4 highlight_color;
 };
 
 struct photon_gui_game{
@@ -94,6 +97,11 @@ struct photon_gui_container{
 
     // TODO - add other gui states.
 
+    glm::vec4 base_color;
+    glm::vec4 highlight_color;
+    glm::vec4 background_color;
+    glm::vec2 small_font;
+
     GLuint text_button_texture = 0;
 };
 
@@ -131,7 +139,7 @@ void ActivateButton(photon_instance &instance, photon_gui_button_list &list, int
 
 void DrawBounds(const photon_gui_bounds &bounds);
 
-void DrawButtonText(photon_gui_button &button, bool highlighted);
+void DrawButtonText(photon_gui_button &button, bool highlighted, const glm::vec4 &base_color, const glm::vec4 &highlight_color);
 
 void DrawButtonList(photon_gui_button_list &list);
 

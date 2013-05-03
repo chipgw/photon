@@ -13,9 +13,7 @@ namespace photon{
 
 namespace level{
 
-photon_level LoadLevelXML(const std::string &filename, photon_player &player){
-    photon_level level;
-
+bool LoadLevelXML(const std::string &filename, photon_level &level, photon_player &player){
     if(PHYSFS_exists(filename.c_str())){
         PHYSFS_File *file;
         long length;
@@ -24,7 +22,7 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         file = PHYSFS_openRead(filename.c_str());
         if(!file){
             PrintToLog("ERROR: unable to open XML Level \"%s\"", filename.c_str());
-            return level;
+            return false;
         }
 
         length = PHYSFS_fileLength(file);
@@ -37,20 +35,22 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
 
         if(doc == nullptr) {
             PrintToLog("ERROR: Unable to load XML Level: Document not parsed successfully!");
-            return level;
+            return false;
         }
 
         xmlNodePtr root = xmlDocGetRootElement(doc);
         if(root == nullptr) {
             PrintToLog("ERROR: Unable to load XML Level: empty document!");
             xmlFreeDoc(doc);
-            return level;
+            return false;
         }
         if(xmlStrcmp(root->name, "photon_level"_xml)) {
             PrintToLog("ERROR: Unable to load XML Level: root node not photon_level!");
             xmlFreeDoc(doc);
-            return level;
+            return false;
         }
+
+        level = photon_level();
 
         xmlChar *width_str = xmlGetProp(root, "width"_xml);
         xmlChar *height_str = xmlGetProp(root, "height"_xml);
@@ -225,7 +225,7 @@ photon_level LoadLevelXML(const std::string &filename, photon_player &player){
         PrintToLog("ERROR: Unable to load XML Level: \"%s\" does not exist!", filename.c_str());
     }
 
-    return level;
+    return level.is_valid;
 }
 
 void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player){

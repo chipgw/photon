@@ -58,7 +58,7 @@ static int LoadLevel(lua_State *L) {
             file = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            instance->level = level::LoadLevelXML(file, instance->player);
+            level::LoadLevelXML(file, instance->level, instance->player);
 
             PrintToLog("INFO: Lua loaded level file %s", file.c_str());
         }else{
@@ -97,10 +97,29 @@ static int CloseLevel(lua_State *L) {
     return 0;
 }
 
+static int SetCheckVictory(lua_State *L){
+    if(instance != nullptr && lua_gettop(L) == 1 && lua_isfunction(L, -1)){
+        int f = luaL_ref(L, LUA_REGISTRYINDEX);
+
+        if(f != LUA_REFNIL && f != LUA_NOREF){
+            instance->level.mode = photon_level::script;
+            instance->level.lua_checkvictory = f;
+            PrintToLog("INFO: Lua set victory function.");
+        }else{
+            PrintToLog("WARNING: Unable to set lua victory function!");
+        }
+    }else{
+        PrintToLog("WARNING: Unable to set lua victory function!");
+        lua_pushboolean(L, false);
+    }
+    return 1;
+}
+
 const luaL_Reg funcs[] = {
     {"load", LoadLevel},
     {"save", SaveLevel},
     {"close", CloseLevel},
+    {"set_victory_condition", SetCheckVictory},
     {nullptr, nullptr}
 };
 }
@@ -274,6 +293,25 @@ int DoFile(const std::string &filename){
         }
     }
     return 1;
+}
+
+int8_t CheckLuaVictory(int victory_function_ref){
+    if(victory_function_ref != LUA_NOREF && victory_function_ref != LUA_REFNIL){
+        lua_rawgeti(lua, LUA_REGISTRYINDEX, victory_function_ref);
+        if(lua_isfunction(lua, -1)){
+            if(lua_pcall(lua, 0, -1, 0) == 0){
+                int8_t v = lua_tointeger(lua, -1);
+                lua_settop(lua, 0);
+                return v;
+            }
+        }else{
+            PrintToLog("WARNING: CheckLuaVictory called with a lua reference that is not a function!");
+        }
+    }else{
+        PrintToLog("WARNING: CheckLuaVictory called with an invlid reference!");
+    }
+    lua_settop(lua, 0);
+    return -1;
 }
 
 }

@@ -39,6 +39,9 @@ struct photon_level{
 
     int16_t blocks_destroyed = 0;
     int16_t goal = 0;
+
+    // the lua reference to the victory checking function for script game modes.
+    int lua_checkvictory = -2;
 };
 
 namespace level{
@@ -51,7 +54,7 @@ void DrawBeamsLight(photon_level &level);
 
 void DrawFX(photon_level &level);
 
-photon_level LoadLevelXML(const std::string &filename, photon_player &player);
+bool LoadLevelXML(const std::string &filename, photon_level &level, photon_player &player);
 
 void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player);
 

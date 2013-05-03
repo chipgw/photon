@@ -1,4 +1,5 @@
 #include "photon_core.h"
+#include "photon_lua.h"
 
 namespace photon{
 
@@ -97,7 +98,9 @@ int8_t CheckVictory(photon_level &level, photon_player &player){
                     return SetVictoryState(level, -1);
                 }
             }
-
+            break;
+        case photon_level::script:
+            return SetVictoryState(level, lua::CheckLuaVictory(level.lua_checkvictory));
             break;
         }
     }

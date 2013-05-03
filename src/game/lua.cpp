@@ -135,10 +135,13 @@ static int GetItemCount(lua_State *L) {
                 }
             }
 
-            lua_pushnumber(L, count);
+            lua_pushinteger(L, count);
+            return 1;
+        }else if(n == 0){
+            lua_pushinteger(L, instance->level.grid.size());
             return 1;
         }else{
-            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 1 got %i!", n);
+            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
     }
     return 0;
@@ -167,10 +170,10 @@ static int GetItemCount(lua_State *L) {
             std::string type = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            lua_pushnumber(L, player::GetItemCount(instance->player, blocks::GetBlockFromName(type.c_str())));
+            lua_pushinteger(L, player::GetItemCount(instance->player, blocks::GetBlockFromName(type.c_str())));
             return 1;
         }else if(n == 0){
-            lua_pushnumber(L, player::GetItemCountCurrent(instance->player));
+            lua_pushinteger(L, player::GetItemCountCurrent(instance->player));
             return 1;
         }else{
             PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);

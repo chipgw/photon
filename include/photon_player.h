@@ -13,6 +13,8 @@ struct photon_player{
 
     std::map<block_type, int8_t> items;
     block_type current_item = invalid_block;
+
+    bool snap_to_beam = true;
 };
 
 namespace player{

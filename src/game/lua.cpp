@@ -163,9 +163,27 @@ static int SetLocation(lua_State *L) {
     return 0;
 }
 
+static int SnapToBeam(lua_State *L){
+    if(instance != nullptr){
+        int n = lua_gettop(L);
+        if(n == 1){
+            // 1 argument = set snap to beam.
+            instance->player.snap_to_beam = lua_toboolean(L, -1);
+        }else if(n == 0){
+            // no arguments = get snap to beam.
+            lua_pushboolean(L, instance->player.snap_to_beam);
+            return 1;
+        }else{
+            PrintToLog("LUA WARNING: snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+        }
+    }
+    return 0;
+}
+
 const luaL_Reg funcs[] = {
     {"get_item_count", GetItemCount},
     {"set_location", SetLocation},
+    {"snap_to_beam", SnapToBeam},
     {nullptr, nullptr}
 };
 }

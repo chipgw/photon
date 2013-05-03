@@ -33,7 +33,9 @@ void MainLoop(photon_instance &instance){
                 level::AdvanceFrame(instance.level, instance.player, frame_delta);
             }
 
-            instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
+            if(instance.player.snap_to_beam){
+                instance.player.location = player::SnapToBeams(instance.level.beams, instance.player.location);
+            }
 
             opengl::UpdateCenter(instance.player.location + glm::vec2(instance.camera_offset));
 

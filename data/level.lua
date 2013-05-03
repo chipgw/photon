@@ -5,6 +5,7 @@ photon.player.set_location(5, 2)
 
 photon.level.set_victory_condition(function()
     if  photon.player.get_item_count("tnt") >= 12 then
+        photon.player.snap_to_beam(false)
         return 1;
     else
         return 0

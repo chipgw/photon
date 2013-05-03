@@ -115,11 +115,41 @@ static int SetCheckVictory(lua_State *L){
     return 1;
 }
 
+static int GetItemCount(lua_State *L) {
+    if(instance != nullptr){
+        int n = lua_gettop(L);  /* number of arguments */
+        if(n == 1){
+            lua_getglobal(L, "tostring");
+            lua_pushvalue(L, -1);  /* function to be called */
+            lua_pushvalue(L, 1);   /* value to print */
+            lua_call(L, 1, 1);
+            std::string type_str = lua_tostring(L, -1);  /* get result */
+            lua_settop(L, 0);
+
+            int count = 0;
+            block_type type = blocks::GetBlockFromName(type_str.c_str());
+
+            for(auto block : instance->level.grid){
+                if(block.second.type == type){
+                    count++;
+                }
+            }
+
+            lua_pushnumber(L, count);
+            return 1;
+        }else{
+            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 1 got %i!", n);
+        }
+    }
+    return 0;
+}
+
 const luaL_Reg funcs[] = {
     {"load", LoadLevel},
     {"save", SaveLevel},
     {"close", CloseLevel},
     {"set_victory_condition", SetCheckVictory},
+    {"get_item_count", GetItemCount},
     {nullptr, nullptr}
 };
 }

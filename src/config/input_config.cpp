@@ -12,7 +12,7 @@ const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
     return (const xmlChar*)str;
 }
 
-photon_input_state LoadInputSingle(xmlNode *node){
+photon_input_state ParseInputSingle(xmlNode *node){
     photon_input_state state;
     xmlChar *type_str = xmlGetProp(node, "type"_xml);
 
@@ -120,51 +120,51 @@ bool LoadConfig(const std::string &filename, photon_input &input){
 
         while(node != nullptr) {
             if((xmlStrEqual(node->name, "interact"_xml))){
-                input.interact = LoadInputSingle(node);
+                input.interact = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "next_item"_xml))){
-                input.next_item = LoadInputSingle(node);
+                input.next_item = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "previous_item"_xml))){
-                input.previous_item = LoadInputSingle(node);
+                input.previous_item = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "open_inventory"_xml))){
-                input.open_inventory = LoadInputSingle(node);
+                input.open_inventory = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "rotate_clockwise"_xml))){
-                input.rotate_clockwise = LoadInputSingle(node);
+                input.rotate_clockwise = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "rotate_counter_clockwise"_xml))){
-                input.rotate_counter_clockwise = LoadInputSingle(node);
+                input.rotate_counter_clockwise = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "zoom_in"_xml))){
-                input.zoom_in = LoadInputSingle(node);
+                input.zoom_in = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "zoom_out"_xml))){
-                input.zoom_out = LoadInputSingle(node);
+                input.zoom_out = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_right"_xml))){
-                input.move_right = LoadInputSingle(node);
+                input.move_right = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_left"_xml))){
-                input.move_left = LoadInputSingle(node);
+                input.move_left = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_up"_xml))){
-                input.move_up = LoadInputSingle(node);
+                input.move_up = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "move_down"_xml))){
-                input.move_down = LoadInputSingle(node);
+                input.move_down = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "camera_right"_xml))){
-                input.camera_right = LoadInputSingle(node);
+                input.camera_right = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "camera_left"_xml))){
-                input.camera_left = LoadInputSingle(node);
+                input.camera_left = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "camera_up"_xml))){
-                input.camera_up = LoadInputSingle(node);
+                input.camera_up = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "camera_down"_xml))){
-                input.camera_down = LoadInputSingle(node);
+                input.camera_down = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "pause"_xml))){
-                input.pause = LoadInputSingle(node);
+                input.pause = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_up"_xml))){
-                input.up = LoadInputSingle(node);
+                input.up = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_down"_xml))){
-                input.down = LoadInputSingle(node);
+                input.down = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_left"_xml))){
-                input.left = LoadInputSingle(node);
+                input.left = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_right"_xml))){
-                input.right = LoadInputSingle(node);
+                input.right = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_select"_xml))){
-                input.select = LoadInputSingle(node);
+                input.select = ParseInputSingle(node);
             }else if((xmlStrEqual(node->name, "gui_back"_xml))){
-                input.back = LoadInputSingle(node);
+                input.back = ParseInputSingle(node);
             }
             node = node->next;
         }

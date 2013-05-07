@@ -18,29 +18,15 @@ photon_instance Init(int argc, char *argv[]){
 
     PrintToLog("INFO: Running on %s, Build Type: %s", SDL_GetPlatform(), build_info::build_type);
 
-    PHYSFS_init(argv[0]);
-    if(!PHYSFS_mount("data", "/", 0)){
-        PrintToLog("WARNING: PhysFS was unable to mount data as '/', trying archive extensions...");
+    LoadEngineConfig("photon.xml", instance);
 
-        const PHYSFS_ArchiveInfo **types = PHYSFS_supportedArchiveTypes();
-        while((*types) != nullptr){
-            std::string filename = "data.";
-            if(PHYSFS_mount(filename.append((*types)->extension).c_str(), "/", 0)){
-                PrintToLog("INFO: data.%s archive found!", (*types)->extension);
-                break;
-            }
-            types++;
-        }
+    PHYSFS_init(argv[0]);
+    if(!SetRootPhysFS(instance.settings.data_path.c_str(), true)){
+        SetRootPhysFS("data", true);
     }
 
     PHYSFS_setWriteDir(PHYSFS_getBaseDir());
-    if(PHYSFS_mkdir("saves")){
-        if(!PHYSFS_setWriteDir("saves")){
-            PrintToLog("ERROR: unable to set saves directory! %s", PHYSFS_getLastError());
-        }else if(!PHYSFS_mount("saves", "/", 0)){ // makes the "saves" directory also work for custom configs and user modding sorts of things. (not that there is much to mod...)
-            PrintToLog("ERROR: unable to mount saves directory! %s", PHYSFS_getLastError());
-        }
-    }else{
+    if(!SetSavesDirPhysFS(instance.settings.save_path) && !SetSavesDirPhysFS("saves")){
         PrintToLog("ERROR: unable to set saves directory! %s", PHYSFS_getLastError());
     }
 

@@ -18,6 +18,8 @@ struct photon_settings{
     bool fullscreen = true;
 
     int multisamples = 16;
+
+    std::string input_config;
 };
 
 struct photon_instance{
@@ -59,6 +61,11 @@ void Close(photon_instance &instance);
  */
 void PrintToLog(const char *format,...);
 
+bool LoadEngineConfig(const std::string &filename, photon_instance &instance);
+
+bool SetRootPhysFS(const std::string &dir, bool do_archives);
+
+bool SetSavesDirPhysFS(const std::string &dir);
 
 /*!
  * \brief holds version information.

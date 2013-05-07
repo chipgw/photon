@@ -37,6 +37,9 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADE
 file(GLOB CORE_SOURCES "src/core/*.cpp")
 add_library(${PROJECT_NAME}_core STATIC ${CORE_SOURCES})
 
+file(GLOB CONFIG_SOURCES "src/config/*.cpp")
+add_library(${PROJECT_NAME}_config STATIC ${CONFIG_SOURCES})
+
 file(GLOB GAME_SOURCES "src/game/*.cpp")
 add_library(${PROJECT_NAME}_game STATIC ${GAME_SOURCES})
 
@@ -46,7 +49,7 @@ add_library(${PROJECT_NAME}_opengl STATIC ${OPENGL_SOURCES})
 file(GLOB GUI_SOURCES "src/gui/*.cpp")
 add_library(${PROJECT_NAME}_gui STATIC ${GUI_SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_core ${PROJECT_NAME}_game ${PROJECT_NAME}_opengl ${PROJECT_NAME}_gui)
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_core ${PROJECT_NAME}_config ${PROJECT_NAME}_game ${PROJECT_NAME}_opengl ${PROJECT_NAME}_gui)
 
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})

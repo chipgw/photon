@@ -11,7 +11,18 @@
 
 namespace photon{
 
+struct photon_settings{
+    std::string data_path = "data";
+    std::string save_path = "saves";
+
+    bool fullscreen = true;
+
+    int multisamples = 16;
+};
+
 struct photon_instance{
+    photon_settings settings;
+
     photon_window window;
 
     photon_input input;
@@ -33,7 +44,7 @@ struct photon_instance{
     glm::vec3 camera_offset = glm::vec3(0.0f, 0.0f, 4.0f);
 };
 
-photon_instance Init(int argc, char *argv[], bool parseconfig = true);
+photon_instance Init(int argc, char *argv[]);
 
 void MainLoop(photon_instance &instance);
 

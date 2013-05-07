@@ -7,6 +7,8 @@
 #include <SDL.h>
 
 namespace photon{
+struct photon_settings;
+
 /*!
  * \brief The window struct
  */
@@ -35,7 +37,7 @@ namespace window_managment{
  *
  * \return The window created.
 */
-photon_window CreateSDLWindow();
+photon_window CreateSDLWindow(const photon::photon_settings &settings);
 
 /*!
  * \brief Swaps window buffers

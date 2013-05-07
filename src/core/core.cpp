@@ -8,7 +8,7 @@
 namespace photon{
 FILE* logfile;
 
-photon_instance Init(int argc, char *argv[], bool parseconfig){
+photon_instance Init(int argc, char *argv[]){
     photon_instance instance;
 
     logfile = fopen("photon.log", "w");
@@ -44,7 +44,7 @@ photon_instance Init(int argc, char *argv[], bool parseconfig){
         PrintToLog("ERROR: unable to set saves directory! %s", PHYSFS_getLastError());
     }
 
-    instance.window = window_managment::CreateSDLWindow();
+    instance.window = window_managment::CreateSDLWindow(instance.settings);
 
     opengl::InitOpenGL(instance.window);
 

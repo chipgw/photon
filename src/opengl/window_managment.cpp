@@ -11,7 +11,7 @@ namespace photon{
 
 namespace window_managment{
 
-photon_window CreateSDLWindow(){
+photon_window CreateSDLWindow(const photon_settings &settings){
     PrintToLog("INFO: Initializing SDL.");
     photon_window window;
 
@@ -31,11 +31,12 @@ photon_window CreateSDLWindow(){
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
 
-    // TODO - load a setting for this.
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  16);
+    if(settings.multisamples > 0){
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  settings.multisamples);
+    }
 
-    window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS);
+    window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS | (settings.fullscreen * SDL_WINDOW_FULLSCREEN));
 
     if (!window.window_SDL){
         PrintToLog("ERROR: Unable to create window!");

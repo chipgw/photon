@@ -36,6 +36,8 @@ photon_window CreateSDLWindow(const photon_settings &settings){
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  settings.multisamples);
     }
 
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, settings.doublebuffer);
+
     window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS);
 
     if (!window.window_SDL){
@@ -45,14 +47,7 @@ photon_window CreateSDLWindow(const photon_settings &settings){
 
     window.context_SDL = SDL_GL_CreateContext(window.window_SDL);
 
-    // Don't cap framerate on debug builds.
-#ifdef NDEBUG
-    SDL_GL_SetSwapInterval(1);
-#else
-    SDL_GL_SetSwapInterval(0);
-#endif
-
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetSwapInterval(settings.vsync);
 
     SDL_ShowCursor(SDL_ENABLE);
 

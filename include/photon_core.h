@@ -17,6 +17,8 @@ struct photon_settings{
 
     bool fullscreen = true;
 
+    bool vsync = true;
+    bool doublebuffer = true;
     int multisamples = 16;
 
     std::string input_config;

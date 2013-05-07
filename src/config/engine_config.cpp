@@ -83,6 +83,30 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(fullscreen_str);
     }
 
+    xmlChar *doublebuffer_str = xmlGetProp(root, "doublebuffer"_xml);
+
+    if(doublebuffer_str != nullptr){
+        if(xmlStrEqual(doublebuffer_str, "true"_xml)){
+            instance.settings.doublebuffer = true;
+        }else if(xmlStrEqual(doublebuffer_str, "false"_xml)){
+            instance.settings.doublebuffer = false;
+        }
+
+        xmlFree(doublebuffer_str);
+    }
+
+    xmlChar *vsync_str = xmlGetProp(root, "vsync"_xml);
+
+    if(vsync_str != nullptr){
+        if(xmlStrEqual(vsync_str, "true"_xml)){
+            instance.settings.vsync = true;
+        }else if(xmlStrEqual(vsync_str, "false"_xml)){
+            instance.settings.vsync = false;
+        }
+
+        xmlFree(vsync_str);
+    }
+
     xmlChar *input_config = xmlGetProp(root, "input"_xml);
 
     if(input_config != nullptr){

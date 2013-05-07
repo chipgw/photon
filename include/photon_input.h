@@ -48,6 +48,8 @@ struct photon_input{
     // pointer to the game controller to use for gamecontroller_* types
     SDL_GameController* controller = nullptr;
 
+    float deadzone = 0.16f;
+
     photon_input_state move_right;
     photon_input_state move_left;
 

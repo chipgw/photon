@@ -116,6 +116,14 @@ bool LoadConfig(const std::string &filename, photon_input &input){
         xmlFree(device_str);
         xmlFree(guid_str);
 
+        xmlChar *deadzone_str = xmlGetProp(root, "deadzone"_xml);
+
+        if(deadzone_str != nullptr){
+            input.deadzone = atof((char*)deadzone_str);
+
+            xmlFree(deadzone_str);
+        }
+
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {

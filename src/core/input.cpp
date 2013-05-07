@@ -33,11 +33,7 @@ void DoInputSingle(photon_input_state &state, photon_input &input){
                 state.current_state = -state.current_state;
             }
         }
-        // deadzone. TODO - make setting.
-        if(fabs(state.current_state) < 0.16f){
-            state.current_state = 0.0f;
-        }
-        if(state.current_state < 0.0f){
+        if(state.current_state < input.deadzone){
             state.current_state = 0.0f;
         }
         break;
@@ -51,11 +47,7 @@ void DoInputSingle(photon_input_state &state, photon_input &input){
         if(state.axis_input_negate){
             state.current_state = -state.current_state;
         }
-        // deadzone. TODO - make setting.
-        if(fabs(state.current_state) < 0.16f){
-            state.current_state = 0.0f;
-        }
-        if(state.current_state < 0.0f){
+        if(state.current_state < input.deadzone){
             state.current_state = 0.0f;
         }
         break;

@@ -107,6 +107,14 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(save_path);
     }
 
+    xmlChar *multisample_str = xmlGetProp(root, "multisamples"_xml);
+
+    if(multisample_str != nullptr){
+        instance.settings.multisamples = atoi((char*)multisample_str);
+
+        xmlFree(multisample_str);
+    }
+
     xmlFreeDoc(doc);
 
     return true;

@@ -21,6 +21,8 @@ struct photon_settings{
     bool doublebuffer = true;
     int multisamples = 16;
 
+    bool screen_edges = true;
+
     std::string input_config;
 };
 

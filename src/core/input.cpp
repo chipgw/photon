@@ -169,19 +169,24 @@ void DoInput(photon_instance &instance, float time){
         if(SDL_GetMouseFocus() == instance.window.window_SDL){
             glm::ivec2 mouse;
             uint32_t buttons = SDL_GetMouseState(&mouse.x, &mouse.y);
-            cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
-            cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
 
-            glm::vec2 delta = WindowToWorldCoord(instance, mouse.x, mouse.y) - instance.player.location;
-            if(buttons & SDL_BUTTON_LMASK){
-                if(glm::length(delta) > 0.5f){
-                    instance.player.location += delta * time;
-                }
+            if(instance.settings.screen_edges){
+                cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
+                cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
             }
-            if(buttons & SDL_BUTTON_RMASK){
-                float angle = glm::degrees(glm::atan(delta.y, delta.x));
 
-                blocks::OnRotate(glm::uvec2(instance.player.location + 0.5f), instance.level, angle);
+            if(input.enable_mouse){
+                glm::vec2 delta = WindowToWorldCoord(instance, mouse.x, mouse.y) - instance.player.location;
+                if(buttons & SDL_BUTTON_LMASK){
+                    if(glm::length(delta) > 0.5f){
+                        instance.player.location += delta * time;
+                    }
+                }
+                if(buttons & SDL_BUTTON_RMASK){
+                    float angle = glm::degrees(glm::atan(delta.y, delta.x));
+
+                    blocks::OnRotate(glm::uvec2(instance.player.location + 0.5f), instance.level, angle);
+                }
             }
         }
 

@@ -85,6 +85,9 @@ struct photon_input{
     photon_input_state back;
 
     bool is_valid = false;
+
+    bool enable_mouse = true;
+
     // for events to figure out what device to use.
     std::vector<SDL_Joystick*> open_joysticks;
     std::vector<SDL_GameController*> open_controllers;

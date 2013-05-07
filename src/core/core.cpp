@@ -39,6 +39,10 @@ photon_instance Init(int argc, char *argv[]){
 
     instance.input = input::InitInput();
 
+    if(!instance.settings.input_config.empty()){
+        input::LoadConfig(instance.settings.input_config, instance.input);
+    }
+
     lua::InitLua(instance, "/init.lua");
 
     return instance;

@@ -36,7 +36,7 @@ photon_window CreateSDLWindow(const photon_settings &settings){
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  settings.multisamples);
     }
 
-    window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS | (settings.fullscreen * SDL_WINDOW_FULLSCREEN));
+    window.window_SDL = SDL_CreateWindow("Photon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, PHOTON_WINDOW_FLAGS);
 
     if (!window.window_SDL){
         PrintToLog("ERROR: Unable to create window!");
@@ -55,6 +55,10 @@ photon_window CreateSDLWindow(const photon_settings &settings){
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     SDL_ShowCursor(SDL_ENABLE);
+
+    if(settings.fullscreen){
+        ToggleFullscreen(window);
+    }
 
     SetWindowIcon(window, "/textures/gui/window_icon.png");
 

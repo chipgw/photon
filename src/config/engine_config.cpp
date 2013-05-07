@@ -115,6 +115,18 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(input_config);
     }
 
+    xmlChar *screenedges_str = xmlGetProp(root, "screen_edges"_xml);
+
+    if(screenedges_str != nullptr){
+        if(xmlStrEqual(screenedges_str, "true"_xml)){
+            instance.settings.screen_edges = true;
+        }else if(xmlStrEqual(screenedges_str, "false"_xml)){
+            instance.settings.screen_edges = false;
+        }
+
+        xmlFree(screenedges_str);
+    }
+
     xmlChar *data_path = xmlGetProp(root, "data_path"_xml);
 
     if(data_path != nullptr){

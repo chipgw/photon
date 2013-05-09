@@ -60,8 +60,8 @@ int8_t CheckVictory(photon_level &level, photon_player &player){
             break;
         case photon_level::power:{
             for(auto &block : level.grid){
-                if(block.second.type == reciever){
-                    // if any reciever is not powered return false.
+                if(block.second.type == receiver){
+                    // if any receiver is not powered return false.
                     if(block.second.power < 0.9f){
                         return 0;
                     }

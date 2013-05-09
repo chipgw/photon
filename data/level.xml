@@ -13,7 +13,7 @@
   <data>
     <row y="1">
       <block x="0" type="emitter_white" angle="0" />
-      <block x="21" type="reciever" angle="180" />
+      <block x="21" type="receiver" angle="180" />
     </row>
     <row y="2">
       <block x="1" type="tnt" />

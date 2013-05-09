@@ -15,6 +15,11 @@ GLuint texture_filter_yellow;
 GLuint texture_filter_cyan;
 GLuint texture_filter_magenta;
 GLuint texture_emitter;
+GLuint texture_receiver;
+GLuint texture_receiver_fx;
+GLuint texture_receiver_fx_red;
+GLuint texture_receiver_fx_green;
+GLuint texture_receiver_fx_blue;
 GLuint texture_target;
 
 namespace photon{
@@ -104,13 +109,12 @@ void Draw(photon_block block, glm::uvec2 location){
         glBindTexture(GL_TEXTURE_2D, texture_emitter);
         DrawBlock(location, 0.5f, block.angle);
         break;
-    case reciever:
-    case reciever_white:
-    case reciever_red:
-    case reciever_green:
-    case reciever_blue:
-        // TODO - make a seperate texture.
-        glBindTexture(GL_TEXTURE_2D, texture_emitter);
+    case receiver:
+    case receiver_white:
+    case receiver_red:
+    case receiver_green:
+    case receiver_blue:
+        glBindTexture(GL_TEXTURE_2D, texture_receiver);
         DrawBlock(location, 0.5f, block.angle);
         break;
     }
@@ -158,6 +162,13 @@ GLuint GetBlockTexture(block_type type){
     case emitter_blue:
         return texture_emitter;
         break;
+    case receiver:
+    case receiver_white:
+    case receiver_red:
+    case receiver_green:
+    case receiver_blue:
+        return texture_receiver;
+        break;
     }
 }
 
@@ -175,6 +186,27 @@ void DrawFX(photon_block block, glm::uvec2 location){
         opengl::SetFacFX(block.power);
         DrawBlock(location, 1.5);
         break;
+    case receiver:
+    case receiver_white:
+        glBindTexture(GL_TEXTURE_2D, texture_receiver_fx);
+        opengl::SetFacFX(block.power + 0.2f);
+        DrawBlock(location, 0.5f, block.angle);
+        break;
+    case receiver_red:
+        glBindTexture(GL_TEXTURE_2D, texture_receiver_fx_red);
+        opengl::SetFacFX(block.power + 0.2f);
+        DrawBlock(location, 0.5f, block.angle);
+        break;
+    case receiver_green:
+        glBindTexture(GL_TEXTURE_2D, texture_receiver_fx_green);
+        opengl::SetFacFX(block.power + 0.2f);
+        DrawBlock(location, 0.5f, block.angle);
+        break;
+    case receiver_blue:
+        glBindTexture(GL_TEXTURE_2D, texture_receiver_fx_blue);
+        opengl::SetFacFX(block.power + 0.2f);
+        DrawBlock(location, 0.5f, block.angle);
+        break;
     }
 }
 
@@ -190,6 +222,11 @@ void LoadTextures(){
     texture_filter_cyan = texture::Load("/textures/blocks/filter_cyan.png");;
     texture_filter_magenta = texture::Load("/textures/blocks/filter_magenta.png");;
     texture_emitter = texture::Load("/textures/blocks/emitter.png");
+    texture_receiver = texture::Load("/textures/blocks/receiver.png");
+    texture_receiver_fx = texture::Load("/textures/blocks/receiver_fx.png");
+    texture_receiver_fx_red = texture::Load("/textures/blocks/receiver_fx_red.png");
+    texture_receiver_fx_green = texture::Load("/textures/blocks/receiver_fx_green.png");
+    texture_receiver_fx_blue = texture::Load("/textures/blocks/receiver_fx_blue.png");
     texture_explosion = texture::Load("/textures/explosion.png");
     texture_target = texture::Load("/textures/blocks/target.png");
 }

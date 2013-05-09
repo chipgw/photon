@@ -25,12 +25,12 @@ enum block_type{
     emitter_green,
     emitter_blue,
 
-    // laser reciever.
-    reciever,
-    reciever_white,
-    reciever_red,
-    reciever_green,
-    reciever_blue,
+    // laser receiver.
+    receiver,
+    receiver_white,
+    receiver_red,
+    receiver_green,
+    receiver_blue,
 
     target, // things to destroy in targets game mode.
 
@@ -51,7 +51,7 @@ struct photon_block{
     // block type.
     block_type type = air;
 
-    // the angle in degrees of a block, only used by mirrors, emitters & recievers.
+    // the angle in degrees of a block, only used by mirrors, emitters & receivers.
     float angle = 0.0f;
     // used for various things depending on the block type...
     float power = 0.0f;

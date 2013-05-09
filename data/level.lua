@@ -14,7 +14,7 @@ photon.level.set_victory_condition(function()
         -- sets a new victory condition. (objective 2)
         photon.level.set_victory_condition(function()
             if  photon.level.get_item_count("target") < 1 then
-                photon.gui.set_message("congratulations you have won!\nnow leave the level using a reciever.", 4)
+                photon.gui.set_message("congratulations you have won!\nnow leave the level using a receiver.", 4)
                 return 1;
             end
             return 0

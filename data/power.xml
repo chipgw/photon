@@ -26,7 +26,7 @@
       <block x="14" type="plain" />
       <block x="15" type="plain" />
       <block x="16" type="plain" />
-      <block x="17" type="reciever" angle="180" />
+      <block x="17" type="receiver" angle="180" />
     </row>
     <row y="2">
       <block x="1" type="tnt" />
@@ -154,7 +154,7 @@
       <block x="14" type="plain" />
       <block x="15" type="plain" />
       <block x="16" type="plain" />
-      <block x="17" type="reciever" angle="180" />
+      <block x="17" type="receiver" angle="180" />
     </row>
   </data>
 </photon_level>

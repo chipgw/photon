@@ -136,9 +136,9 @@ bool LoadLevelXML(const std::string &filename, photon_level &level, photon_playe
                                 if(block.type == mirror || block.type == mirror_locked ||
                                         block.type == emitter_white || block.type == emitter_red ||
                                         block.type == emitter_green || block.type == emitter_blue ||
-                                        block.type == reciever_white || block.type == reciever_red ||
-                                        block.type == reciever_green || block.type == reciever_blue ||
-                                        block.type == reciever){
+                                        block.type == receiver_white || block.type == receiver_red ||
+                                        block.type == receiver_green || block.type == receiver_blue ||
+                                        block.type == receiver){
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
 

@@ -16,33 +16,33 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         case air:
         default:
             break;
-        case reciever:
+        case receiver:
             block.power++;
             // stops tracing the laser.
             return nullptr;
             break;
-        case reciever_red:
+        case receiver_red:
             if(segment->color.r > 0.8f){
                 block.power++;
             }
             // stops tracing the laser.
             return nullptr;
             break;
-        case reciever_green:
+        case receiver_green:
             if(segment->color.g > 0.8f){
                 block.power++;
             }
             // stops tracing the laser.
             return nullptr;
             break;
-        case reciever_blue:
+        case receiver_blue:
             if(segment->color.b > 0.8f){
                 block.power++;
             }
             // stops tracing the laser.
             return nullptr;
             break;
-        case reciever_white:
+        case receiver_white:
             if(segment->color.r > 0.8f && segment->color.g > 0.8f && segment->color.b > 0.8f){
                 block.power++;
             }
@@ -179,11 +179,11 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
             level.moves++;
         }
         break;
-    case reciever:
-    case reciever_red:
-    case reciever_green:
-    case reciever_blue:
-    case reciever_white:
+    case receiver:
+    case receiver_red:
+    case receiver_green:
+    case receiver_blue:
+    case receiver_white:
         if(level::CheckVictory(level, player) > 0){
             // TODO - show victory screen.
             PrintToLog("INFO: VICTORY!");
@@ -298,11 +298,11 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             beam.origin_angle = block.angle;
             break;
         }
-        case reciever:
-        case reciever_red:
-        case reciever_green:
-        case reciever_blue:
-        case reciever_white:
+        case receiver:
+        case receiver_red:
+        case receiver_green:
+        case receiver_blue:
+        case receiver_white:
             block.power = 0.0f;
             break;
         }
@@ -357,11 +357,11 @@ const char* GetBlockName(block_type type){
         CASESTR(emitter_red);
         CASESTR(emitter_green);
         CASESTR(emitter_blue);
-        CASESTR(reciever);
-        CASESTR(reciever_white);
-        CASESTR(reciever_red);
-        CASESTR(reciever_green);
-        CASESTR(reciever_blue);
+        CASESTR(receiver);
+        CASESTR(receiver_white);
+        CASESTR(receiver_red);
+        CASESTR(receiver_green);
+        CASESTR(receiver_blue);
         CASESTR(target);
         CASESTR(tnt);
         CASESTR(tnt_fireball);
@@ -387,11 +387,11 @@ block_type GetBlockFromName(const char* name){
     else CASESTR(emitter_red)
     else CASESTR(emitter_green)
     else CASESTR(emitter_blue)
-    else CASESTR(reciever)
-    else CASESTR(reciever_white)
-    else CASESTR(reciever_red)
-    else CASESTR(reciever_green)
-    else CASESTR(reciever_blue)
+    else CASESTR(receiver)
+    else CASESTR(receiver_white)
+    else CASESTR(receiver_red)
+    else CASESTR(receiver_green)
+    else CASESTR(receiver_blue)
     else CASESTR(target)
     else CASESTR(tnt)
     else CASESTR(tnt_fireball)

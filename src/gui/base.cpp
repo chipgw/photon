@@ -8,7 +8,6 @@ namespace photon{
 
 namespace gui{
 
-
 photon_gui_container InitGUI(){
     photon_gui_container gui;
 
@@ -112,18 +111,22 @@ void DrawGUI(photon_instance &instance){
         gui::RenderText(gui.moves_display_location, instance.gui.small_font, instance.gui.base_color, false, "Moves: %i", instance.level.moves);
         gui::RenderText(gui.time_display_location,  instance.gui.small_font, instance.gui.base_color, false, "Time: %i:%02i", int(instance.level.time) / 60, int(instance.level.time) % 60);
 
-        if(!gui.message.empty() && gui.message_timeout - instance.level.time > 0.0f){
-            float strength = std::min(gui.message_timeout - instance.level.time, 1.0f);
-            glm::vec4 color = instance.gui.background_color;
-            color.a += strength - 1.0f;
-            // TODO - use a texture for this...
-            glBindTexture(GL_TEXTURE_2D, 0);
-            opengl::SetColorGUI(color);
-            DrawBounds(gui.message_area);
+        if(!gui.message.empty()){
+            if(gui.message_timeout - instance.level.time > 0.0f){
+                float strength = std::min(gui.message_timeout - instance.level.time, 1.0f);
+                glm::vec4 color = instance.gui.background_color;
+                color.a += strength - 1.0f;
+                // TODO - use a texture for this...
+                glBindTexture(GL_TEXTURE_2D, 0);
+                opengl::SetColorGUI(color);
+                DrawBounds(gui.message_area);
 
-            color = instance.gui.base_color;
-            color.a += strength - 2.0f;
-            RenderText(glm::vec2(gui.message_area.left + 0.04f, gui.message_area.top - instance.gui.small_font.y - 0.04f), instance.gui.small_font, color, false, gui.message);
+                color = instance.gui.base_color;
+                color.a += strength - 2.0f;
+                RenderText(glm::vec2(gui.message_area.left + 0.04f, gui.message_area.top - instance.gui.small_font.y - 0.04f), instance.gui.small_font, color, false, gui.message);
+            }else{
+                gui.message.clear();
+            }
         }
 
         if(instance.paused){

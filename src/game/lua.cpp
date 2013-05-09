@@ -7,6 +7,13 @@ namespace photon{
 
 namespace lua{
 
+struct timer{
+    int lua_call_ref = LUA_NOREF;
+    float timeout = INFINITY;
+};
+
+std::vector<timer> timers;
+
 lua_State *lua = nullptr;
 photon_instance *instance = nullptr;
 
@@ -26,6 +33,43 @@ static int Print(lua_State *L) {
     }
     PrintToLog(s.c_str());
     return 0;
+}
+
+namespace generic_funcs{
+
+static int After(lua_State *L){
+    if(instance != nullptr){
+        if(lua_gettop(L) == 2 && lua_isfunction(L, 1) && lua_isnumber(L, 2)){
+            timer t;
+            t.timeout = instance->level.time + lua_tonumber(L, 2);
+            lua_pop(L, 1);
+
+            int f = luaL_ref(L, LUA_REGISTRYINDEX);
+
+            if(f != LUA_REFNIL && f != LUA_NOREF){
+                t.lua_call_ref = f;
+
+                timers.push_back(t);
+
+                lua_pushboolean(L, true);
+            }else{
+                PrintToLog("WARNING: Unable to create timer: error getting function reference!");
+                lua_pushboolean(L, false);
+            }
+        }else{
+            PrintToLog("WARNING: Unable to create timer: invalid arguments!");
+            lua_pushboolean(L, false);
+        }
+        return 1;
+    }
+    return 0;
+}
+
+static const luaL_Reg funcs[] = {
+    {"after", After},
+    {nullptr, nullptr}
+};
+
 }
 
 namespace window_funcs{
@@ -308,9 +352,29 @@ void InitLua(photon_instance &in, const std::string &initscript){
     PHOTON_API_ENTRY("gui", gui_funcs);
     PHOTON_API_ENTRY("build", build_info_funcs);
 
+    luaL_setfuncs(lua, generic_funcs::funcs, 0);
+
     lua_setglobal(lua, "photon");
 
     DoFile(initscript);
+}
+
+void AdvanceFrame(){
+    if(instance != nullptr){
+        for(auto i = timers.begin(); i != timers.end();){
+            timer &t = *i;
+            if(t.timeout < instance->level.time && t.lua_call_ref != LUA_NOREF && t.lua_call_ref != LUA_REFNIL){
+                lua_rawgeti(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+                if(!lua_isfunction(lua, -1) || lua_pcall(lua, 0, -1, 0) != 0){
+                    PrintToLog("WARNING: calling timer function failed!");
+                }
+                i = timers.erase(i);
+                luaL_unref(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+            }else{
+                ++i;
+            }
+        }
+    }
 }
 
 void GarbageCollect(){

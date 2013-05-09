@@ -1,5 +1,9 @@
 -- sets the popup message with a timeout of 4 seconds.
-photon.gui.set_message("first I want you to gather 12 tnt...", 4)
+photon.gui.set_message("Welcome to Photon " .. photon.build.version() .. "!", 4)
+
+photon.after(function()
+    photon.gui.set_message("first I want you to gather 12 tnt...", 4)
+end, 3)
 
 -- sets the photon's location.
 photon.player.set_location(5, 2)

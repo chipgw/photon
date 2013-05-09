@@ -40,6 +40,8 @@ void AdvanceFrame(photon_level &level, photon_player &player, float time){
 
     level.time += time;
 
+    lua::AdvanceFrame();
+
     // if victory_state is 0 before checking but not after then defeat occured. (keeps it from repeating message over and over)
     if(level.victory_state == 0 && level::CheckVictory(level, player) < 0){
         PrintToLog("INFO: DEFEAT! (game is unwinnable)");

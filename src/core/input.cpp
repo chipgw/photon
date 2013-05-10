@@ -170,7 +170,8 @@ void DoInput(photon_instance &instance, float time){
             glm::ivec2 mouse;
             uint32_t buttons = SDL_GetMouseState(&mouse.x, &mouse.y);
 
-            if(instance.settings.screen_edges){
+            // if the mouse position is (0,0) chances are it hasn't recieved the first event yet... I should try to find a better way to fix this, but this will do for now...
+            if(instance.settings.screen_edges && !(mouse == glm::ivec2(0))){
                 cam_offset.x += (std::max(80 + mouse.x - int(instance.window.width),  0) - std::max(80 - mouse.x, 0)) / 80.0f;
                 cam_offset.y += (std::max(80 - mouse.y, 0) - std::max(80 + mouse.y - int(instance.window.height), 0)) / 80.0f;
             }

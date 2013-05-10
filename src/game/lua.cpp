@@ -107,7 +107,7 @@ static int LoadLevel(lua_State *L) {
 
             PrintToLog("INFO: Lua loaded level file %s", file.c_str());
         }else{
-            PrintToLog("LUA WARNING: load_level() called with the wrong number of arguments! expected 1 got %i!", n);
+            PrintToLog("LUA WARNING: level.load() called with the wrong number of arguments! expected 1 got %i!", n);
         }
     }
     return 0;
@@ -127,9 +127,9 @@ static int SaveLevel(lua_State *L) {
 
             level::SaveLevelXML(file, instance->level, instance->player);
 
-            PrintToLog("INFO: Lua loaded level file %s", file.c_str());
+            PrintToLog("INFO: Lua saved level file %s", file.c_str());
         }else{
-            PrintToLog("LUA WARNING: load_level() called with the wrong number of arguments! expected 1 got %i!", n);
+            PrintToLog("LUA WARNING: level.save() called with the wrong number of arguments! expected 1 got %i!", n);
         }
     }
     return 0;
@@ -149,12 +149,12 @@ static int SetCheckVictory(lua_State *L){
         if(f != LUA_REFNIL && f != LUA_NOREF){
             instance->level.mode = photon_level::script;
             instance->level.lua_checkvictory = f;
-            PrintToLog("INFO: Lua set victory function.");
+            PrintToLog("INFO: Lua set victory condition.");
         }else{
-            PrintToLog("WARNING: Unable to set lua victory function!");
+            PrintToLog("WARNING: Unable to set lua victory condition!");
         }
     }else{
-        PrintToLog("WARNING: Unable to set lua victory function!");
+        PrintToLog("WARNING: Unable to set lua victory condition!");
         lua_pushboolean(L, false);
     }
     return 1;
@@ -186,7 +186,7 @@ static int GetItemCount(lua_State *L) {
             lua_pushinteger(L, instance->level.grid.size());
             return 1;
         }else{
-            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+            PrintToLog("LUA WARNING: level.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
     }
     return 0;
@@ -221,7 +221,7 @@ static int GetItemCount(lua_State *L) {
             lua_pushinteger(L, player::GetItemCountCurrent(instance->player));
             return 1;
         }else{
-            PrintToLog("LUA WARNING: get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+            PrintToLog("LUA WARNING: player.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
     }
     return 0;
@@ -235,7 +235,7 @@ static int SetLocation(lua_State *L) {
             instance->player.location.y = lua_tonumber(L, 2);
             return 0;
         }else{
-            PrintToLog("LUA WARNING: set_location() called with the wrong number of arguments! expected 2 got %i!", n);
+            PrintToLog("LUA WARNING: player.set_location() called with the wrong number of arguments! expected 2 got %i!", n);
         }
     }
     return 0;
@@ -252,7 +252,7 @@ static int SnapToBeam(lua_State *L){
             lua_pushboolean(L, instance->player.snap_to_beam);
             return 1;
         }else{
-            PrintToLog("LUA WARNING: snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+            PrintToLog("LUA WARNING: player.snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
     }
     return 0;
@@ -284,7 +284,7 @@ static int SetMessage(lua_State *L) {
             instance->gui.game.message = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            PrintToLog("INFO: Lua set message to %s", instance->gui.game.message.c_str());
+            PrintToLog("INFO: Lua set message to \"%s\"", instance->gui.game.message.c_str());
         }else{
             PrintToLog("LUA WARNING: set_message() called with the wrong number of arguments! expected 1 or 2 got %i!", n);
         }

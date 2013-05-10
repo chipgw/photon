@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
 <photon_level width="20" height="20" playerx="1" playery="1" mode="script" script="level.lua">
   <inventory>
-    <item type="mirror" amount="infinite" />
+    <item type="mirror" amount="10" />
     <item type="filter_red" amount="infinite" />
     <item type="filter_green" amount="infinite" />
     <item type="filter_blue" amount="infinite" />
     <item type="filter_yellow" amount="infinite" />
     <item type="filter_cyan" amount="infinite" />
     <item type="filter_magenta" amount="infinite" />
-    <item type="tnt" amount="10" />
   </inventory>
   <data>
     <row y="1">

@@ -1,9 +1,8 @@
-#include <physfs.h>
-#include <libxml/parser.h>
-#include "photon_level.h"
-#include "photon_player.h"
 #include "photon_core.h"
 #include "photon_lua.h"
+
+#include <physfs.h>
+#include <libxml/parser.h>
 
 const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
     return (const xmlChar*)str;

@@ -1,10 +1,6 @@
 #include "photon_core.h"
 #include "photon_texture.h"
 
-#include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
 namespace photon{
 
 void MainLoop(photon_instance &instance){

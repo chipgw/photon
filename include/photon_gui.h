@@ -3,9 +3,6 @@
 
 #include "photon_opengl.h"
 
-#include <glm/glm.hpp>
-#include <string>
-#include <array>
 #include <functional>
 
 namespace photon{

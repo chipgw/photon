@@ -5,9 +5,9 @@ include_directories("./include")
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1) # is 1 during alpha.
-set(VERSION_PATCH 4) # 4 for alpha4
+set(VERSION_PATCH 5) # 5 for alpha5
 
-set(PHOTON_VERSION "alpha4")
+set(PHOTON_VERSION "alpha5")
 
 set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -Wall")

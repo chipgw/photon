@@ -26,7 +26,7 @@ namespace photon{
 
 namespace blocks{
 
-void DrawBlock(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
+void DrawBlock(glm::vec2 location, float size = 0.5f, float rotation = 0.0f){
     static const float verts[] = { 1.0f, 1.0f,
                                    1.0f,-1.0f,
                                   -1.0f,-1.0f,
@@ -53,7 +53,7 @@ void DrawBlock(glm::uvec2 location, float size = 0.5f, float rotation = 0.0f){
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void Draw(photon_block block, glm::uvec2 location){
+void Draw(photon_block block, glm::vec2 location){
     switch(block.type){
     default:
         break;
@@ -117,6 +117,14 @@ void Draw(photon_block block, glm::uvec2 location){
         glBindTexture(GL_TEXTURE_2D, texture_receiver);
         DrawBlock(location, 0.5f, block.angle);
         break;
+    case move:{
+        // TODO - make texture.
+        glBindTexture(GL_TEXTURE_2D, texture_indestructible_block);
+        glm::vec2 offset(location);
+        offset += glm::vec2(cos(block.angle) * block.power, sin(block.angle) * block.power);
+        DrawBlock(offset);
+        break;
+    }
     }
 }
 
@@ -172,7 +180,7 @@ GLuint GetBlockTexture(block_type type){
     }
 }
 
-void DrawFX(photon_block block, glm::uvec2 location){
+void DrawFX(photon_block block, glm::vec2 location){
     switch(block.type){
     default:
         break;

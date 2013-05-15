@@ -10,7 +10,6 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     photon_level_coord coord(location.x, location.y);
     if(level.grid.count(coord)){
         photon_block &block = level.grid[coord];
-        block.activated = true;
 
         switch(block.type){
         case air:
@@ -147,7 +146,21 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             }
             break;
         }
+        case move:{
+            // if the block was already activated or the segment angle is not a multiple of 90 reset.
+            if(block.activated || fmod(segment->angle, 90.0f) != 0.0f
+                    || level.grid.count(photon_level_coord(cos(block.angle) + location.x, sin(block.angle) + location.y))){
+                block.angle = 0.0f;
+                block.power = 0.0f;
+            }else{
+                block.angle = segment->angle;
+                block.power += time;
+            }
+            break;
         }
+        }
+
+        block.activated = true;
     }
     return segment;
 }
@@ -305,6 +318,17 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
         case receiver_white:
             block.power = 0.0f;
             break;
+        case move:
+            if(!block.activated){
+                block.power = 0.0f;
+            }else if(block.power >= 0.8f){
+                block.power--;
+                glm::uvec2 newlocation = glm::uvec2(cos(block.angle), sin(block.angle)) + location;
+                photon_level_coord newcoord(newlocation.x, newlocation.y);
+                level.grid[newcoord] = block;
+                level.grid.erase(coord);
+            }
+            break;
         }
         block.activated = false;
     }
@@ -336,8 +360,8 @@ void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength)
     glm::uvec2 end = location + dist;
 
     unsigned int y = current.y;
-    for(;current.x <= end.x;current.x++){
-        for(current.y = y;current.y <= end.y;current.y++){
+    for(;current.x <= end.x; current.x++){
+        for(current.y = y; current.y <= end.y; current.y++){
             OnDamage(current, level, std::max(2.0f - (glm::distance2(glm::vec2(current), glm::vec2(location)) / strength), 0.0f));
         }
     }
@@ -371,6 +395,7 @@ const char* GetBlockName(block_type type){
         CASESTR(filter_yellow);
         CASESTR(filter_cyan);
         CASESTR(filter_magenta);
+        CASESTR(move);
     }
 }
 #undef CASESTR
@@ -401,6 +426,7 @@ block_type GetBlockFromName(const char* name){
     else CASESTR(filter_yellow)
     else CASESTR(filter_cyan)
     else CASESTR(filter_magenta)
+    else CASESTR(move)
     else{
         return invalid_block;
     }

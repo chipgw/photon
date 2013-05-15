@@ -7,7 +7,7 @@ namespace level{
 
 void Draw(photon_level &level){
     for(auto &block : level.grid){
-        blocks::Draw(block.second, glm::uvec2(block.first.first, block.first.second));
+        blocks::Draw(block.second, glm::vec2(block.first.first, block.first.second));
     }
 }
 
@@ -25,7 +25,7 @@ void DrawBeamsLight(photon_level &level){
 
 void DrawFX(photon_level &level){
     for(auto &block : level.grid){
-        blocks::DrawFX(block.second, glm::uvec2(block.first.first, block.first.second));
+        blocks::DrawFX(block.second, glm::vec2(block.first.first, block.first.second));
     }
 }
 

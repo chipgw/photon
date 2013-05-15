@@ -43,7 +43,9 @@ enum block_type{
     filter_blue,
     filter_yellow,
     filter_cyan,
-    filter_magenta
+    filter_magenta,
+
+    move // moves when activated (no diagonal)
 };
 
 
@@ -81,9 +83,9 @@ void DamageAroundPoint(glm::uvec2 location, photon_level &level, float strength)
 
 // Drawing functions
 
-void Draw(photon_block block, glm::uvec2 location);
+void Draw(photon_block block, glm::vec2 location);
 
-void DrawFX(photon_block block, glm::uvec2 location);
+void DrawFX(photon_block block, glm::vec2 location);
 
 void LoadTextures();
 

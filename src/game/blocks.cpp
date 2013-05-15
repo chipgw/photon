@@ -149,7 +149,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         case move:{
             // if the block was already activated or the segment angle is not a multiple of 90 reset.
             if(block.activated || fmod(segment->angle, 90.0f) != 0.0f
-                    || level.grid.count(photon_level_coord(cos(block.angle) + location.x, sin(block.angle) + location.y))){
+                    || level.grid.count(photon_level_coord(glm::cos(glm::radians(segment->angle)) + location.x, glm::sin(glm::radians(segment->angle)) + location.y))){
                 block.angle = 0.0f;
                 block.power = 0.0f;
             }else{
@@ -323,7 +323,7 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
                 block.power = 0.0f;
             }else if(block.power >= 0.8f){
                 block.power--;
-                glm::uvec2 newlocation = glm::uvec2(cos(block.angle), sin(block.angle)) + location;
+                glm::uvec2 newlocation = glm::uvec2(glm::cos(glm::radians(block.angle)) + location.x, glm::sin(glm::radians(block.angle)) + location.y);
                 photon_level_coord newcoord(newlocation.x, newlocation.y);
                 level.grid[newcoord] = block;
                 level.grid.erase(coord);

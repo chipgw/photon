@@ -121,7 +121,7 @@ void Draw(photon_block block, glm::vec2 location){
         // TODO - make texture.
         glBindTexture(GL_TEXTURE_2D, texture_indestructible_block);
         glm::vec2 offset(location);
-        offset += glm::vec2(cos(block.angle) * block.power, sin(block.angle) * block.power);
+        offset += glm::vec2(glm::cos(glm::radians(block.angle)) * block.power, glm::sin(glm::radians(block.angle)) * block.power);
         DrawBlock(offset);
         break;
     }

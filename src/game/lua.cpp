@@ -103,7 +103,7 @@ static int LoadLevel(lua_State *L) {
             file = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            level::LoadLevelXML(file, instance->level, instance->player);
+            level::LoadLevelXML(file, *instance);
 
             PrintToLog("INFO: Lua loaded level file %s", file.c_str());
         }else{
@@ -369,13 +369,22 @@ void AdvanceFrame(){
                 if(!lua_isfunction(lua, -1) || lua_pcall(lua, 0, -1, 0) != 0){
                     PrintToLog("WARNING: calling timer function failed!");
                 }
-                i = timers.erase(i);
                 luaL_unref(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+                i = timers.erase(i);
             }else{
                 ++i;
             }
         }
     }
+}
+
+void Reset(){
+    for(timer &t : timers){
+        luaL_unref(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+    }
+    timers.clear();
+
+    // TODO - reset any script created globals (i.e. anything other than "photon")
 }
 
 void GarbageCollect(){

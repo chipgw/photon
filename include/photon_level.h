@@ -55,7 +55,7 @@ void DrawBeamsLight(photon_level &level);
 
 void DrawFX(photon_level &level);
 
-bool LoadLevelXML(const std::string &filename, photon_level &level, photon_player &player);
+bool LoadLevelXML(const std::string &filename, photon_instance &instance);
 
 void SaveLevelXML(const std::string &filename, const photon_level &level, const photon_player &player);
 

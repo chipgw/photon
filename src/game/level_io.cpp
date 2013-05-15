@@ -12,7 +12,9 @@ namespace photon{
 
 namespace level{
 
-bool LoadLevelXML(const std::string &filename, photon_level &level, photon_player &player){
+bool LoadLevelXML(const std::string &filename, photon_instance &instance){
+    photon_level &level = instance.level;
+    photon_player &player = instance.player;
     if(PHYSFS_exists(filename.c_str())){
         PHYSFS_File *file;
         long length;
@@ -50,6 +52,8 @@ bool LoadLevelXML(const std::string &filename, photon_level &level, photon_playe
         }
 
         level = photon_level();
+        lua::Reset();
+        instance.gui.game.message.clear();
 
         xmlChar *width_str = xmlGetProp(root, "width"_xml);
         xmlChar *height_str = xmlGetProp(root, "height"_xml);

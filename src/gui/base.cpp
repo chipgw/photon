@@ -43,7 +43,7 @@ photon_gui_container InitGUI(){
 
     gui.main_menu.buttons.push_back({"Play",
                                      [](photon_instance &instance) {
-                                         level::LoadLevelXML("/level.xml", instance.level, instance.player);
+                                         level::LoadLevelXML("/level.xml", instance);
                                          instance.paused = false;
                                      } });
     gui.main_menu.buttons.push_back({"Load", StartSavingGUI });
@@ -252,7 +252,7 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
 void ConfirmLoadSave(photon_instance &instance){
     if(instance.gui.load_save_menu.loading && !instance.gui.load_save_menu.saving){
         // TODO - make a popup box with an unable to load message if it failed.
-        level::LoadLevelXML(instance.gui.load_save_menu.filename, instance.level, instance.player);
+        level::LoadLevelXML(instance.gui.load_save_menu.filename, instance);
     }else if(instance.gui.load_save_menu.saving && !instance.gui.load_save_menu.loading){
         // TODO - some GUI feedback of whether or not it actually saved.
         level::SaveLevelXML(instance.gui.load_save_menu.filename, instance.level, instance.player);

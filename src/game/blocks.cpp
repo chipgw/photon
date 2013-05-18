@@ -11,6 +11,9 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
     if(level.grid.count(coord)){
         photon_block &block = level.grid[coord];
 
+        bool wasactivated = block.activated;
+        block.activated = true;
+
         switch(block.type){
         case air:
         default:
@@ -148,7 +151,7 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
         }
         case move:{
             // if the block was already activated or the segment angle is not a multiple of 90 reset.
-            if(block.activated || fmod(segment->angle, 90.0f) != 0.0f
+            if(wasactivated || fmod(segment->angle, 90.0f) != 0.0f
                     || level.grid.count(photon_level_coord(glm::cos(glm::radians(segment->angle)) + location.x, glm::sin(glm::radians(segment->angle)) + location.y))){
                 block.angle = 0.0f;
                 block.power = 0.0f;
@@ -159,8 +162,6 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             break;
         }
         }
-
-        block.activated = true;
     }
     return segment;
 }

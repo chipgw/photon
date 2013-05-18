@@ -46,7 +46,7 @@ photon_gui_container InitGUI(){
                                          level::LoadLevelXML("/level.xml", instance);
                                          instance.paused = false;
                                      } });
-    gui.main_menu.buttons.push_back({"Load", StartSavingGUI });
+    gui.main_menu.buttons.push_back({"Load", StartLoadingGUI });
     gui.main_menu.buttons.push_back({"Exit Game", Close});
     CalculateButtonListBounds(gui.main_menu, { 0.15f,-0.15f, -0.9f, 0.3f}, 0.02f);
     gui.main_menu.base_color = gui.base_color;

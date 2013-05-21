@@ -4,10 +4,6 @@
 #include <physfs.h>
 #include <libxml/parser.h>
 
-const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
-    return (const xmlChar*)str;
-}
-
 namespace photon{
 
 namespace level{
@@ -45,7 +41,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
             xmlFreeDoc(doc);
             return false;
         }
-        if(xmlStrcmp(root->name, "photon_level"_xml)) {
+        if(xmlStrcmp(root->name, (const xmlChar*)"photon_level")) {
             PrintToLog("ERROR: Unable to load XML Level: root node not photon_level!");
             xmlFreeDoc(doc);
             return false;
@@ -55,8 +51,8 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
         lua::Reset();
         instance.gui.game.message.clear();
 
-        xmlChar *width_str = xmlGetProp(root, "width"_xml);
-        xmlChar *height_str = xmlGetProp(root, "height"_xml);
+        xmlChar *width_str = xmlGetProp(root, (const xmlChar*)"width");
+        xmlChar *height_str = xmlGetProp(root, (const xmlChar*)"height");
 
         int w = atoi((char*)width_str);
         int h = atoi((char*)height_str);
@@ -89,8 +85,8 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
             level.grid[photon_level_coord(level.width - 1, y)].type = indestructible;
         }
 
-        xmlChar *playerx_str = xmlGetProp(root, "playerx"_xml);
-        xmlChar *playery_str = xmlGetProp(root, "playery"_xml);
+        xmlChar *playerx_str = xmlGetProp(root, (const xmlChar*)"playerx");
+        xmlChar *playery_str = xmlGetProp(root, (const xmlChar*)"playery");
 
         if(playerx_str && playery_str){
             player.location.x = atof((char*)playerx_str);
@@ -103,11 +99,11 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
-            if((xmlStrEqual(node->name, "data"_xml))){
+            if((xmlStrEqual(node->name, (const xmlChar*)"data"))){
                 xmlNode *row = node->xmlChildrenNode;
                 while(row != nullptr){
-                    if((xmlStrEqual(row->name, "row"_xml))){
-                        xmlChar *y_str = xmlGetProp(row, "y"_xml);
+                    if((xmlStrEqual(row->name, (const xmlChar*)"row"))){
+                        xmlChar *y_str = xmlGetProp(row, (const xmlChar*)"y");
                         uint8_t y = atoi((char*)y_str);
                         xmlFree(y_str);
 
@@ -119,8 +115,8 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
 
                         xmlNode *block_xml = row->xmlChildrenNode;
                         while(block_xml != nullptr) {
-                            if((xmlStrEqual(block_xml->name, "block"_xml))){
-                                xmlChar *x_str = xmlGetProp(block_xml, "x"_xml);
+                            if((xmlStrEqual(block_xml->name, (const xmlChar*)"block"))){
+                                xmlChar *x_str = xmlGetProp(block_xml, (const xmlChar*)"x");
                                 uint8_t x = atoi((char*)x_str);
                                 xmlFree(x_str);
 
@@ -130,7 +126,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
                                     continue;
                                 }
 
-                                xmlChar *type_str = xmlGetProp(block_xml, "type"_xml);
+                                xmlChar *type_str = xmlGetProp(block_xml, (const xmlChar*)"type");
 
                                 photon_block &block = level.grid[photon_level_coord(x,y)];
 
@@ -143,7 +139,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
                                         block.type == receiver_green || block.type == receiver_blue ||
                                         block.type == receiver){
 
-                                    xmlChar *angle_str = xmlGetProp(block_xml, "angle"_xml);
+                                    xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar*)"angle");
 
                                     block.angle = atof((char*)angle_str);
 
@@ -158,17 +154,17 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
 
                     row = row->next;
                 }
-            }else if((xmlStrEqual(node->name, "inventory"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"inventory"))){
                 player.items.clear();
                 xmlNode *item = node->xmlChildrenNode;
                 while(item != nullptr) {
-                    if((xmlStrEqual(item->name, "item"_xml))){
-                        xmlChar *type_str = xmlGetProp(item, "type"_xml);
+                    if((xmlStrEqual(item->name, (const xmlChar*)"item"))){
+                        xmlChar *type_str = xmlGetProp(item, (const xmlChar*)"type");
                         block_type type = blocks::GetBlockFromName((char*)type_str);
                         if(type != invalid_block){
-                            xmlChar *amount_str = xmlGetProp(item, "amount"_xml);
+                            xmlChar *amount_str = xmlGetProp(item, (const xmlChar*)"amount");
 
-                            if((xmlStrEqual(amount_str, "infinite"_xml))){
+                            if((xmlStrEqual(amount_str, (const xmlChar*)"infinite"))){
                                 player::GiveInfiniteItems(player, type);
                             }else{
                                 player::AddItem(player, type, atoi((char*)amount_str));
@@ -185,18 +181,18 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
             node = node->next;
         }
 
-        xmlChar *mode_str = xmlGetProp(root, "mode"_xml);
+        xmlChar *mode_str = xmlGetProp(root, (const xmlChar*)"mode");
 
-        if(xmlStrEqual(mode_str, "power"_xml)){
+        if(xmlStrEqual(mode_str, (const xmlChar*)"power")){
             level.mode = photon_level::power;
-        }else if(xmlStrEqual(mode_str, "targets"_xml)){
+        }else if(xmlStrEqual(mode_str, (const xmlChar*)"targets")){
             level.mode = photon_level::targets;
-        }else if(xmlStrEqual(mode_str, "destruction"_xml)){
+        }else if(xmlStrEqual(mode_str, (const xmlChar*)"destruction")){
             level.mode = photon_level::destruction;
-        }else if(xmlStrEqual(mode_str, "tnt_harvester"_xml)){
+        }else if(xmlStrEqual(mode_str, (const xmlChar*)"tnt_harvester")){
             level.mode = photon_level::tnt_harvester;
-        }else if(xmlStrEqual(mode_str, "script"_xml)){
-            xmlChar *script_str = xmlGetProp(root, "script"_xml);
+        }else if(xmlStrEqual(mode_str, (const xmlChar*)"script")){
+            xmlChar *script_str = xmlGetProp(root, (const xmlChar*)"script");
 
             if(script_str != nullptr){
                 if(!lua::DoFile((char*)script_str)){
@@ -212,7 +208,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
 
         xmlFree(mode_str);
 
-        xmlChar *goal_str = xmlGetProp(root, "goal"_xml);
+        xmlChar *goal_str = xmlGetProp(root, (const xmlChar*)"goal");
 
         if(goal_str != nullptr){
             level.goal = atoi((char*)goal_str);
@@ -235,39 +231,39 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
     xmlChar *xmlbuff;
     int buffersize;
 
-    xmlDoc *doc = xmlNewDoc("1.0"_xml);
-    xmlNode *root = xmlNewNode(nullptr, "photon_level"_xml);
+    xmlDoc *doc = xmlNewDoc((const xmlChar*)"1.0");
+    xmlNode *root = xmlNewNode(nullptr, (const xmlChar*)"photon_level");
     xmlDocSetRootElement(doc, root);
 
-    xmlSetProp(root, "width"_xml,  (const xmlChar*)std::to_string(level.width  - 2).c_str());
-    xmlSetProp(root, "height"_xml, (const xmlChar*)std::to_string(level.height - 2).c_str());
+    xmlSetProp(root, (const xmlChar*)"width",  (const xmlChar*)std::to_string(level.width  - 2).c_str());
+    xmlSetProp(root, (const xmlChar*)"height", (const xmlChar*)std::to_string(level.height - 2).c_str());
 
-    xmlSetProp(root, "playerx"_xml, (const xmlChar*)std::to_string(player.location.x).c_str());
-    xmlSetProp(root, "playery"_xml, (const xmlChar*)std::to_string(player.location.y).c_str());
+    xmlSetProp(root, (const xmlChar*)"playerx", (const xmlChar*)std::to_string(player.location.x).c_str());
+    xmlSetProp(root, (const xmlChar*)"playery", (const xmlChar*)std::to_string(player.location.y).c_str());
 
-    xmlNode *inventory = xmlNewNode(nullptr, "inventory"_xml);
+    xmlNode *inventory = xmlNewNode(nullptr, (const xmlChar*)"inventory");
     xmlAddChild(root, inventory);
 
     for(auto item : player.items){
-        xmlNode* item_xml = xmlNewNode(nullptr, "item"_xml);
+        xmlNode* item_xml = xmlNewNode(nullptr, (const xmlChar*)"item");
         xmlAddChild(inventory, item_xml);
-        xmlSetProp(item_xml, "type"_xml, (const xmlChar*)blocks::GetBlockName(item.first));
+        xmlSetProp(item_xml, (const xmlChar*)"type", (const xmlChar*)blocks::GetBlockName(item.first));
 
         if(item.second > 0){
-            xmlSetProp(item_xml, "amount"_xml, (const xmlChar*)std::to_string(item.second).c_str());
+            xmlSetProp(item_xml, (const xmlChar*)"amount", (const xmlChar*)std::to_string(item.second).c_str());
         }else{
-            xmlSetProp(item_xml, "amount"_xml, "infinite"_xml);
+            xmlSetProp(item_xml, (const xmlChar*)"amount", (const xmlChar*)"infinite");
         }
     }
 
-    xmlNode *data = xmlNewNode(nullptr, "data"_xml);
+    xmlNode *data = xmlNewNode(nullptr, (const xmlChar*)"data");
     xmlAddChild(root, data);
 
     std::map<uint8_t, xmlNode*> rows;
 
     for(auto block : level.grid){
-        xmlNode* block_xml = xmlNewNode(nullptr, "block"_xml);
-        xmlSetProp(block_xml, "x"_xml, (const xmlChar*)std::to_string(block.first.first).c_str());
+        xmlNode* block_xml = xmlNewNode(nullptr, (const xmlChar*)"block");
+        xmlSetProp(block_xml, (const xmlChar*)"x", (const xmlChar*)std::to_string(block.first.first).c_str());
 
         switch(block.second.type){
         case mirror:
@@ -276,7 +272,7 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
         case emitter_red:
         case emitter_green:
         case emitter_blue:
-            xmlSetProp(block_xml, "angle"_xml, (const xmlChar*)std::to_string(block.second.angle).c_str());
+            xmlSetProp(block_xml, (const xmlChar*)"angle", (const xmlChar*)std::to_string(block.second.angle).c_str());
         case tnt:
             // TODO - store TNT warmup.
             break;
@@ -292,12 +288,12 @@ void SaveLevelXML(const std::string &filename, const photon_level &level, const 
             break;
         }
 
-        xmlSetProp(block_xml, "type"_xml, (const xmlChar*)blocks::GetBlockName(block.second.type));
+        xmlSetProp(block_xml, (const xmlChar*)"type", (const xmlChar*)blocks::GetBlockName(block.second.type));
         if(rows.count(block.first.second)){
             xmlAddChild(rows[block.first.second], block_xml);
         }else{
-            xmlNode* row_xml = xmlNewNode(nullptr, "row"_xml);
-            xmlSetProp(row_xml, "y"_xml, (const xmlChar*)std::to_string(block.first.second).c_str());
+            xmlNode* row_xml = xmlNewNode(nullptr, (const xmlChar*)"row");
+            xmlSetProp(row_xml, (const xmlChar*)"y", (const xmlChar*)std::to_string(block.first.second).c_str());
             xmlAddChild(data, row_xml);
             rows[block.first.second] = row_xml;
             xmlAddChild(row_xml, block_xml);

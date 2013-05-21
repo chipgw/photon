@@ -47,10 +47,6 @@ bool SetSavesDirPhysFS(const std::string &dir){
     return false;
 }
 
-const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
-    return (const xmlChar*)str;
-}
-
 bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
     xmlDocPtr doc = xmlParseFile(filename.c_str());
 
@@ -65,49 +61,49 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFreeDoc(doc);
         return false;
     }
-    if(xmlStrcmp(root->name, "photon_config"_xml)) {
+    if(xmlStrcmp(root->name, (const xmlChar*)"photon_config")) {
         PrintToLog("ERROR: Unable to load XML config: root node not photon_input!");
         xmlFreeDoc(doc);
         return false;
     }
 
-    xmlChar *fullscreen_str = xmlGetProp(root, "fullscreen"_xml);
+    xmlChar *fullscreen_str = xmlGetProp(root, (const xmlChar*)"fullscreen");
 
     if(fullscreen_str != nullptr){
-        if(xmlStrEqual(fullscreen_str, "true"_xml)){
+        if(xmlStrEqual(fullscreen_str, (const xmlChar*)"true")){
             instance.settings.fullscreen = true;
-        }else if(xmlStrEqual(fullscreen_str, "false"_xml)){
+        }else if(xmlStrEqual(fullscreen_str, (const xmlChar*)"false")){
             instance.settings.fullscreen = false;
         }
 
         xmlFree(fullscreen_str);
     }
 
-    xmlChar *doublebuffer_str = xmlGetProp(root, "doublebuffer"_xml);
+    xmlChar *doublebuffer_str = xmlGetProp(root, (const xmlChar*)"doublebuffer");
 
     if(doublebuffer_str != nullptr){
-        if(xmlStrEqual(doublebuffer_str, "true"_xml)){
+        if(xmlStrEqual(doublebuffer_str, (const xmlChar*)"true")){
             instance.settings.doublebuffer = true;
-        }else if(xmlStrEqual(doublebuffer_str, "false"_xml)){
+        }else if(xmlStrEqual(doublebuffer_str, (const xmlChar*)"false")){
             instance.settings.doublebuffer = false;
         }
 
         xmlFree(doublebuffer_str);
     }
 
-    xmlChar *vsync_str = xmlGetProp(root, "vsync"_xml);
+    xmlChar *vsync_str = xmlGetProp(root, (const xmlChar*)"vsync");
 
     if(vsync_str != nullptr){
-        if(xmlStrEqual(vsync_str, "true"_xml)){
+        if(xmlStrEqual(vsync_str, (const xmlChar*)"true")){
             instance.settings.vsync = true;
-        }else if(xmlStrEqual(vsync_str, "false"_xml)){
+        }else if(xmlStrEqual(vsync_str, (const xmlChar*)"false")){
             instance.settings.vsync = false;
         }
 
         xmlFree(vsync_str);
     }
 
-    xmlChar *input_config = xmlGetProp(root, "input"_xml);
+    xmlChar *input_config = xmlGetProp(root, (const xmlChar*)"input");
 
     if(input_config != nullptr){
         instance.settings.input_config = (char*)input_config;
@@ -115,19 +111,19 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(input_config);
     }
 
-    xmlChar *screenedges_str = xmlGetProp(root, "screen_edges"_xml);
+    xmlChar *screenedges_str = xmlGetProp(root, (const xmlChar*)"screen_edges");
 
     if(screenedges_str != nullptr){
-        if(xmlStrEqual(screenedges_str, "true"_xml)){
+        if(xmlStrEqual(screenedges_str, (const xmlChar*)"true")){
             instance.settings.screen_edges = true;
-        }else if(xmlStrEqual(screenedges_str, "false"_xml)){
+        }else if(xmlStrEqual(screenedges_str, (const xmlChar*)"false")){
             instance.settings.screen_edges = false;
         }
 
         xmlFree(screenedges_str);
     }
 
-    xmlChar *data_path = xmlGetProp(root, "data_path"_xml);
+    xmlChar *data_path = xmlGetProp(root, (const xmlChar*)"data_path");
 
     if(data_path != nullptr){
         instance.settings.data_path = (char*)data_path;
@@ -135,7 +131,7 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(data_path);
     }
 
-    xmlChar *save_path = xmlGetProp(root, "save_path"_xml);
+    xmlChar *save_path = xmlGetProp(root, (const xmlChar*)"save_path");
 
     if(save_path != nullptr){
         instance.settings.save_path = (char*)save_path;
@@ -143,7 +139,7 @@ bool LoadEngineConfig(const std::string &filename, photon_instance &instance){
         xmlFree(save_path);
     }
 
-    xmlChar *multisample_str = xmlGetProp(root, "multisamples"_xml);
+    xmlChar *multisample_str = xmlGetProp(root, (const xmlChar*)"multisamples");
 
     if(multisample_str != nullptr){
         instance.settings.multisamples = atoi((char*)multisample_str);

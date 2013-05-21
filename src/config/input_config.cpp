@@ -7,63 +7,59 @@ namespace photon{
 
 namespace input{
 
-const xmlChar* operator "" _xml(const char* str, size_t /*length*/){
-    return (const xmlChar*)str;
-}
-
 photon_input_state ParseInputSingle(xmlNode *node){
     photon_input_state state;
-    xmlChar *type_str = xmlGetProp(node, "type"_xml);
+    xmlChar *type_str = xmlGetProp(node, (const xmlChar*)"type");
 
-    if((xmlStrEqual(type_str, "keyboard"_xml))){
+    if((xmlStrEqual(type_str, (const xmlChar*)"keyboard"))){
         state.type = photon_input_state::keyboard;
 
-        xmlChar *key_str = xmlGetProp(node, "key"_xml);
-        xmlChar *mod_str = xmlGetProp(node, "modifiers"_xml);
+        xmlChar *key_str = xmlGetProp(node, (const xmlChar*)"key");
+        xmlChar *mod_str = xmlGetProp(node, (const xmlChar*)"modifiers");
 
         state.key = SDL_GetScancodeFromName((char*)key_str);
 
-        if(xmlStrstr(mod_str, "ctrl"_xml)){
+        if(xmlStrstr(mod_str, (const xmlChar*)"ctrl")){
             state.modifiers |= KMOD_CTRL;
-        }else if(xmlStrstr(mod_str, "shift"_xml)){
+        }else if(xmlStrstr(mod_str, (const xmlChar*)"shift")){
             state.modifiers |= KMOD_SHIFT;
-        }else if(xmlStrstr(mod_str, "alt"_xml)){
+        }else if(xmlStrstr(mod_str, (const xmlChar*)"alt")){
             state.modifiers |= KMOD_ALT;
         }
 
         xmlFree(key_str);
         xmlFree(mod_str);
-    }else if((xmlStrEqual(type_str, "joystick_button"_xml))){
+    }else if((xmlStrEqual(type_str, (const xmlChar*)"joystick_button"))){
         state.type = photon_input_state::joystick_button;
 
-        xmlChar *index_str = xmlGetProp(node, "index"_xml);
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar*)"index");
         state.joystick_input_index = atoi((char*)index_str);
 
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, "joystick_axis"_xml))){
+    }else if((xmlStrEqual(type_str, (const xmlChar*)"joystick_axis"))){
         state.type = photon_input_state::joystick_axis;
 
-        xmlChar *index_str = xmlGetProp(node, "index"_xml);
-        xmlChar *negate_str = xmlGetProp(node, "negate"_xml);
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar*)"index");
+        xmlChar *negate_str = xmlGetProp(node, (const xmlChar*)"negate");
         state.joystick_input_index = atoi((char*)index_str);
-        state.axis_input_negate = xmlStrEqual(negate_str, "true"_xml);
+        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar*)"true");
 
         xmlFree(negate_str);
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, "controller_button"_xml))){
+    }else if((xmlStrEqual(type_str, (const xmlChar*)"controller_button"))){
         state.type = photon_input_state::gamecontroller_button;
 
-        xmlChar *index_str = xmlGetProp(node, "button"_xml);
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar*)"button");
         state.controller_button = SDL_GameControllerGetButtonFromString((char*)index_str);
 
         xmlFree(index_str);
-    }else if((xmlStrEqual(type_str, "controller_axis"_xml))){
+    }else if((xmlStrEqual(type_str, (const xmlChar*)"controller_axis"))){
         state.type = photon_input_state::gamecontroller_axis;
 
-        xmlChar *index_str = xmlGetProp(node, "axis"_xml);
-        xmlChar *negate_str = xmlGetProp(node, "negate"_xml);
+        xmlChar *index_str = xmlGetProp(node, (const xmlChar*)"axis");
+        xmlChar *negate_str = xmlGetProp(node, (const xmlChar*)"negate");
         state.controller_axis = SDL_GameControllerGetAxisFromString((char*)index_str);
-        state.axis_input_negate = xmlStrEqual(negate_str, "true"_xml);
+        state.axis_input_negate = xmlStrEqual(negate_str, (const xmlChar*)"true");
 
         xmlFree(negate_str);
         xmlFree(index_str);
@@ -102,20 +98,22 @@ bool LoadConfig(const std::string &filename, photon_input &input){
             xmlFreeDoc(doc);
             return false;
         }
-        if(xmlStrcmp(root->name, "photon_input"_xml)) {
+        if(xmlStrcmp(root->name, (const xmlChar*)"photon_input")) {
             PrintToLog("ERROR: Unable to load XML input config: root node not photon_input!");
             xmlFreeDoc(doc);
             return false;
         }
         input.is_valid = false;
 
-        xmlChar *device_str = xmlGetProp(root, "device"_xml);
-        xmlChar *guid_str = xmlGetProp(root, "device_guid"_xml);
+        xmlChar *device_str = xmlGetProp(root, (const xmlChar*)"device");
+        xmlChar *guid_str = xmlGetProp(root, (const xmlChar*)"device_guid");
+
+        // TODO - use device name and GUID.
 
         xmlFree(device_str);
         xmlFree(guid_str);
 
-        xmlChar *deadzone_str = xmlGetProp(root, "deadzone"_xml);
+        xmlChar *deadzone_str = xmlGetProp(root, (const xmlChar*)"deadzone");
 
         if(deadzone_str != nullptr){
             input.deadzone = atof((char*)deadzone_str);
@@ -126,51 +124,51 @@ bool LoadConfig(const std::string &filename, photon_input &input){
         xmlNode *node = root->xmlChildrenNode;
 
         while(node != nullptr) {
-            if((xmlStrEqual(node->name, "interact"_xml))){
+            if((xmlStrEqual(node->name, (const xmlChar*)"interact"))){
                 input.interact = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "next_item"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"next_item"))){
                 input.next_item = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "previous_item"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"previous_item"))){
                 input.previous_item = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "open_inventory"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"open_inventory"))){
                 input.open_inventory = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "rotate_clockwise"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"rotate_clockwise"))){
                 input.rotate_clockwise = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "rotate_counter_clockwise"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"rotate_counter_clockwise"))){
                 input.rotate_counter_clockwise = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "zoom_in"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"zoom_in"))){
                 input.zoom_in = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "zoom_out"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"zoom_out"))){
                 input.zoom_out = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "move_right"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"move_right"))){
                 input.move_right = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "move_left"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"move_left"))){
                 input.move_left = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "move_up"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"move_up"))){
                 input.move_up = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "move_down"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"move_down"))){
                 input.move_down = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "camera_right"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"camera_right"))){
                 input.camera_right = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "camera_left"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"camera_left"))){
                 input.camera_left = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "camera_up"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"camera_up"))){
                 input.camera_up = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "camera_down"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"camera_down"))){
                 input.camera_down = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "pause"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"pause"))){
                 input.pause = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_up"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_up"))){
                 input.up = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_down"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_down"))){
                 input.down = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_left"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_left"))){
                 input.left = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_right"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_right"))){
                 input.right = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_select"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_select"))){
                 input.select = ParseInputSingle(node);
-            }else if((xmlStrEqual(node->name, "gui_back"_xml))){
+            }else if((xmlStrEqual(node->name, (const xmlChar*)"gui_back"))){
                 input.back = ParseInputSingle(node);
             }
             node = node->next;

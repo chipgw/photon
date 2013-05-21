@@ -53,8 +53,8 @@ void InitOpenGL(photon_window &window){
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
         PrintToLog("ERROR: Frambuffer creation failed!");
-        // TODO - proper error handling.
-        throw;
+        // TODO - error handling.
+        abort();
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -337,7 +337,8 @@ void InitLua(photon_instance &in, const std::string &initscript){
 
     if(lua == nullptr){
         PrintToLog("ERROR: Unable to initilize Lua! luaL_newstate() returned null!");
-        throw;
+        // TODO - error handling.
+        abort();
     }
 
     luaL_openlibs(lua);

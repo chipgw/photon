@@ -20,7 +20,8 @@ photon_window CreateSDLWindow(const photon_settings &settings){
 
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) == -1) {
         PrintToLog("ERROR: Unable to init SDL! \"%s\"", SDL_GetError());
-        throw;
+        // TODO - error handling.
+        abort();
     }
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
@@ -42,7 +43,8 @@ photon_window CreateSDLWindow(const photon_settings &settings){
 
     if (!window.window_SDL){
         PrintToLog("ERROR: Unable to create window!");
-        throw;
+        // TODO - error handling.
+        abort();
     }
 
     window.context_SDL = SDL_GL_CreateContext(window.window_SDL);

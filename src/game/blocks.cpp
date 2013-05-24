@@ -248,6 +248,14 @@ void OnRotate(glm::uvec2 location, photon_level &level, float to_angle){
     }
 }
 
+void CreateBeam(photon_level &level, glm::vec3 color, glm::uvec2 location, float angle){
+    level.beams.push_back(photon_laserbeam());
+    photon_laserbeam &beam = level.beams.back();
+    beam.color = color;
+    beam.origin = location;
+    beam.origin_angle = angle;
+}
+
 void OnFrame(glm::uvec2 location, photon_level &level, float time){
     photon_level_coord coord(location.x, location.y);
     if(level.grid.count(coord)){
@@ -281,35 +289,19 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             }
             break;
         case emitter_white:{
-            level.beams.push_back(photon_laserbeam());
-            photon_laserbeam &beam = level.beams.back();
-            beam.color = glm::vec3(0.9f,0.9f,0.9f);
-            beam.origin = location;
-            beam.origin_angle = block.angle;
+            CreateBeam(level, glm::vec3(0.9f), location, block.angle);
             break;
         }
         case emitter_red:{
-            level.beams.push_back(photon_laserbeam());
-            photon_laserbeam &beam = level.beams.back();
-            beam.color = glm::vec3(0.9f,0.2f,0.1f);
-            beam.origin = location;
-            beam.origin_angle = block.angle;
+            CreateBeam(level, glm::vec3(0.9f,0.2f,0.1f), location, block.angle);
             break;
         }
         case emitter_green:{
-            level.beams.push_back(photon_laserbeam());
-            photon_laserbeam &beam = level.beams.back();
-            beam.color = glm::vec3(0.1f,0.9f,0.2f);
-            beam.origin = location;
-            beam.origin_angle = block.angle;
+            CreateBeam(level, glm::vec3(0.1f,0.9f,0.2f), location, block.angle);
             break;
         }
         case emitter_blue:{
-            level.beams.push_back(photon_laserbeam());
-            photon_laserbeam &beam = level.beams.back();
-            beam.color = glm::vec3(0.1f,0.2f,0.9f);
-            beam.origin = location;
-            beam.origin_angle = block.angle;
+            CreateBeam(level, glm::vec3(0.1f,0.2f,0.9f), location, block.angle);
             break;
         }
         case receiver:

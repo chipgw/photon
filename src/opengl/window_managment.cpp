@@ -1,8 +1,8 @@
 #include "photon_core.h"
 
 #include <SDL_opengl.h>
+#include <SDL_image.h>
 #include <SDL_gamecontroller.h>
-#include <SOIL.h>
 #include <physfs.h>
 
 #define PHOTON_WINDOW_FLAGS SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED
@@ -101,36 +101,16 @@ void SetWindowIcon(photon_window &window, const std::string &filename){
 
             PHYSFS_close(fp);
 
-            int width, height, channels;
-            uint8_t *image = SOIL_load_image_from_memory(buffer, length, &width, &height, &channels, SOIL_LOAD_RGBA);
-
-            if(image == nullptr){
-                PrintToLog("ERROR: image loading failed!");
-            }
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-            const uint32_t rmask = 0xff000000;
-            const uint32_t gmask = 0x00ff0000;
-            const uint32_t bmask = 0x0000ff00;
-            const uint32_t amask = 0x000000ff;
-#else
-            const uint32_t rmask = 0x000000ff;
-            const uint32_t gmask = 0x0000ff00;
-            const uint32_t bmask = 0x00ff0000;
-            const uint32_t amask = 0xff000000;
-#endif
-
-            SDL_Surface *icon = SDL_CreateRGBSurfaceFrom(image, width, height, channels * 8, channels*width, rmask, gmask, bmask, amask);
-
+            SDL_RWops *rw = SDL_RWFromMem(buffer, length);
+            SDL_Surface *icon = IMG_Load_RW(rw, 1);
 
             if(icon == nullptr){
-                PrintToLog("ERROR: surface creation failed!");
+                PrintToLog("ERROR: icon loading failed! %s", IMG_GetError());
             }
 
             SDL_SetWindowIcon(window.window_SDL, icon);
 
             SDL_FreeSurface(icon);
-            free(image);
             free(buffer);
         }else{
             PrintToLog("ERROR: Unable to open image file \"%s\"!");

@@ -32,10 +32,10 @@ void DrawBlock(glm::vec2 location, float size = 0.5f, float rotation = 0.0f){
                                   -1.0f,-1.0f,
                                   -1.0f, 1.0f};
 
-    static const float uv[] = {1.0f, 1.0f,
-                               1.0f, 0.0f,
-                               0.0f, 0.0f,
-                               0.0f, 1.0f};
+    static const float uv[] = {1.0f, 0.0f,
+                               1.0f, 1.0f,
+                               0.0f, 1.0f,
+                               0.0f, 0.0f};
 
     rotation = glm::radians(rotation);
 

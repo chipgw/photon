@@ -56,10 +56,10 @@ photon_gui_container InitGUI(){
 }
 
 void DrawBounds(const photon_gui_bounds &bounds){
-    static const float uv[] = {0.0f, 0.0f,
-                               0.0f, 1.0f,
-                               1.0f, 1.0f,
-                               1.0f, 0.0f};
+    static const float uv[] = {0.0f, 1.0f,
+                               0.0f, 0.0f,
+                               1.0f, 0.0f,
+                               1.0f, 1.0f};
 
     float verts[] = {bounds.left, bounds.bottom,
                      bounds.left, bounds.top,

@@ -67,9 +67,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
 
-find_package(SOIL REQUIRED)
-include_directories(${SOIL_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${SOIL_LIBRARIES})
+find_package(SDL2_image REQUIRED)
+include_directories(${SDL2_IMAGE_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${SDL2_IMAGE_LIBRARY})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})

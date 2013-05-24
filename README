@@ -11,4 +11,3 @@ libraries:
   OpenGL (2 or later)
   PhysFS (2 or later, icculus.org/physfs/)
   SDL2 (hg, libsdl.org)
-  SOIL (lonesock.net/soil.html)

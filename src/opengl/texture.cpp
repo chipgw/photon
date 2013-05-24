@@ -1,8 +1,8 @@
 #include "photon_core.h"
 #include "photon_texture.h"
 
-#include <SOIL.h>
 #include <map>
+#include <SDL_image.h>
 #include <physfs.h>
 
 namespace photon{
@@ -12,7 +12,6 @@ namespace texture{
 std::map<std::string, GLuint> textures = std::map<std::string, GLuint>();
 
 GLuint Load(const std::string &filename){
-    GLuint texture;
     if(textures.count(filename)){
         return textures[filename];
     }else{
@@ -25,15 +24,40 @@ GLuint Load(const std::string &filename){
                 PHYSFS_read(fp, buffer, 1, length);
 
                 PHYSFS_close(fp);
-                texture = SOIL_load_OGL_texture_from_memory(buffer, length, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS);
+
+                SDL_RWops *rw = SDL_RWFromMem(buffer, length);
+                SDL_Surface *image = IMG_Load_RW(rw, 1);
 
                 free(buffer);
 
-                if(texture > 0){
-                    PrintToLog("INFO: Loaded texture \"%s\"", filename.c_str());
-                    textures[filename] = texture;
-                    return texture;
+                if(image == nullptr){
+                    PrintToLog("ERROR: texture loading failed! %s", IMG_GetError());
+                    return 0;
                 }
+
+                SDL_Surface *converted = SDL_ConvertSurface(image, SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888), 0);
+                SDL_FreeSurface(image);
+
+                GLuint texture;
+                glGenTextures(1, &texture);
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, converted->w, converted->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, converted->pixels);
+
+                glGenerateMipmap(GL_TEXTURE_2D);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+                static const float border_color[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+                glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+
+                SDL_FreeSurface(converted);
+
+                PrintToLog("INFO: Loaded texture \"%s\"", filename.c_str());
+                textures[filename] = texture;
+                return texture;
             }
 
         }else{

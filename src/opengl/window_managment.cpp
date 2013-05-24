@@ -1,6 +1,5 @@
 #include "photon_core.h"
 
-#include <SDL_opengl.h>
 #include <SDL_image.h>
 #include <SDL_gamecontroller.h>
 #include <physfs.h>

@@ -197,14 +197,20 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         uv.push_back(glm::vec2(character.x + character.width / main_atlas.width, character.rows / FONT_SIZE));
         verts.push_back(glm::vec2(x + w, y - h));
 
+        uv.push_back(glm::vec2(character.x + character.width / main_atlas.width, character.rows / FONT_SIZE));
+        verts.push_back(glm::vec2(x + w, y - h));
+
         uv.push_back(glm::vec2(character.x, character.rows / FONT_SIZE));
         verts.push_back(glm::vec2(x, y - h));
+
+        uv.push_back(glm::vec2(character.x, 0.0f));
+        verts.push_back(glm::vec2(x, y));
     }
 
     glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
     glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
 
-    glDrawArrays(GL_QUADS, 0, verts.size());
+    glDrawArrays(GL_TRIANGLES, 0, verts.size());
 }
 
 float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos, int32_t end_pos){

@@ -198,7 +198,7 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
     case receiver_green:
     case receiver_blue:
     case receiver_white:
-        if(level::CheckVictory(level, player) > 0){
+        if(level.victory_state > 0){
             // TODO - show victory screen.
             PrintToLog("INFO: VICTORY!");
             level = photon_level();

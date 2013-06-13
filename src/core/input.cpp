@@ -102,8 +102,8 @@ void DoInput(photon_instance &instance, float time){
             gui::CancelLoadSave(instance);
         }
         if(IsActivated(input.left)){
-            if(--load_save_menu.cursor < 0){
-                load_save_menu.cursor = 0;
+            if(load_save_menu.cursor > 0){
+                load_save_menu.cursor--;
             }
         }
         if(IsActivated(input.right)){
@@ -118,7 +118,7 @@ void DoInput(photon_instance &instance, float time){
             load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
         }
         if(IsActivated(input.down)){
-            if(++load_save_menu.current_file_index >= load_save_menu.file_list.size()){
+            if(++load_save_menu.current_file_index >= (int)load_save_menu.file_list.size()){
                 load_save_menu.current_file_index = 0;
             }
             load_save_menu.filename = load_save_menu.file_list[load_save_menu.current_file_index];
@@ -135,7 +135,7 @@ void DoInput(photon_instance &instance, float time){
             }
         }
         if(IsActivated(input.down)){
-            if(++menu.highlighted >= menu.buttons.size()){
+            if(++menu.highlighted >= (int8_t)menu.buttons.size()){
                 menu.highlighted = 0;
             }
         }
@@ -153,7 +153,7 @@ void DoInput(photon_instance &instance, float time){
             }
         }
         if(IsActivated(input.down)){
-            if(++menu.highlighted >= menu.buttons.size()){
+            if(++menu.highlighted >= (int8_t)menu.buttons.size()){
                 menu.highlighted = 0;
             }
         }

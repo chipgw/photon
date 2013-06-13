@@ -220,7 +220,7 @@ bool HandleMouseClick(photon_instance &instance, int x, int y){
             SDL_StopTextInput();
         }
         if(InBounds(location, instance.gui.load_save_menu.file_list_bounds)){
-            int index = ((instance.gui.load_save_menu.file_list_bounds.top - 0.1f) - location.y) / 0.08f;
+            std::vector<std::string>::size_type index = ((instance.gui.load_save_menu.file_list_bounds.top - 0.1f) - location.y) / 0.08f;
             if(index >= 0 && index < instance.gui.load_save_menu.file_list.size()){
                 instance.gui.load_save_menu.current_file_index = index;
                 instance.gui.load_save_menu.filename = instance.gui.load_save_menu.file_list[index];

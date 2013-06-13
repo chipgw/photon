@@ -19,7 +19,7 @@ void DrawButtonList(photon_gui_button_list &list){
 }
 
 void ActivateButton(photon_instance &instance, photon_gui_button_list &list, glm::vec2 coordinate){
-    for(int i = 0; i < list.buttons.size(); i++){
+    for(std::vector<photon_gui_button>::size_type i = 0; i < list.buttons.size(); i++){
         if(InBounds(coordinate, list.buttons[i].bounds)){
             ActivateButton(instance, list, i);
         }
@@ -27,7 +27,7 @@ void ActivateButton(photon_instance &instance, photon_gui_button_list &list, glm
 }
 
 void ActivateButton(photon_instance &instance, photon_gui_button_list &list, int8_t button){
-    if(button >= 0 && button < list.buttons.size() && list.buttons[button].action != nullptr){
+    if(button >= 0 && button < (int8_t)list.buttons.size() && list.buttons[button].action != nullptr){
         list.buttons[button].action(instance);
 
         list.highlighted = -1;

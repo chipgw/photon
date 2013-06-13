@@ -80,7 +80,7 @@ struct photon_gui_load_save_menu{
     std::vector<std::string> file_list;
     int current_file_index = -1;
     std::string filename;
-    int cursor = 0;
+    std::string::size_type cursor = 0;
 
     bool loading = false;
     bool saving  = false;
@@ -114,7 +114,7 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 
 float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos = 0, int32_t end_pos = -1);
 
-std::pair<int32_t, int32_t> GetTextLimits(const std::string &text, float desired_width, glm::vec2 scale, int32_t end_pos);
+std::pair<int32_t, int32_t> GetTextLimits(const std::string &text, float desired_width, glm::vec2 scale, std::string::size_type end_pos);
 
 void DrawGUI(photon_instance &instance);
 

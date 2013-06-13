@@ -82,7 +82,12 @@ int8_t CheckVictory(photon_level &level, photon_player &player){
             return SetVictoryState(level, 1);
             break;
         case photon_level::destruction:
-            // TODO - implement.
+            for(auto &block : level.grid){
+                if(block.second.type == plain || block.second.type == tnt || block.second.type == target){
+                    // if there is any destructible block in existense return false.
+                    return 0;
+                }
+            }
             return SetVictoryState(level, 1);
             break;
         case photon_level::tnt_harvester:

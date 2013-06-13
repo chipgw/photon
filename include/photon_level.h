@@ -16,8 +16,8 @@ struct photon_level{
         none,           // nothin.
         power,          // power up all the receivers to win.
         targets,        // destroy all the targets to win.
-        destruction,    // destroy all or <goal> blocks to win.
-        tnt_harvester,  // gather all or <goal> TNT blocks to win.
+        destruction,    // destroy all blocks to win.
+        tnt_harvester,  // gather <goal> TNT blocks to win.
         script          // uses a script to do the objectives.
     };
 

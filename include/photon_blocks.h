@@ -45,7 +45,9 @@ enum block_type{
     filter_cyan,
     filter_magenta,
 
-    move // moves when activated (no diagonal)
+    // moves when activated (no diagonal)
+    move,
+    move_reverse
 };
 
 

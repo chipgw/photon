@@ -149,18 +149,54 @@ photon_lasersegment *OnLightInteract(photon_lasersegment *segment, glm::uvec2 lo
             }
             break;
         }
-        case move:{
-            // if the block was already activated or the segment angle is not a multiple of 90 reset.
-            if(wasactivated || fmod(segment->angle, 90.0f) != 0.0f
-                    || level.grid.count(photon_level_coord(glm::cos(glm::radians(segment->angle)) + location.x, glm::sin(glm::radians(segment->angle)) + location.y))){
-                block.angle = 0.0f;
-                block.power = 0.0f;
-            }else{
-                block.angle = segment->angle;
+        case move:
+            if(!wasactivated){
+                block.angle = fmod(segment->angle + 360.0f, 360.0f);
                 block.power += time;
+
+                photon_level_coord newcoord(coord);
+
+                if(block.angle == 0.0f){
+                    newcoord.first++;
+                }else if(block.angle == 90.0f){
+                    newcoord.second++;
+                }else if(block.angle == 180.0f){
+                    newcoord.first--;
+                }else if(block.angle == 270.0f){
+                    newcoord.second--;
+                }
+
+                if(!level.grid.count(newcoord)){
+                    break;
+                }
             }
+            block.angle = 0.0f;
+            block.power = 0.0f;
             break;
-        }
+        case move_reverse:
+            if(!wasactivated){
+                block.angle = fmod(segment->angle + 540.0f, 360.0f);
+                block.power += time;
+
+                photon_level_coord newcoord(coord);
+
+                if(block.angle == 0.0f){
+                    newcoord.first++;
+                }else if(block.angle == 90.0f){
+                    newcoord.second++;
+                }else if(block.angle == 180.0f){
+                    newcoord.first--;
+                }else if(block.angle == 270.0f){
+                    newcoord.second--;
+                }
+
+                if(!level.grid.count(newcoord)){
+                    break;
+                }
+            }
+            block.angle = 0.0f;
+            block.power = 0.0f;
+            break;
         }
     }
     return segment;
@@ -204,6 +240,20 @@ void OnPhotonInteract(glm::uvec2 location, photon_level &level, photon_player &p
             level = photon_level();
         }
         // TODO - show some indication of incompleteness.
+        break;
+    case move:
+        if(!block.locked){
+            block.type = move_reverse;
+            block.power = -block.power;
+            level.moves++;
+        }
+        break;
+    case move_reverse:
+        if(!block.locked){
+            block.type = move;
+            block.power = -block.power;
+            level.moves++;
+        }
         break;
     }
     // if for some reason nothing happened to this block after it was added...
@@ -312,12 +362,25 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             block.power = 0.0f;
             break;
         case move:
+        case move_reverse:
             if(!block.activated){
                 block.power = 0.0f;
             }else if(block.power >= 0.8f){
                 block.power--;
-                glm::uvec2 newlocation = glm::uvec2(glm::cos(glm::radians(block.angle)) + location.x, glm::sin(glm::radians(block.angle)) + location.y);
-                photon_level_coord newcoord(newlocation.x, newlocation.y);
+
+                photon_level_coord newcoord(coord);
+
+                if(block.angle == 0.0f){
+                    newcoord.first++;
+                }else if(block.angle == 90.0f){
+                    newcoord.second++;
+                }else if(block.angle == 180.0f){
+                    newcoord.first--;
+                }else if(block.angle == 270.0f){
+                    newcoord.second--;
+                }else{
+                    break;
+                }
                 level.grid[newcoord] = block;
                 level.grid.erase(coord);
             }
@@ -389,6 +452,7 @@ const char* GetBlockName(block_type type){
         CASESTR(filter_cyan);
         CASESTR(filter_magenta);
         CASESTR(move);
+        CASESTR(move_reverse);
     }
 }
 #undef CASESTR
@@ -420,6 +484,7 @@ block_type GetBlockFromName(const char* name){
     else CASESTR(filter_cyan)
     else CASESTR(filter_magenta)
     else CASESTR(move)
+    else CASESTR(move_reverse)
     else{
         return invalid_block;
     }

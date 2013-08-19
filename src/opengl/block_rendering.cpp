@@ -117,11 +117,21 @@ void Draw(photon_block block, glm::vec2 location){
         glBindTexture(GL_TEXTURE_2D, texture_receiver);
         DrawBlock(location, 0.5f, block.angle);
         break;
-    case move:{
+    case move:
+    case move_reverse:{
         // TODO - make texture.
         glBindTexture(GL_TEXTURE_2D, texture_indestructible_block);
         glm::vec2 offset(location);
-        offset += glm::vec2(glm::cos(glm::radians(block.angle)) * block.power, glm::sin(glm::radians(block.angle)) * block.power);
+
+        if(block.angle == 0.0f){
+            offset.x += block.power;
+        }else if(block.angle == 90.0f){
+            offset.y += block.power;
+        }else if(block.angle == 180.0f){
+            offset.x -= block.power;
+        }else if(block.angle == 270.0f){
+            offset.y -= block.power;
+        }
         DrawBlock(offset);
         break;
     }

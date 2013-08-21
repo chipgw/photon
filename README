@@ -10,4 +10,4 @@ libraries:
   LibXML2 (xmlsoft.org/)
   OpenGL (2 or later)
   PhysFS (2 or later, icculus.org/physfs/)
-  SDL2 (hg, libsdl.org)
+  SDL2 (libsdl.org)

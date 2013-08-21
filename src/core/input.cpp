@@ -21,7 +21,7 @@ void DoInputSingle(photon_input_state &state, photon_input &input){
     state.last_state = state.current_state;
     switch(state.type){
     case photon_input_state::keyboard:{
-        Uint8* keyboard = SDL_GetKeyboardState(nullptr);
+        const Uint8* keyboard = SDL_GetKeyboardState(nullptr);
         SDL_Keymod modifiers = SDL_GetModState();
         state.current_state = keyboard[state.key] && (modifiers == state.modifiers || modifiers & state.modifiers);
         break;

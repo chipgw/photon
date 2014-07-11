@@ -58,7 +58,7 @@ void InitFreeType(){
     }
 
     length = PHYSFS_fileLength(file);
-    font_buffer = (uint8_t*)malloc(length);
+    font_buffer = new uint8_t[length];
 
     PHYSFS_read(file, font_buffer, 1, length);
     PHYSFS_close(file);
@@ -67,7 +67,7 @@ void InitFreeType(){
 
     if(err){
         PrintToLog("ERROR: Could not load font \"%s\"! error code %x!", font_filename, err);
-        free(font_buffer);
+        delete[] font_buffer;
         return;
     }
 
@@ -127,7 +127,7 @@ void InitFreeType(){
     PrintToLog("INFO: Created character atlas size %ix%i", width,height);
 
     FT_Done_Face(face);
-    free(font_buffer);
+    delete[] font_buffer;
 
     // TODO - perhaps leave this open for loading other fonts and close in a GarbageCollect() function?
     FT_Done_FreeType(ft);

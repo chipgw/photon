@@ -23,7 +23,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
         }
 
         length = PHYSFS_fileLength(file);
-        xml_buffer = (char*)malloc(length);
+        xml_buffer = new char[length];
 
         PHYSFS_read(file, xml_buffer, 1, length);
         PHYSFS_close(file);
@@ -218,7 +218,7 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
 
         level.is_valid = true;
 
-        free(xml_buffer);
+        delete[] xml_buffer;
         xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Level: \"%s\" does not exist!", filename.c_str());

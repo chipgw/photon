@@ -19,7 +19,7 @@ GLuint Load(const std::string &filename){
             auto fp = PHYSFS_openRead(filename.c_str());
             intmax_t length = PHYSFS_fileLength(fp);
             if(length > 0){
-                uint8_t *buffer = (uint8_t*) malloc(length);
+                uint8_t *buffer = new uint8_t[length];
 
                 PHYSFS_read(fp, buffer, 1, length);
 
@@ -28,7 +28,7 @@ GLuint Load(const std::string &filename){
                 SDL_RWops *rw = SDL_RWFromMem(buffer, length);
                 SDL_Surface *image = IMG_Load_RW(rw, 1);
 
-                free(buffer);
+                delete[] buffer;
 
                 if(image == nullptr){
                     PrintToLog("ERROR: texture loading failed! %s", IMG_GetError());

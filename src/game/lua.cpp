@@ -399,7 +399,7 @@ int DoFile(const std::string &filename){
         auto fp = PHYSFS_openRead(filename.c_str());
         intmax_t length = PHYSFS_fileLength(fp);
         if(length > 0){
-            char *buffer = (char*)malloc(length + 1);
+            char *buffer = new char[length + 1];
 
             // make it null terminated (fixes some Lua errors)
             buffer[length] = 0;
@@ -409,6 +409,8 @@ int DoFile(const std::string &filename){
             PHYSFS_close(fp);
 
             int state = luaL_dostring(lua, buffer);
+
+            delete[] buffer;
 
             if(state != 0){
                 PrintToLog("LUA ERROR: %s\n", lua_tostring(lua, -1));

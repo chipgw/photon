@@ -94,7 +94,7 @@ void SetWindowIcon(photon_window &window, const std::string &filename){
         auto fp = PHYSFS_openRead(filename.c_str());
         intmax_t length = PHYSFS_fileLength(fp);
         if(length > 0){
-            uint8_t *buffer = (uint8_t*) malloc(length);
+            uint8_t *buffer = new uint8_t[length];
 
             PHYSFS_read(fp, buffer, 1, length);
 
@@ -110,7 +110,7 @@ void SetWindowIcon(photon_window &window, const std::string &filename){
             SDL_SetWindowIcon(window.window_SDL, icon);
 
             SDL_FreeSurface(icon);
-            free(buffer);
+            delete[] buffer;
         }else{
             PrintToLog("ERROR: Unable to open image file \"%s\"!");
         }

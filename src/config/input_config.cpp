@@ -64,6 +64,7 @@ photon_input_state ParseInputSingle(xmlNode *node){
         xmlFree(negate_str);
         xmlFree(index_str);
     }
+    xmlFree(type_str);
     return state;
 }
 
@@ -80,7 +81,7 @@ bool LoadConfig(const std::string &filename, photon_input &input){
         }
 
         length = PHYSFS_fileLength(file);
-        xml_buffer = (char*)malloc(length);
+        xml_buffer = new char[length];
 
         PHYSFS_read(file, xml_buffer, 1, length);
         PHYSFS_close(file);
@@ -176,7 +177,7 @@ bool LoadConfig(const std::string &filename, photon_input &input){
 
         input.is_valid = true;
 
-        free(xml_buffer);
+        delete[] xml_buffer;
         xmlFreeDoc(doc);
 
         return true;

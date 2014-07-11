@@ -22,7 +22,7 @@ GLuint LoadAndCompileShader(const char *filename, GLenum shader_type){
     }
 
     length = PHYSFS_fileLength(file);
-    source = (char*)malloc(length+1);
+    source = new char[length+1];
 
     PHYSFS_read(file, source, 1, length);
     PHYSFS_close(file);
@@ -32,25 +32,25 @@ GLuint LoadAndCompileShader(const char *filename, GLenum shader_type){
 
     glCompileShader(shader);
 
-    free(source);
+    delete[] source;
 
     int isCompiled,maxLength;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
     if(maxLength > 1){
-        char *infoLog = (char *)malloc(maxLength);
+        char *infoLog = new char[maxLength];
 
         glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
 
         if(isCompiled == GL_FALSE) {
             PrintToLog("ERROR: failed to compile \"%s\"!\n\tLog: %s", filename, infoLog);
-            free(infoLog);
+            delete[] infoLog;
 
             return 0;
         }else{
             PrintToLog("INFO: succesfully compiled \"%s\".\n\tLog: %s", filename, infoLog);
-            free(infoLog);
+            delete[] infoLog;
         }
     }else{
         if(isCompiled == GL_FALSE) {
@@ -78,7 +78,7 @@ int LinkShaderProgram(photon_shader &shader){
     glGetProgramiv(shader.program, GL_INFO_LOG_LENGTH, &maxLength);
 
     if(maxLength > 1){
-        char*infoLog = (char *)malloc(maxLength);
+        char *infoLog = new char[maxLength];
 
         glGetProgramInfoLog(shader.program, maxLength, &maxLength, infoLog);
 
@@ -87,7 +87,7 @@ int LinkShaderProgram(photon_shader &shader){
         }else{
             PrintToLog("INFO: succesfully linked shader.\n\tLog: %s", infoLog);
         }
-        free(infoLog);
+        delete[] infoLog;
     }else{
         if(isLinked == GL_FALSE){
             PrintToLog("ERROR: failed to link shader program! No log availible.");
@@ -139,7 +139,7 @@ photon_shader LoadShaderXML(const std::string &filename){
         }
 
         length = PHYSFS_fileLength(file);
-        xml_buffer = (char*)malloc(length);
+        xml_buffer = new char[length];
 
         PHYSFS_read(file, xml_buffer, 1, length);
         PHYSFS_close(file);
@@ -214,7 +214,7 @@ photon_shader LoadShaderXML(const std::string &filename){
             node = node->next;
         }
 
-        free(xml_buffer);
+        delete[] xml_buffer;
         xmlFreeDoc(doc);
     }else{
         PrintToLog("ERROR: Unable to load XML Shader: file \"%s\" does not exist!", filename.c_str());

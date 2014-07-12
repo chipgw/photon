@@ -2,6 +2,7 @@
 #define _PHOTON_LUA_H_
 
 #include <string>
+#include <cstdint>
 
 namespace photon{
 

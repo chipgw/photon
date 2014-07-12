@@ -2,6 +2,8 @@
 #include "photon_lua.h"
 
 #include <stdlib.h>
+#include <ctime>
+#include <cstdio>
 #include <stdarg.h>
 #include <physfs.h>
 
@@ -65,6 +67,10 @@ void Close(photon_instance &instance){
     PrintToLog("INFO: Request to shutdown Photon recieved.");
     instance.running = false;
 }
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 void PrintToLog(const char *format,...){
     va_list args;

@@ -1,10 +1,16 @@
+#include "photon_core.h"
+
 namespace photon{
 
 namespace build_info{
 
 const char* git_sha1 =  "@GIT_SHA1@";
 
-const char* build_type =  "@CMAKE_BUILD_TYPE@";
+#ifdef PHOTON_MSVC_CONFIGURATION
+const char* build_type = PHOTON_MSVC_CONFIGURATION;
+#else
+const char* build_type = "@CMAKE_BUILD_TYPE@";
+#endif
 
 const char* version =  "@PHOTON_VERSION@";
 

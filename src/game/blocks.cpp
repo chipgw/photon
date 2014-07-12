@@ -335,7 +335,12 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
             if(block.power > 0.4f){
                 DamageAroundPoint(location, level, 4.0f * (1.2f - block.power));
             }else if(block.power < 0.0f){
+#ifdef _MSC_VER
+                /* TODO - this is just a temporary workaround because MSVC's STL doesn't let you erase from within a range based for loop. */
+                block.type = air;
+#else
                 level.grid.erase(coord);
+#endif
             }
             break;
         case emitter_white:{

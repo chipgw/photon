@@ -93,7 +93,7 @@ int8_t AddItemCurrent(photon_player &player, int8_t amount){
 }
 
 int8_t GetItemCount(photon_player &player, block_type type){
-    if(player.items.count(type)){
+    if(player.items.size() > 0 && player.items.count(type)){
         if(player.items[type] <= 0){
             return -1;
         }

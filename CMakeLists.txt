@@ -20,8 +20,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/core/version.cpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/version.cpp" @ONLY)
-
 # files not needed in build, but included so they show up in IDE.
 file(GLOB HEADERS "include/*.h")
 file(GLOB GLSL_SOURCES "data/shaders/*.xml" "data/shaders/*.vert" "data/shaders/*.frag")
@@ -29,8 +27,19 @@ file(GLOB LUA_SOURCES "data/*.lua")
 
 file(GLOB SOURCES "src/*.cpp")
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc" @ONLY)
-set(WINDRES "${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/core/version.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/version.cpp" @ONLY)
+list(APPEND SOURCES "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
+
+if(WIN32)
+    if(${CMAKE_GENERATOR} MATCHES "Visual Studio*")
+        add_definitions(-DPHOTON_MSVC_CONFIGURATION="$(ConfigurationName)")
+    endif()
+
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/res.rc" @ONLY)
+    set(WINDRES "${CMAKE_CURRENT_BINARY_DIR}/res.rc")
+else(WIN32)
+    set(WINDRES "")
+endif(WIN32)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADERS} ${WINDRES})
 

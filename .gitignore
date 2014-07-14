@@ -46,11 +46,11 @@ Thumbs.db
 #####################
 *~
 
-# Generated at build time #
-###########################
-version.cpp
-res.rc
+# build directory #
+###################
+build*
 
 # cloc running script #
 #######################
 cloc*
+

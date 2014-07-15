@@ -9,6 +9,12 @@ set(VERSION_PATCH 5) # 5 for alpha5
 
 set(PHOTON_VERSION "alpha5")
 
+if(WIN32)
+    set(WITH_GLEW ON)
+else(WIN32)
+    option(WITH_GLEW "Use GLEW to load OpenGL functions." OFF)
+endif(WIN32)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -64,12 +70,12 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${LIBXML2_LIBRARIES})
 
-if(WIN32)
+if(WITH_GLEW)
     add_definitions(-DPHOTON_WITH_GLEW)
     find_package(GLEW REQUIRED)
     include_directories(${GLEW_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
-endif(WIN32)
+endif(WITH_GLEW)
 
 find_package(PhysFS REQUIRED)
 include_directories(${PHYSFS_INCLUDE_DIR})

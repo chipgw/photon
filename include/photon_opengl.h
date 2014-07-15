@@ -1,7 +1,13 @@
 #ifndef _PHOTON_OPENGL_H_
 #define _PHOTON_OPENGL_H_
 
+#ifdef PHOTON_WITH_GLEW
 #include <GL/glew.h>
+#else
+#define GL_GLEXT_PROTOTYPES
+#include <GL/glcorearb.h>
+#endif
+
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>

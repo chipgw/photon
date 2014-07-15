@@ -19,6 +19,7 @@ void InitOpenGL(photon_window &window){
     PrintToLog("INFO: Initializing OpenGL.");
     SDL_GL_MakeCurrent(window.window_SDL, window.context_SDL);
 
+#ifdef PHOTON_WITH_GLEW
     GLuint glewstatus = glewInit();
     if(glewstatus != GLEW_OK){
         PrintToLog("GLEW ERROR: %s", glewGetErrorString(glewstatus));
@@ -29,6 +30,7 @@ void InitOpenGL(photon_window &window){
     }else{
         PrintToLog("WARNING: OpenGL 2.0 support NOT detected, things probably won't work.");
     }
+#endif
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 

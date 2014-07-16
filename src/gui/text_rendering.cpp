@@ -149,6 +149,9 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 }
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const std::string &text) {
+    /* No sense doing any of this if string is empty, and MSVC crashes if it's empty. */
+    if(text.size() < 1) return;
+
     scale /= FONT_SIZE;
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
 

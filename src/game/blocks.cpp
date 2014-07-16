@@ -387,7 +387,13 @@ void OnFrame(glm::uvec2 location, photon_level &level, float time){
                     break;
                 }
                 level.grid[newcoord] = block;
+
+#ifdef _MSC_VER
+                /* TODO - this is just a temporary workaround because MSVC's STL doesn't let you erase from within a range based for loop. */
+                block.type = air;
+#else
                 level.grid.erase(coord);
+#endif
             }
             break;
         }

@@ -6,7 +6,7 @@ Building Photon:
 
 libraries:
   Freetype2 (freetype.org)
-  GLEW (glew.sourceforge.net)
+  GLEW (glew.sourceforge.net, Windows only)
   GLM (glm.g-truc.net)
   LibXML2 (xmlsoft.org)
   Lua (5.2 lua.org)

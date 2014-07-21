@@ -3,7 +3,10 @@
 
 #include "photon_opengl.h"
 
+#ifndef _MSC_VER
 #define SDL_MAIN_HANDLED
+#endif
+
 #include <SDL.h>
 
 namespace photon{

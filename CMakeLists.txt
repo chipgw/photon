@@ -43,11 +43,9 @@ if(WIN32)
 
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/windres/res.rc.in" "${CMAKE_CURRENT_BINARY_DIR}/res.rc" @ONLY)
     set(WINDRES "${CMAKE_CURRENT_BINARY_DIR}/res.rc")
-else(WIN32)
-    set(WINDRES "")
 endif(WIN32)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADERS} ${WINDRES})
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${GLSL_SOURCES} ${LUA_SOURCES} ${HEADERS} ${WINDRES})
 
 file(GLOB CORE_SOURCES "src/core/*.cpp")
 add_library(${PROJECT_NAME}_core STATIC ${CORE_SOURCES})

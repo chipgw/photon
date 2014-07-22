@@ -149,9 +149,6 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
 }
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const std::string &text) {
-    /* No sense doing any of this if string is empty, and MSVC crashes if it's empty. */
-    if(text.size() < 1) return;
-
     scale /= FONT_SIZE;
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
 
@@ -210,10 +207,12 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         verts.push_back(glm::vec2(x, y));
     }
 
-    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
-    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
+    if(verts.size() != 0) {
+        glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
+        glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
 
-    glDrawArrays(GL_TRIANGLES, 0, verts.size());
+        glDrawArrays(GL_TRIANGLES, 0, verts.size());
+    }
 }
 
 float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos, int32_t end_pos){

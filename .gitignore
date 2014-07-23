@@ -50,6 +50,10 @@ Thumbs.db
 ###################
 build*
 
+# If you want to put GLM in the include folder #
+################################################
+include/glm/*
+
 # cloc running script #
 #######################
 cloc*

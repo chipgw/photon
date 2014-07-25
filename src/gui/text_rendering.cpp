@@ -134,21 +134,27 @@ void InitFreeType(){
 }
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const char *format,...) {
-    va_list args;
+    va_list args, args2;
     va_start(args, format);
+    va_copy(args2, args);
 
-    std::string out;
+    int len = vsnprintf(nullptr, 0, format, args) + 1;
 
-    // TODO - maybe calculate this somehow?
-    out.reserve(512);
+    char* buffer = new char[len];
 
-    vsnprintf(&out[0], out.capacity(), format, args);
+    vsnprintf(buffer, len, format, args2);
+
     va_end(args);
+    va_end(args2);
 
-    RenderText(position, scale, color, center, out);
+    RenderText(position, scale, color, center, std::string(buffer));
+
+    delete[] buffer;
 }
 
 void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool center, const std::string &text) {
+    if(text.size() == 0) return;
+
     scale /= FONT_SIZE;
     glBindTexture(GL_TEXTURE_2D, main_atlas.texture);
 
@@ -207,12 +213,10 @@ void RenderText(glm::vec2 position, glm::vec2 scale, glm::vec4 color, bool cente
         verts.push_back(glm::vec2(x, y));
     }
 
-    if(verts.size() != 0) {
-        glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
-        glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
+    glVertexAttribPointer(PHOTON_VERTEX_LOCATION_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(verts[0]));
+    glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, glm::value_ptr(uv[0]));
 
-        glDrawArrays(GL_TRIANGLES, 0, verts.size());
-    }
+    glDrawArrays(GL_TRIANGLES, 0, verts.size());
 }
 
 float GetTextWidth(const std::string &text, glm::vec2 scale, uint32_t start_pos, int32_t end_pos){

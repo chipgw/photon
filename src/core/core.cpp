@@ -73,35 +73,47 @@ void Close(photon_instance &instance){
 #endif
 
 void PrintToLog(const char *format,...){
-    va_list args;
+    va_list args, args2;
     va_start(args, format);
+    va_copy(args2, args);
 
-    char buffer[512];
-
+    /* Create the timestamp string */
     std::chrono::high_resolution_clock::time_point current = std::chrono::high_resolution_clock::now();
 
     time_t tnow = std::chrono::high_resolution_clock::to_time_t(current);
     tm *date = std::localtime(&tnow);
     int microseconds = std::chrono::duration_cast<std::chrono::microseconds>(current.time_since_epoch()).count() % 1000000;
 
-    snprintf(buffer, 18, "%02i:%02i:%02i.%06i: ", date->tm_hour, date->tm_min, date->tm_sec, microseconds);
+    /* The size of this is constant, so it might as well not be on the heap.
+     * It saves us from some confusing sizing & position calculation by keeping it seperate from the main output string. */
+    char timestamp[18];
+    snprintf(timestamp, 18, "%02i:%02i:%02i.%06i: ", date->tm_hour, date->tm_min, date->tm_sec, microseconds);
+    timestamp[17] = '\0';
 
-    // index 17 is the right place to start after the time has been printed.
-    vsnprintf(&buffer[17], 495, format, args);
+    /* Create the main output string */
+    int len = vsnprintf(nullptr, 0, format, args) + 1;
+
+    char* buffer = new char[len + 1];
+
+    vsnprintf(buffer, len, format, args2);
+
     va_end(args);
+    va_end(args2);
 
-    std::string out(buffer);
+    buffer[len - 1] = '\n';
+    buffer[len] = '\0';
 
-    if(*out.rbegin() != '\n'){
-        out.append("\n");
-    }
-
-    fprintf(stdout, out.c_str());
+    /* Write the strings to stdout and log file. */
+    fprintf(stdout, timestamp);
+    fprintf(stdout, buffer);
     fflush(stdout);
 
     if(logfile){
-        fprintf(logfile, out.c_str());
+        fprintf(logfile, timestamp);
+        fprintf(logfile, buffer);
         fflush(logfile);
     }
+
+    delete[] buffer;
 }
 }

@@ -51,7 +51,7 @@ struct photon_instance{
     glm::vec3 camera_offset = glm::vec3(0.0f, 0.0f, 4.0f);
 };
 
-photon_instance Init(int argc, char *argv[]);
+photon_instance& Init(int argc, char *argv[]);
 
 void MainLoop(photon_instance &instance);
 

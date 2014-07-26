@@ -10,9 +10,9 @@
 namespace photon{
 FILE* logfile;
 
-photon_instance Init(int argc, char *argv[]){
-    photon_instance instance;
+photon_instance instance;
 
+photon_instance &Init(int argc, char *argv[]){
     logfile = fopen("photon.log", "w");
     PrintToLog("INFO: Starting up Photon. Executable: \"%s\"", argv[0]);
 

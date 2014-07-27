@@ -141,9 +141,11 @@ bool LoadLevelXML(const std::string &filename, photon_instance &instance){
 
                                     xmlChar *angle_str = xmlGetProp(block_xml, (const xmlChar*)"angle");
 
-                                    block.angle = atof((char*)angle_str);
+                                    if(angle_str != nullptr){
+                                        block.angle = atof((char*)angle_str);
 
-                                    xmlFree(angle_str);
+                                        xmlFree(angle_str);
+                                    }
                                 }
 
                                 xmlFree(type_str);

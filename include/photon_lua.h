@@ -10,7 +10,7 @@ struct photon_instance;
 
 namespace lua{
 
-void InitLua(photon_instance &in, const std::string &initscript);
+void InitLua(const std::string &initscript);
 
 void AdvanceFrame();
 

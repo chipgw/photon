@@ -309,7 +309,7 @@ const luaL_Reg funcs[] = {
 
 #define PHOTON_API_ENTRY(F, N) luaL_newlib(lua, N::funcs); lua_setfield(lua, 1, F); lua_settop(lua, 1)
 
-void InitLua(photon_instance &in, const std::string &initscript){
+void InitLua(const std::string &initscript){
     PrintToLog("INFO: Initializing Lua.");
     lua = luaL_newstate();
 

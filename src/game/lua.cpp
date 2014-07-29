@@ -6,6 +6,8 @@
 
 namespace photon{
 
+extern photon_instance instance;
+
 namespace lua{
 
 struct timer{
@@ -16,7 +18,6 @@ struct timer{
 std::vector<timer> timers;
 
 lua_State *lua = nullptr;
-photon_instance *instance = nullptr;
 
 static int Print(lua_State *L) {
     int n = lua_gettop(L);  /* number of arguments */
@@ -39,10 +40,9 @@ static int Print(lua_State *L) {
 namespace generic_funcs{
 
 static int After(lua_State *L){
-    if(instance != nullptr){
         if(lua_gettop(L) == 2 && lua_isfunction(L, 1) && lua_isnumber(L, 2)){
             timer t;
-            t.timeout = instance->level.time + lua_tonumber(L, 2);
+            t.timeout = instance.level.time + lua_tonumber(L, 2);
             lua_pop(L, 1);
 
             int f = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -61,8 +61,6 @@ static int After(lua_State *L){
             PrintToLog("WARNING: Unable to create timer: invalid arguments!");
             lua_pushboolean(L, false);
         }
-        return 1;
-    }
     return 0;
 }
 
@@ -76,9 +74,7 @@ static const luaL_Reg funcs[] = {
 namespace window_funcs{
 
 static int ToggleFullscreen(lua_State *L) {
-    if(instance != nullptr){
-        window_managment::ToggleFullscreen(instance->window);
-    }
+        window_managment::ToggleFullscreen(instance.window);
     return 0;
 }
 
@@ -92,7 +88,6 @@ static const luaL_Reg funcs[] = {
 namespace level_funcs{
 
 static int LoadLevel(lua_State *L) {
-    if(instance != nullptr){
         int n = lua_gettop(L);  /* number of arguments */
         std::string file;
         if(n == 1){
@@ -103,18 +98,16 @@ static int LoadLevel(lua_State *L) {
             file = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            level::LoadLevelXML(file, *instance);
+            level::LoadLevelXML(file, instance);
 
             PrintToLog("INFO: Lua loaded level file %s", file.c_str());
         }else{
             PrintToLog("LUA WARNING: level.load() called with the wrong number of arguments! expected 1 got %i!", n);
         }
-    }
     return 0;
 }
 
 static int SaveLevel(lua_State *L) {
-    if(instance != nullptr){
         int n = lua_gettop(L);  /* number of arguments */
         std::string file;
         if(n == 1){
@@ -125,30 +118,27 @@ static int SaveLevel(lua_State *L) {
             file = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            level::SaveLevelXML(file, instance->level, instance->player);
+            level::SaveLevelXML(file, instance.level, instance.player);
 
             PrintToLog("INFO: Lua saved level file %s", file.c_str());
         }else{
             PrintToLog("LUA WARNING: level.save() called with the wrong number of arguments! expected 1 got %i!", n);
         }
-    }
     return 0;
 }
 
 static int CloseLevel(lua_State *L) {
-    if(instance != nullptr){
-        instance->level = photon_level();
-    }
+        instance.level = photon_level();
     return 0;
 }
 
 static int SetCheckVictory(lua_State *L){
-    if(instance != nullptr && lua_gettop(L) == 1 && lua_isfunction(L, -1)){
+    if(lua_gettop(L) == 1 && lua_isfunction(L, -1)){
         int f = luaL_ref(L, LUA_REGISTRYINDEX);
 
         if(f != LUA_REFNIL && f != LUA_NOREF){
-            instance->level.mode = photon_level::script;
-            instance->level.lua_checkvictory = f;
+            instance.level.mode = photon_level::script;
+            instance.level.lua_checkvictory = f;
             PrintToLog("INFO: Lua set victory condition.");
         }else{
             PrintToLog("WARNING: Unable to set lua victory condition!");
@@ -161,8 +151,7 @@ static int SetCheckVictory(lua_State *L){
 }
 
 static int GetItemCount(lua_State *L) {
-    if(instance != nullptr){
-        int n = lua_gettop(L);  /* number of arguments */
+    int n = lua_gettop(L);  /* number of arguments */
         if(n == 1){
             lua_getglobal(L, "tostring");
             lua_pushvalue(L, -1);  /* function to be called */
@@ -174,7 +163,7 @@ static int GetItemCount(lua_State *L) {
             int count = 0;
             block_type type = blocks::GetBlockFromName(type_str.c_str());
 
-            for(auto block : instance->level.grid){
+            for(auto block : instance.level.grid){
                 if(block.second.type == type){
                     count++;
                 }
@@ -183,12 +172,11 @@ static int GetItemCount(lua_State *L) {
             lua_pushinteger(L, count);
             return 1;
         }else if(n == 0){
-            lua_pushinteger(L, instance->level.grid.size());
+            lua_pushinteger(L, instance.level.grid.size());
             return 1;
         }else{
             PrintToLog("LUA WARNING: level.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
-    }
     return 0;
 }
 
@@ -205,7 +193,6 @@ const luaL_Reg funcs[] = {
 namespace player_funcs{
 
 static int GetItemCount(lua_State *L) {
-    if(instance != nullptr){
         int n = lua_gettop(L);  /* number of arguments */
         if(n == 1){
             lua_getglobal(L, "tostring");
@@ -215,46 +202,41 @@ static int GetItemCount(lua_State *L) {
             std::string type = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            lua_pushinteger(L, player::GetItemCount(instance->player, blocks::GetBlockFromName(type.c_str())));
+            lua_pushinteger(L, player::GetItemCount(instance.player, blocks::GetBlockFromName(type.c_str())));
             return 1;
         }else if(n == 0){
-            lua_pushinteger(L, player::GetItemCountCurrent(instance->player));
+            lua_pushinteger(L, player::GetItemCountCurrent(instance.player));
             return 1;
         }else{
             PrintToLog("LUA WARNING: player.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
-    }
     return 0;
 }
 
 static int SetLocation(lua_State *L) {
-    if(instance != nullptr){
         int n = lua_gettop(L);  /* number of arguments */
         if(n == 2){
-            instance->player.location.x = lua_tonumber(L, 1);
-            instance->player.location.y = lua_tonumber(L, 2);
+            instance.player.location.x = lua_tonumber(L, 1);
+            instance.player.location.y = lua_tonumber(L, 2);
             return 0;
         }else{
             PrintToLog("LUA WARNING: player.set_location() called with the wrong number of arguments! expected 2 got %i!", n);
         }
-    }
     return 0;
 }
 
 static int SnapToBeam(lua_State *L){
-    if(instance != nullptr){
         int n = lua_gettop(L);
         if(n == 1){
             // 1 argument = set snap to beam.
-            instance->player.snap_to_beam = lua_toboolean(L, -1);
+            instance.player.snap_to_beam = lua_toboolean(L, -1);
         }else if(n == 0){
             // no arguments = get snap to beam.
-            lua_pushboolean(L, instance->player.snap_to_beam);
+            lua_pushboolean(L, instance.player.snap_to_beam);
             return 1;
         }else{
             PrintToLog("LUA WARNING: player.snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
-    }
     return 0;
 }
 
@@ -269,26 +251,24 @@ const luaL_Reg funcs[] = {
 namespace gui_funcs{
 
 static int SetMessage(lua_State *L) {
-    if(instance != nullptr){
         int n = lua_gettop(L);  /* number of arguments */
         if(n == 1 || n == 2){
             if(n == 2){
-                instance->gui.game.message_timeout = instance->level.time + lua_tonumber(lua, 2);
+                instance.gui.game.message_timeout = instance.level.time + lua_tonumber(lua, 2);
             }else{
-                instance->gui.game.message_timeout = INFINITY;
+                instance.gui.game.message_timeout = INFINITY;
             }
             lua_getglobal(L, "tostring");
             lua_pushvalue(L, -1);  /* function to be called */
             lua_pushvalue(L, 1);   /* value to print */
             lua_call(L, 1, 1);
-            instance->gui.game.message = lua_tostring(L, -1);  /* get result */
+            instance.gui.game.message = lua_tostring(L, -1);  /* get result */
             lua_pop(L, 1);  /* pop result */
 
-            PrintToLog("INFO: Lua set message to \"%s\"", instance->gui.game.message.c_str());
+            PrintToLog("INFO: Lua set message to \"%s\"", instance.gui.game.message.c_str());
         }else{
             PrintToLog("LUA WARNING: set_message() called with the wrong number of arguments! expected 1 or 2 got %i!", n);
         }
-    }
     return 0;
 }
 
@@ -333,8 +313,6 @@ void InitLua(photon_instance &in, const std::string &initscript){
     PrintToLog("INFO: Initializing Lua.");
     lua = luaL_newstate();
 
-    instance = &in;
-
     if(lua == nullptr){
         PrintToLog("ERROR: Unable to initilize Lua! luaL_newstate() returned null!");
         // TODO - error handling.
@@ -362,10 +340,9 @@ void InitLua(photon_instance &in, const std::string &initscript){
 }
 
 void AdvanceFrame(){
-    if(instance != nullptr){
         for(auto i = timers.begin(); i != timers.end();){
             timer &t = *i;
-            if(t.timeout < instance->level.time && t.lua_call_ref != LUA_NOREF && t.lua_call_ref != LUA_REFNIL){
+            if(t.timeout < instance.level.time && t.lua_call_ref != LUA_NOREF && t.lua_call_ref != LUA_REFNIL){
                 lua_rawgeti(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
                 if(!lua_isfunction(lua, -1) || lua_pcall(lua, 0, -1, 0) != 0){
                     PrintToLog("WARNING: calling timer function failed!");
@@ -376,7 +353,6 @@ void AdvanceFrame(){
                 ++i;
             }
         }
-    }
 }
 
 void Reset(){

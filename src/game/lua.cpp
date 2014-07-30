@@ -40,27 +40,27 @@ static int Print(lua_State *L) {
 namespace generic_funcs{
 
 static int After(lua_State *L){
-        if(lua_gettop(L) == 2 && lua_isfunction(L, 1) && lua_isnumber(L, 2)){
-            timer t;
-            t.timeout = instance.level.time + lua_tonumber(L, 2);
-            lua_pop(L, 1);
+    if(lua_gettop(L) == 2 && lua_isfunction(L, 1) && lua_isnumber(L, 2)){
+        timer t;
+        t.timeout = instance.level.time + lua_tonumber(L, 2);
+        lua_pop(L, 1);
 
-            int f = luaL_ref(L, LUA_REGISTRYINDEX);
+        int f = luaL_ref(L, LUA_REGISTRYINDEX);
 
-            if(f != LUA_REFNIL && f != LUA_NOREF){
-                t.lua_call_ref = f;
+        if(f != LUA_REFNIL && f != LUA_NOREF){
+            t.lua_call_ref = f;
 
-                timers.push_back(t);
+            timers.push_back(t);
 
-                lua_pushboolean(L, true);
-            }else{
-                PrintToLog("WARNING: Unable to create timer: error getting function reference!");
-                lua_pushboolean(L, false);
-            }
+            lua_pushboolean(L, true);
         }else{
-            PrintToLog("WARNING: Unable to create timer: invalid arguments!");
+            PrintToLog("WARNING: Unable to create timer: error getting function reference!");
             lua_pushboolean(L, false);
         }
+    }else{
+        PrintToLog("WARNING: Unable to create timer: invalid arguments!");
+        lua_pushboolean(L, false);
+    }
     return 0;
 }
 
@@ -74,7 +74,7 @@ static const luaL_Reg funcs[] = {
 namespace window_funcs{
 
 static int ToggleFullscreen(lua_State *L) {
-        window_managment::ToggleFullscreen(instance.window);
+    window_managment::ToggleFullscreen(instance.window);
     return 0;
 }
 
@@ -88,47 +88,47 @@ static const luaL_Reg funcs[] = {
 namespace level_funcs{
 
 static int LoadLevel(lua_State *L) {
-        int n = lua_gettop(L);  /* number of arguments */
-        std::string file;
-        if(n == 1){
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -1);  /* function to be called */
-            lua_pushvalue(L, 1);   /* value to print */
-            lua_call(L, 1, 1);
-            file = lua_tostring(L, -1);  /* get result */
-            lua_pop(L, 1);  /* pop result */
+    int n = lua_gettop(L);  /* number of arguments */
+    std::string file;
+    if(n == 1){
+        lua_getglobal(L, "tostring");
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, 1);   /* value to print */
+        lua_call(L, 1, 1);
+        file = lua_tostring(L, -1);  /* get result */
+        lua_pop(L, 1);  /* pop result */
 
-            level::LoadLevelXML(file, instance);
+        level::LoadLevelXML(file, instance);
 
-            PrintToLog("INFO: Lua loaded level file %s", file.c_str());
-        }else{
-            PrintToLog("LUA WARNING: level.load() called with the wrong number of arguments! expected 1 got %i!", n);
-        }
+        PrintToLog("INFO: Lua loaded level file %s", file.c_str());
+    }else{
+        PrintToLog("LUA WARNING: level.load() called with the wrong number of arguments! expected 1 got %i!", n);
+    }
     return 0;
 }
 
 static int SaveLevel(lua_State *L) {
-        int n = lua_gettop(L);  /* number of arguments */
-        std::string file;
-        if(n == 1){
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -1);  /* function to be called */
-            lua_pushvalue(L, 1);   /* value to print */
-            lua_call(L, 1, 1);
-            file = lua_tostring(L, -1);  /* get result */
-            lua_pop(L, 1);  /* pop result */
+    int n = lua_gettop(L);  /* number of arguments */
+    std::string file;
+    if(n == 1){
+        lua_getglobal(L, "tostring");
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, 1);   /* value to print */
+        lua_call(L, 1, 1);
+        file = lua_tostring(L, -1);  /* get result */
+        lua_pop(L, 1);  /* pop result */
 
-            level::SaveLevelXML(file, instance.level, instance.player);
+        level::SaveLevelXML(file, instance.level, instance.player);
 
-            PrintToLog("INFO: Lua saved level file %s", file.c_str());
-        }else{
-            PrintToLog("LUA WARNING: level.save() called with the wrong number of arguments! expected 1 got %i!", n);
-        }
+        PrintToLog("INFO: Lua saved level file %s", file.c_str());
+    }else{
+        PrintToLog("LUA WARNING: level.save() called with the wrong number of arguments! expected 1 got %i!", n);
+    }
     return 0;
 }
 
 static int CloseLevel(lua_State *L) {
-        instance.level = photon_level();
+    instance.level = photon_level();
     return 0;
 }
 
@@ -152,31 +152,31 @@ static int SetCheckVictory(lua_State *L){
 
 static int GetItemCount(lua_State *L) {
     int n = lua_gettop(L);  /* number of arguments */
-        if(n == 1){
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -1);  /* function to be called */
-            lua_pushvalue(L, 1);   /* value to print */
-            lua_call(L, 1, 1);
-            std::string type_str = lua_tostring(L, -1);  /* get result */
-            lua_settop(L, 0);
+    if(n == 1){
+        lua_getglobal(L, "tostring");
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, 1);   /* value to print */
+        lua_call(L, 1, 1);
+        std::string type_str = lua_tostring(L, -1);  /* get result */
+        lua_settop(L, 0);
 
-            int count = 0;
-            block_type type = blocks::GetBlockFromName(type_str.c_str());
+        int count = 0;
+        block_type type = blocks::GetBlockFromName(type_str.c_str());
 
-            for(auto block : instance.level.grid){
-                if(block.second.type == type){
-                    count++;
-                }
+        for(auto block : instance.level.grid){
+            if(block.second.type == type){
+                count++;
             }
-
-            lua_pushinteger(L, count);
-            return 1;
-        }else if(n == 0){
-            lua_pushinteger(L, instance.level.grid.size());
-            return 1;
-        }else{
-            PrintToLog("LUA WARNING: level.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
         }
+
+        lua_pushinteger(L, count);
+        return 1;
+    }else if(n == 0){
+        lua_pushinteger(L, instance.level.grid.size());
+        return 1;
+    }else{
+        PrintToLog("LUA WARNING: level.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+    }
     return 0;
 }
 
@@ -193,50 +193,50 @@ const luaL_Reg funcs[] = {
 namespace player_funcs{
 
 static int GetItemCount(lua_State *L) {
-        int n = lua_gettop(L);  /* number of arguments */
-        if(n == 1){
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -1);  /* function to be called */
-            lua_pushvalue(L, 1);   /* value to print */
-            lua_call(L, 1, 1);
-            std::string type = lua_tostring(L, -1);  /* get result */
-            lua_pop(L, 1);  /* pop result */
+    int n = lua_gettop(L);  /* number of arguments */
+    if(n == 1){
+        lua_getglobal(L, "tostring");
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, 1);   /* value to print */
+        lua_call(L, 1, 1);
+        std::string type = lua_tostring(L, -1);  /* get result */
+        lua_pop(L, 1);  /* pop result */
 
-            lua_pushinteger(L, player::GetItemCount(instance.player, blocks::GetBlockFromName(type.c_str())));
-            return 1;
-        }else if(n == 0){
-            lua_pushinteger(L, player::GetItemCountCurrent(instance.player));
-            return 1;
-        }else{
-            PrintToLog("LUA WARNING: player.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
-        }
+        lua_pushinteger(L, player::GetItemCount(instance.player, blocks::GetBlockFromName(type.c_str())));
+        return 1;
+    }else if(n == 0){
+        lua_pushinteger(L, player::GetItemCountCurrent(instance.player));
+        return 1;
+    }else{
+        PrintToLog("LUA WARNING: player.get_item_count() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+    }
     return 0;
 }
 
 static int SetLocation(lua_State *L) {
-        int n = lua_gettop(L);  /* number of arguments */
-        if(n == 2){
-            instance.player.location.x = lua_tonumber(L, 1);
-            instance.player.location.y = lua_tonumber(L, 2);
-            return 0;
-        }else{
-            PrintToLog("LUA WARNING: player.set_location() called with the wrong number of arguments! expected 2 got %i!", n);
-        }
+    int n = lua_gettop(L);  /* number of arguments */
+    if(n == 2){
+        instance.player.location.x = lua_tonumber(L, 1);
+        instance.player.location.y = lua_tonumber(L, 2);
+        return 0;
+    }else{
+        PrintToLog("LUA WARNING: player.set_location() called with the wrong number of arguments! expected 2 got %i!", n);
+    }
     return 0;
 }
 
 static int SnapToBeam(lua_State *L){
-        int n = lua_gettop(L);
-        if(n == 1){
-            // 1 argument = set snap to beam.
-            instance.player.snap_to_beam = lua_toboolean(L, -1);
-        }else if(n == 0){
-            // no arguments = get snap to beam.
-            lua_pushboolean(L, instance.player.snap_to_beam);
-            return 1;
-        }else{
-            PrintToLog("LUA WARNING: player.snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
-        }
+    int n = lua_gettop(L);
+    if(n == 1){
+        // 1 argument = set snap to beam.
+        instance.player.snap_to_beam = lua_toboolean(L, -1);
+    }else if(n == 0){
+        // no arguments = get snap to beam.
+        lua_pushboolean(L, instance.player.snap_to_beam);
+        return 1;
+    }else{
+        PrintToLog("LUA WARNING: player.snap_to_beam() called with the wrong number of arguments! expected 0 or 1 got %i!", n);
+    }
     return 0;
 }
 
@@ -251,24 +251,24 @@ const luaL_Reg funcs[] = {
 namespace gui_funcs{
 
 static int SetMessage(lua_State *L) {
-        int n = lua_gettop(L);  /* number of arguments */
-        if(n == 1 || n == 2){
-            if(n == 2){
-                instance.gui.game.message_timeout = instance.level.time + lua_tonumber(lua, 2);
-            }else{
-                instance.gui.game.message_timeout = INFINITY;
-            }
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -1);  /* function to be called */
-            lua_pushvalue(L, 1);   /* value to print */
-            lua_call(L, 1, 1);
-            instance.gui.game.message = lua_tostring(L, -1);  /* get result */
-            lua_pop(L, 1);  /* pop result */
-
-            PrintToLog("INFO: Lua set message to \"%s\"", instance.gui.game.message.c_str());
+    int n = lua_gettop(L);  /* number of arguments */
+    if(n == 1 || n == 2){
+        if(n == 2){
+            instance.gui.game.message_timeout = instance.level.time + lua_tonumber(lua, 2);
         }else{
-            PrintToLog("LUA WARNING: set_message() called with the wrong number of arguments! expected 1 or 2 got %i!", n);
+            instance.gui.game.message_timeout = INFINITY;
         }
+        lua_getglobal(L, "tostring");
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, 1);   /* value to print */
+        lua_call(L, 1, 1);
+        instance.gui.game.message = lua_tostring(L, -1);  /* get result */
+        lua_pop(L, 1);  /* pop result */
+
+        PrintToLog("INFO: Lua set message to \"%s\"", instance.gui.game.message.c_str());
+    }else{
+        PrintToLog("LUA WARNING: set_message() called with the wrong number of arguments! expected 1 or 2 got %i!", n);
+    }
     return 0;
 }
 
@@ -340,19 +340,19 @@ void InitLua(const std::string &initscript){
 }
 
 void AdvanceFrame(){
-        for(auto i = timers.begin(); i != timers.end();){
-            timer &t = *i;
-            if(t.timeout < instance.level.time && t.lua_call_ref != LUA_NOREF && t.lua_call_ref != LUA_REFNIL){
-                lua_rawgeti(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
-                if(!lua_isfunction(lua, -1) || lua_pcall(lua, 0, -1, 0) != 0){
-                    PrintToLog("WARNING: calling timer function failed!");
-                }
-                luaL_unref(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
-                i = timers.erase(i);
-            }else{
-                ++i;
+    for(auto i = timers.begin(); i != timers.end();){
+        timer &t = *i;
+        if(t.timeout < instance.level.time && t.lua_call_ref != LUA_NOREF && t.lua_call_ref != LUA_REFNIL){
+            lua_rawgeti(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+            if(!lua_isfunction(lua, -1) || lua_pcall(lua, 0, -1, 0) != 0){
+                PrintToLog("WARNING: calling timer function failed!");
             }
+            luaL_unref(lua, LUA_REGISTRYINDEX, t.lua_call_ref);
+            i = timers.erase(i);
+        }else{
+            ++i;
         }
+    }
 }
 
 void Reset(){

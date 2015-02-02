@@ -3,11 +3,6 @@
 
 #include <glm/gtx/rotate_vector.hpp>
 
-// TODO - maybe this would be better elswhere?
-#ifndef M_PI
-#define M_PI 3.1415926535897932384626433832795
-#endif
-
 namespace photon{
 
 namespace opengl{
@@ -22,7 +17,7 @@ void DrawLaserSegment(photon_lasersegment &segment){
                                 0.0f, 0.0f};
 
     opengl::SetLaserColor(segment.color);
-    glm::vec2 tangent = 0.2f * glm::normalize(glm::rotate(glm::vec2(segment.start) - glm::vec2(segment.end), 90.0f));
+    glm::vec2 tangent = 0.2f * glm::normalize(glm::rotate(glm::vec2(segment.start) - glm::vec2(segment.end), glm::half_pi<float>()));
 
     glm::vec2 child_offset(0.0f);
     glm::vec2 parent_offset(0.0f);
@@ -31,13 +26,13 @@ void DrawLaserSegment(photon_lasersegment &segment){
         float child_angle = segment.angle - segment.child->angle;
         child_angle = 0.5f * -fmod(child_angle + 180.0f, 360.0f);
 
-        child_offset = glm::rotate(tangent * glm::tan(glm::radians(child_angle)), 90.0f);
+        child_offset = glm::rotate(tangent * glm::tan(glm::radians(child_angle)), glm::half_pi<float>());
     }
     if(segment.parent != nullptr && segment.angle != segment.parent->angle){
         float parent_angle = segment.parent->angle - segment.angle;
         parent_angle = 0.5f * -fmod(parent_angle + 180.0f, 360.0f);
 
-        parent_offset = glm::rotate(tangent * glm::tan(glm::radians(parent_angle)), 90.0f);
+        parent_offset = glm::rotate(tangent * glm::tan(glm::radians(parent_angle)), glm::half_pi<float>());
     }
 
     glm::vec2 fstart = glm::vec2(segment.start);
@@ -104,7 +99,7 @@ void DrawLaserSegmentLight(photon_lasersegment &segment){
     glVertexAttribPointer(PHOTON_VERTEX_UV_ATTRIBUTE, 2, GL_FLOAT, GL_FALSE, 0, verts);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
-    radians += M_PI;
+    radians += glm::pi<float>();
 
     matrix = glm::mat3( glm::cos(radians) * size, glm::sin(radians) * size, 0.0f,
                        -glm::sin(radians) * size, glm::cos(radians) * size, 0.0f,

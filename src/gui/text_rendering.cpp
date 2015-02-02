@@ -84,7 +84,7 @@ void InitFreeType(){
         }
 
         width += g->bitmap.width + 1;
-        height = std::max(height, g->bitmap.rows);
+        height = std::max(height, int(g->bitmap.rows));
     }
 
     main_atlas.width = width;

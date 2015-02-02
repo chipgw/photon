@@ -1,8 +1,6 @@
 #include "photon_texture.h"
 #include "photon_core.h"
 
-#include <glm/gtx/rotate_vector.hpp>
-
 GLuint texture_plain_block;
 GLuint texture_indestructible_block;
 GLuint texture_mirror;
